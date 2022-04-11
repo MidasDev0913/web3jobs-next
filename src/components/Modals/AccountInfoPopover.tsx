@@ -1,5 +1,5 @@
 import React from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useRouter } from 'next/router';
 import { Box, styled, IconButton, Stack, Typography } from '@mui/material';
 
 import SingOutIcon from '../SVGIcons/SingOut';
@@ -94,19 +94,19 @@ const AccountInfoPopover = ({
   jobs,
   onClose,
 }: AccountInfoPopoverProps) => {
-  const navigate = useNavigate();
+  const router = useRouter();
   const dispatch = useDispatch();
 
   const handleSignOut = () => {
     auth.signOut();
     localStorage.clear();
     dispatch(logout());
-    navigate('/');
+    router.push('/');
     onClose();
   };
 
   const onClickAccount = () => {
-    navigate('/dashboard');
+    router.push('/dashboard');
   };
 
   return (
@@ -151,7 +151,7 @@ const AccountInfoPopover = ({
               mt={2.75}
               key={job.id}
               onClick={() => {
-                navigate(`/job/${job.id}`);
+                router.push(`/job/${job.id}`);
                 onClose();
               }}
             />

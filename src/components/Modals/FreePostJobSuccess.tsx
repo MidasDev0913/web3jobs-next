@@ -1,5 +1,5 @@
 import React from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useRouter } from 'next/router';
 import { Stack, Modal, Typography, IconButton, Button } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 import { styled } from '@mui/material/styles';
@@ -64,7 +64,7 @@ export const FreePostJobSuccess: React.FC<ComponentProps> = ({
   onBackToHomePage,
   onViewInManageJobs,
 }) => {
-  const navigate = useNavigate();
+  const router = useRouter();
 
   return (
     <Modal open={open} onClose={onClose}>

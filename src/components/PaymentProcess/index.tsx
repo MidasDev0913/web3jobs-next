@@ -21,7 +21,7 @@ import CloseIcon from '@mui/icons-material/Close';
 import StepConnector, {
   stepConnectorClasses,
 } from '@mui/material/StepConnector';
-import { useNavigate } from 'react-router-dom';
+import { useRouter } from 'next/router';
 import { styled } from '@mui/material/styles';
 
 import { Container, CloseButton } from './index.styles';
@@ -145,7 +145,7 @@ export const PaymentProcessPopup: React.FC<ComponentProps> = ({
   const url = 'https://min-api.cryptocompare.com/data/price?fsym=ETH&tsyms=USD';
 
   const dispatch = useDispatch();
-  const navigate = useNavigate();
+  const router = useRouter();
   const theme = useTheme();
   const matchDownMd = useMediaQuery(theme.breakpoints.down('md'));
   const { account, library, chainId, activate } = useWeb3React();
@@ -366,8 +366,8 @@ export const PaymentProcessPopup: React.FC<ComponentProps> = ({
                 txnHash={txnHash}
                 onViewJob={() =>
                   isEdit
-                    ? navigate(`/detail-job/${newJobId}`)
-                    : navigate(`/job/${newJobId}`)
+                    ? router.push(`/detail-job/${newJobId}`)
+                    : router.push(`/job/${newJobId}`)
                 }
                 onGotoHomePage={() => {
                   if(typeof window !== undefined) {
@@ -378,10 +378,10 @@ export const PaymentProcessPopup: React.FC<ComponentProps> = ({
                     });
                   }
                   if (isEdit) {
-                    navigate('/manage-jobs');
+                    router.push('/manage-jobs');
                     return;
                   }
-                  navigate('/');
+                  router.push('/');
                 }}
               />
             )}
@@ -398,7 +398,7 @@ export const PaymentProcessPopup: React.FC<ComponentProps> = ({
         onClose={() => setOpenJobseekerFailedModal(false)}
         onConfirm={() => {
           setOpenJobseekerFailedModal(false);
-          navigate('/');
+          router.push('/');
         }}
       />
     </>

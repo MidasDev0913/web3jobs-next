@@ -9,7 +9,7 @@ import {
   TextField,
   InputAdornment,
 } from '@mui/material';
-import { useNavigate } from 'react-router-dom';
+import { useRouter } from 'next/router';
 import { useDispatch } from 'react-redux';
 import { useWeb3React } from '@web3-react/core';
 import CloseIcon from '@mui/icons-material/Close';
@@ -66,7 +66,7 @@ const Header: React.FC<ComponentProps> = ({
   visibleSearchBar,
 }) => {
   const dispatch = useDispatch();
-  const navigate = useNavigate();
+  const router = useRouter();
   const { account, activate } = useWeb3React();
   const [val, setValue] = useState<string>('');
 
@@ -86,11 +86,11 @@ const Header: React.FC<ComponentProps> = ({
 
   useEffect(() => {
     auth.onAuthStateChanged((user: any) => {
-      if (typeof window !== 'undefined') {
+      if (typeof window !== 'undefined') { //added by midas start
         const { pathname } = window.location;
         if (!user && privateUrls.includes(pathname)) {
           dispatch(logout());
-          navigate('/');
+          router.push('/');
         }
       }
     });
@@ -109,7 +109,7 @@ const Header: React.FC<ComponentProps> = ({
   }, []);
 
   const handleGoToMain = () => {
-    navigate('/');
+    router.push('/');
   };
 
   return (
@@ -159,7 +159,7 @@ const Header: React.FC<ComponentProps> = ({
           position="absolute"
           ml="47px"
           mt={6}
-          onClick={() => navigate('/')}
+          onClick={() => router.push('/')}
         >
           Back to landing page
         </Typography>

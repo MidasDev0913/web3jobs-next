@@ -1,5 +1,7 @@
 import React, { useEffect, useState } from 'react';
-import { useParams, useNavigate, Link as RouterLink } from 'react-router-dom';
+import { useParams, Link as RouterLink, Navigate } from 'react-router-dom';
+import { useRouter } from 'next/router';
+
 import { useDispatch, useSelector } from 'react-redux';
 import Moment from 'react-moment';
 import { Box, Link, Stack, styled, Typography, Tooltip } from '@mui/material';
@@ -58,7 +60,7 @@ const HtmlTooltip = styled(({ className, ...props }: TooltipProps) => (
 
 const ApplyJobPage = () => {
   const dispatch = useDispatch();
-  const navigate = useNavigate();
+  const router = useRouter();
   const { id } = useParams();
   const ga = useGA4React();
 
@@ -138,12 +140,12 @@ const ApplyJobPage = () => {
   };
 
   const handleGoToCompany = () => {
-    navigate(`/?company=${selectedJob.company_name}`, {
-      state: { goToJobs: true },
+    router.push({pathname:`/?company=${selectedJob.company_name}`, 
+      query: { goToJobs: true },
     });
   };
 
-  const handleClickFav = (e: React.MouseEvent<HTMLDivElement>) => {
+  const handleClickFav = (e: React.MouseEvent<HTMLDivElement>) => { 
     if (!isLoggedIn || !userInfo.address) {
       document.getElementById('header-connect-wallet-btn')?.click();
     } else {
@@ -178,7 +180,7 @@ const ApplyJobPage = () => {
         ml="115px"
         mt={2.5}
         className="cursor__pointer"
-        onClick={() => navigate('/', { state: { goToJobs: true } })}
+        onClick={() => router.push({pathname: '/', query: { goToJobs: true } })}
       >
         <ArrowLeftIcon />
         <Typography ml="15px">Back to Web3Jobs</Typography>
@@ -625,11 +627,11 @@ const ApplyJobPage = () => {
           </Box>
         )}
         <EnjoyFeatureSection
-          onHireTalent={() => navigate('/post-job')}
+          onHireTalent={() => router.push('/post-job')}
           onGetJob={() =>
-            navigate('/', {
-              state: { goToJobs: true },
-            })
+            router.push({pathname:'/', 
+              query: { goToJobs: true },
+          })
           }
         />
         {/* <Box marginTop="86px" className="home-newsletter">

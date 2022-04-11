@@ -1,5 +1,5 @@
 import React from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useRouter } from 'next/router';
 import { Stack, Modal, Typography, IconButton, Button } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 import { styled } from '@mui/material/styles';
@@ -50,7 +50,7 @@ export const EditJobSuccess: React.FC<ComponentProps> = ({
   open,
   onClose,
 }) => {
-  const navigate = useNavigate();
+  const router = useRouter();
 
   return (
     <Modal open={open} onClose={onClose}>
@@ -90,7 +90,7 @@ export const EditJobSuccess: React.FC<ComponentProps> = ({
           <ConfirmButton
             onClick={() => {
               onClose();
-              navigate(`/detail-job/${jobId}`);
+              router.push(`/detail-job/${jobId}`);
             }}
           >
             View Job
@@ -100,7 +100,7 @@ export const EditJobSuccess: React.FC<ComponentProps> = ({
             className="cursor__pointer"
             onClick={() => {
               onClose();
-              navigate('/manage-jobs');
+              router.push('/manage-jobs');
             }}
           >
             Back to Manage jobs

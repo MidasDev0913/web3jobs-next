@@ -10,7 +10,7 @@ import {
 } from '@mui/material';
 import Tooltip, { TooltipProps, tooltipClasses } from '@mui/material/Tooltip';
 import { useDispatch, useSelector } from 'react-redux';
-import { useNavigate } from 'react-router-dom';
+import { useRouter } from 'next/router';
 import { useWeb3React } from '@web3-react/core';
 import axios from 'axios';
 
@@ -102,7 +102,7 @@ const Header = () => {
     pathName = window.location.pathname;
   }
   const dispatch = useDispatch();
-  const navigate = useNavigate();
+  const router = useRouter();
   const theme = useTheme();
   const matchDownMd = useMediaQuery(theme.breakpoints.down('md'));
   const { isMobile } = useDetectMobile();
@@ -178,7 +178,7 @@ const Header = () => {
 
   const handleGoToPage = (url: string | undefined) => {
     if (url) {
-      navigate(url);
+      router.push(url);
     }
   };
 
@@ -351,7 +351,7 @@ const Header = () => {
           onClose={() => setOpenJoinSuccessModal(false)}
           onConfirm={() => {
             setOpenJoinSuccessModal(false);
-            navigate('/');
+            router.push('/');
           }}
         />
         <JoinJobseekerConfirmModal
@@ -359,7 +359,7 @@ const Header = () => {
           onClose={() => setOpenJoinSuccessModal(false)}
           onConfirm={() => {
             setOpenJoinSuccessModal(false);
-            navigate('/');
+            router.push('/');
           }}
         />
         <JobSeekerFailedModal
@@ -367,7 +367,7 @@ const Header = () => {
           onClose={() => setOpenJobseekerFailedModal(false)}
           onConfirm={() => {
             setOpenJobseekerFailedModal(false);
-            navigate('/');
+            router.push('/');
           }}
         />
         <InstallMetamaskModal
