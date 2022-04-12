@@ -1,4 +1,5 @@
 import React from 'react';
+import Image from 'next/image';
 import { Box, Link } from '@mui/material';
 
 import { FooterContainer } from './index.styles';
@@ -65,10 +66,11 @@ const Footer = () => {
             ut porta a, ullamcorper vel ante.
           </span>
           <Box display="flex" alignItems="center" className="social-icons">
-            <img src={FacebookIcon} />
-            <img src={TwitterIcon} />
-            <img src={InstagramIcon} />
-            <img src={LinkedinIcon} />
+            <img src={FacebookIcon.src} />
+            <img src={TwitterIcon.src} />
+            <img src={InstagramIcon.src} />
+            <img src={LinkedinIcon.src} />
+           
           </Box>
         </Box>
         <Box display="flex" flexDirection="column" width="25%">

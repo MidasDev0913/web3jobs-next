@@ -1,4 +1,5 @@
 import React from 'react';
+import Image from 'next/image';
 import { FormHelperText, styled } from '@mui/material';
 import InfoIcon from '../../assets/icons/info_icon.svg';
 
@@ -17,7 +18,7 @@ const CustomFormHelperText = styled(FormHelperText)(({ theme }) => ({
 
 export const ErrorMessage = () => (
   <CustomFormHelperText>
-    <img src={InfoIcon} />
+    <img src={InfoIcon.src} />
     Please fill out this field.
   </CustomFormHelperText>
 );

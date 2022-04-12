@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import Image from 'next/image';
 import { useSelector } from 'react-redux';
 import {
   styled,
@@ -210,7 +211,8 @@ const FilterSidebar: React.FC<ComponentProps> = ({
                 ...params.InputProps,
                 startAdornment: (
                   <InputAdornment position="start">
-                    <img src={SearchIcon} width="17px" height="17px" />
+                    <Image src={SearchIcon} width={17} height={17}/>
+                    {/* <img src={SearchIcon} width="17px" height="17px" /> */}
                   </InputAdornment>
                 ),
                 endAdornment: (

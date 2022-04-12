@@ -1,4 +1,5 @@
 import React from 'react';
+import Image from 'next/image';
 import { Modal, Box, styled, Button, IconButton } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 import FailedSVG from '../../assets/images/failed.svg';
@@ -88,7 +89,7 @@ const JobSeekerFailedModal = ({
           </CloseButton>
         </Box>
         <Box className="modal-body">
-          <img className="modal-body-logo" src={FailedSVG} />
+          <img className="modal-body-logo" src={FailedSVG.src} />
           <Box className="modal-body-text">
             You have a jobseeker account, you cannot post jobs.
           </Box>

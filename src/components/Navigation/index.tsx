@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Link, Box, IconButton, Typography } from '@mui/material';
+import { useRouter } from 'next/router';
 
 import {
   NavigationContainer,
@@ -19,10 +20,8 @@ const Navigation = ({
   collapsed: boolean;
   setCollapsed: (arg: boolean) => void;
 }) => {
-  let url : any;
-  if(typeof window !== undefined) {
-    url = window.location.pathname;
-  }
+  const router = useRouter();
+  const url = router.pathname;
 
   const handleCollapse = () => {
     setCollapsed(!collapsed);

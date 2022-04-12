@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import Image from 'next/image';
 import axios from 'axios';
 import {
   Modal,
@@ -112,7 +113,7 @@ const PaymentConfirmModal = ({
           alignItems="center"
           mt="73px"
         >
-          <img src={UpArrowImage} />
+          <img src={UpArrowImage.src} />
           <span className="eth_price">
             -{ethPrice ? price / ethPrice : 0} ETH
           </span>
@@ -124,12 +125,20 @@ const PaymentConfirmModal = ({
         >
           {loading && <CircularProgress thickness={5} size={24} />}
           <Box ml={2}>Proceed to Metamask</Box>
-          <img
+          {/* <img
             src={MetamaskIcon}
             width="28px"
             height="27px"
             style={{ marginLeft: '12px' }}
+          /> */}
+          <div style={{ marginLeft: '12px' }}>
+          <Image
+            src={MetamaskIcon}
+            width={28}
+            height={27}
+            
           />
+          </div>
         </ConfirmButton>
       </ContainerBox>
     </Modal>

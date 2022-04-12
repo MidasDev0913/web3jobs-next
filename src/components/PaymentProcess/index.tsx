@@ -258,8 +258,8 @@ export const PaymentProcessPopup: React.FC<ComponentProps> = ({
     return activeStep === 0
       ? 'Payment'
       : activeStep === 1
-      ? 'Confirmation'
-      : 'Transaction Complete';
+        ? 'Confirmation'
+        : 'Transaction Complete';
   }, [activeStep]);
 
   const handleConfirmJoinOption = (type: number) => {
@@ -366,11 +366,21 @@ export const PaymentProcessPopup: React.FC<ComponentProps> = ({
                 txnHash={txnHash}
                 onViewJob={() =>
                   isEdit
-                    ? router.push(`/detail-job/${newJobId}`)
-                    : router.push(`/job/${newJobId}`)
+                    ? router.push({
+                      pathname: `/detail-job`,
+                      query: {
+                        id: newJobId, // pass the id 
+                      }
+                    })
+                    : router.push({
+                      pathname: `/job`,
+                      query: {
+                        id: newJobId, // pass the id 
+                      }
+                    })
                 }
                 onGotoHomePage={() => {
-                  if(typeof window !== undefined) {
+                  if (typeof window !== undefined) {
 
                     window.scrollTo({
                       top: 0,

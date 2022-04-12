@@ -1,4 +1,5 @@
 import React from 'react';
+import Image from 'next/image';
 import { Box, Typography } from '@mui/material';
 import { Container } from './index.styles';
 import ThunderIcon from '../../assets/icons/thunder_icon.svg';
@@ -25,7 +26,7 @@ export const OptionWithTag = ({ title, price, ratio }: OptionWithTagProps) => {
       {Boolean(ratio) && (
         <Box className="views" display="flex" alignItems="center">
           {ratio}X more views
-          <img src={ThunderIcon} />
+          <img src={ThunderIcon.src} />
         </Box>
       )}
     </Container>

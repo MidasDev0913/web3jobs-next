@@ -1,4 +1,5 @@
 import React from 'react';
+import Image from 'next/image';
 import { Web3Provider } from '@ethersproject/providers';
 import { Box, FilterOptionsState, Typography } from '@mui/material';
 import Moment from 'react-moment';
@@ -196,15 +197,21 @@ export const createPostedJobTableData = (job: TJob): PostedJobTableData => {
     name: (
       <Box display="flex" alignItems="center">
         {logo ? (
-          <img
-            src={logo}
-            style={{
-              width: 48,
-              height: 48,
-              borderRadius: 12,
-              marginRight: 16,
-            }}
-          />
+          // <img
+          //   src={logo}
+          //   style={{
+          //     width: 48,
+          //     height: 48,
+          //     borderRadius: 12,
+          //     marginRight: 16,
+          //   }}
+          // />
+          <div style={{
+            borderRadius: 12,
+            marginRight: 16,
+          }}>
+            <Image src={logo} width={48} height={48}/>
+          </div>
         ) : (
           <Box
             display="flex"
@@ -251,15 +258,21 @@ export const createManageJobTableData = (
           {_i + 1}.
         </Typography>
         {logo ? (
-          <img
-            src={logo}
-            style={{
-              width: 48,
-              height: 48,
-              borderRadius: 12,
-              marginRight: 16,
-            }}
-          />
+          // <img
+          //   src={logo}
+          //   style={{
+          //     width: 48,
+          //     height: 48,
+          //     borderRadius: 12,
+          //     marginRight: 16,
+          //   }}
+          // />
+          <div style={{
+            borderRadius: 12,
+            marginRight: 16,
+          }}>
+            <Image src={logo} width={48} height={48}/>
+          </div>
         ) : (
           <Box
             display="flex"
@@ -311,15 +324,21 @@ export const createInvoiceTableData = (
           {_i + 1}.
         </Typography>
         {logo ? (
-          <img
-            src={logo}
-            style={{
-              width: 48,
-              height: 48,
-              borderRadius: 12,
-              marginRight: 16,
-            }}
-          />
+          // <img
+          //   src={logo}
+          //   style={{
+          //     width: 48,
+          //     height: 48,
+          //     borderRadius: 12,
+          //     marginRight: 16,
+          //   }}
+          // />
+          <div style={{
+            borderRadius: 12,
+            marginRight: 16,
+          }}>
+            <Image src={logo} width={48} height={48}/>
+          </div>
         ) : (
           <Box
             display="flex"

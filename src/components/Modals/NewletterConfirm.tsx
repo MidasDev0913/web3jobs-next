@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import Image from 'next/image';
 import { useSelector } from 'react-redux';
 import {
   Modal,
@@ -310,7 +311,8 @@ const NewsletterConfirm = ({
                       ...params.inputProps,
                       startAdornment: (
                         <InputAdornment position="start">
-                          <img src={SearchIcon} width="17px" height="17px" />
+                          {/* <img src={SearchIcon} width="17px" height="17px" /> */}
+                          <Image src={SearchIcon} width={17} height={17} />
                         </InputAdornment>
                       ),
                       placeholder: 'country',

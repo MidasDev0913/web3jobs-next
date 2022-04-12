@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import Image from 'next/image';
 import { Box, Link, Typography } from '@mui/material';
 
 import { SectionContainer } from './index.styles';
@@ -114,7 +115,7 @@ const TopWeb3CitiesSection = ({
               See {seeMore ? 'less' : 'more'}
             </Typography>
             <img
-              src={ArrowDownIcon}
+              src={ArrowDownIcon.src}
               style={{ transform: `rotate(${seeMore ? '180' : '0'}deg)` }}
             />
           </Box>

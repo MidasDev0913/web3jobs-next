@@ -1,4 +1,5 @@
 import React from 'react';
+import Image from 'next/image';
 import {
   Modal,
   Box,
@@ -97,7 +98,7 @@ const InstallMetamaskModal = ({ open, onClose }: InstallMetamaskModalProps) => {
           </CloseButton>
         </Box>
         <Box className="modal-body">
-          <img className="modal-body-logo" src={MetaMaskSvg} />
+          <img className="modal-body-logo" src={MetaMaskSvg.src} />
           <span className="modal-body-title">Metamask</span>
           <Box
             width="100%"

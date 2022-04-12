@@ -1,4 +1,5 @@
 import React from 'react';
+import Image from 'next/image';
 import { useRouter } from 'next/router';
 import { Stack, Modal, Typography, IconButton, Button } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
@@ -89,7 +90,8 @@ export const FreePostJobSuccess: React.FC<ComponentProps> = ({
           </CloseButton>
         </Stack>
         <Stack alignItems="center" padding={{ xs: "38px 51px 51px", md: "95px 99px 48px" }}>
-          <img src={SuccessSVG} />
+          {/* <img src={SuccessSVG} /> */}
+          <Image src={SuccessSVG} layout='fill'/>
           <Typography
             fontSize={18}
             lineHeight="22px"

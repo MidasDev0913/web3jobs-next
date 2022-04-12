@@ -1,4 +1,5 @@
 import React from 'react';
+import Image from 'next/image';
 import { Box, Stack, Typography } from '@mui/material';
 
 import { ConfirmButton } from '../index.styles';
@@ -21,7 +22,7 @@ export const PaymentStep: React.FC<ComponentProps> = ({
 }) => {
   return (
     <Stack direction="column" alignItems="center">
-      <img src={UpArrowImage} className="payment-step-up-arrow" />
+      <img src={UpArrowImage.src} className="payment-step-up-arrow" />
       <Typography
         fontWeight={500}
         fontSize={{ xs: 15, md: 18 }}
@@ -35,12 +36,20 @@ export const PaymentStep: React.FC<ComponentProps> = ({
         <Box fontSize={{ xs: 10, md: 18 }} ml={2}>
           Proceed to Metamask
         </Box>
-        <img
+        {/* <img
           src={MetamaskIcon}
           width="28px"
           height="27px"
           style={{ marginLeft: '12px' }}
+        /> */}
+        <div style={{ marginLeft: '12px' }}>
+        <Image
+          src={MetamaskIcon}
+          width={28}
+          height={27}
+          
         />
+        </div>
       </ConfirmButton>
       <Typography
         sx={{ textDecoration: 'underline' }}

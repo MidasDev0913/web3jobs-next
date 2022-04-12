@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useRouter } from 'next/router';
+import Image from 'next/image';
 import {
   Box,
   Pagination,
@@ -65,9 +66,9 @@ const HomePage = () => {
   interface paramsType {
     [key: string]: string
   }
-  const params : paramsType = router.query as paramsType;
+  const params: paramsType = router.query as paramsType;
   // const { state } : any = router.asPath;
-  const { state } : any = router.pathname;
+  const { state }: any = router.pathname;
   const theme = useTheme();
   const matchDownMd = useMediaQuery(theme.breakpoints.down('md'));
   const countryNameList = getCountryNames();
@@ -98,9 +99,9 @@ const HomePage = () => {
     const filterBarObj = document.getElementById('home-filter-bar');
     const filterBoxObj = document.getElementById('job-list');
     const filterBoxY = filterBoxObj?.offsetTop;
-    if( typeof window !== undefined) {
+    if (typeof window !== undefined) {
       const scrollY = window.pageYOffset;
-  
+
       if (filterBarObj !== undefined && filterBoxY) {
         if (scrollY > filterBoxY + 680) {
           filterBarObj?.style.setProperty('opacity', '1');
@@ -164,8 +165,8 @@ const HomePage = () => {
             ? 'USA'
             : (filterSettings.searchKey || '').toLowerCase() ===
               'united kingdom'
-            ? 'UK'
-            : filterSettings.searchKey,
+              ? 'UK'
+              : filterSettings.searchKey,
         page: page,
         pageSize: JOB_PAGE_SIZE,
         tags: filterSettings.activeTags || [],
@@ -234,7 +235,7 @@ const HomePage = () => {
   const goToJobBoard = () => {
     const obj = document.getElementById('job-board');
     if (obj?.offsetTop) {
-      if(typeof window !== undefined) {
+      if (typeof window !== undefined) {
 
         window.scrollTo({
           top: (obj?.offsetTop ?? 0) + 560,
@@ -299,10 +300,11 @@ const HomePage = () => {
     return MyComp;
   }, [tags, filterSettings]);
 
+
   return (
     <HomePageWrapper position="relative">
       <LazyLoad once>
-        <img src={WaveBgSVG} className="wave-bg" loading="lazy" />
+        <img src={WaveBgSVG.src} className="wave-bg" loading="lazy" />
       </LazyLoad>
       {/* <LottieAnimation
         url={HomeWaveData}
@@ -394,32 +396,32 @@ const HomePage = () => {
         <Box className="sub-title" id="job-board" mt={{ xs: 7, md: 16 }}>
           <Box>
             <LazyLoad once>
-              <img src={FilterMaskSVG} className="filter-mask" loading="lazy" />
+              <img src={FilterMaskSVG.src} className="filter-mask" loading="lazy" />
             </LazyLoad>
           </Box>
           <h1>
             {filterSettings.searchKey &&
-            !countryNameList.includes(
-              makeWordsUpperCase(filterSettings.searchKey) as string
-            )
+              !countryNameList.includes(
+                makeWordsUpperCase(filterSettings.searchKey) as string
+              )
               ? filterSettings.searchKey
               : (filterSettings.activeTags || []).length
-              ? (filterSettings.activeTags || [])
+                ? (filterSettings.activeTags || [])
                   .map((tag: string) => getCaptialized(tag))
                   .join(' & ')
-              : filterSettings.company
-              ? filterSettings.company
-              : 'All'}{' '}
+                : filterSettings.company
+                  ? filterSettings.company
+                  : 'All'}{' '}
             Jobs
             {filterSettings.location
               ? ` in ${filterSettings.location}`
               : filterSettings.city
-              ? ` in ${filterSettings.city}`
-              : countryNameList.includes(
+                ? ` in ${filterSettings.city}`
+                : countryNameList.includes(
                   makeWordsUpperCase(filterSettings.searchKey) as string
                 )
-              ? ` in ${makeWordsUpperCase(filterSettings.searchKey)}`
-              : ''}
+                  ? ` in ${makeWordsUpperCase(filterSettings.searchKey)}`
+                  : ''}
             {/* <Box ml={3}>
             <NewsletterButton
               onClick={() => setOpenNewsletterConfirmModal(true)}
@@ -500,12 +502,18 @@ const HomePage = () => {
             ) : (
               <Stack alignItems="center">
                 <LazyLoad once>
-                  <img
+                <Image
                     src={EmptyIcon}
                     width={140}
                     height={127}
                     loading="lazy"
                   />
+                  {/* <img
+                    src={EmptyIcon}
+                    width={140}
+                    height={127}
+                    loading="lazy"
+                  /> */}
                 </LazyLoad>
                 <Typography
                   fontSize={{ xs: 14, md: 20 }}

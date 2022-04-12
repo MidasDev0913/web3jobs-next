@@ -135,7 +135,6 @@ const StickyPostCompare = ({
   }, []);
   //modified by midas start
   // const fr = new FileReader();
-  // const fr = window.FileReader;
   // if (logo) fr.readAsDataURL(logo);
   //modified by midas end
 

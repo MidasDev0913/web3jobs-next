@@ -1,4 +1,5 @@
 import React from 'react';
+import Image from 'next/image';
 import Moment from 'react-moment';
 import { Box, Stack, Typography } from '@mui/material';
 import { THistory } from '../../interfaces';
@@ -32,12 +33,19 @@ export const JobHistoryItem = ({
         <Typography width="24px">{index}.</Typography>
         <Box display="flex" alignItems="center" justifyContent="center">
           {history.job?.logo ? (
-            <img
+            // <img
+            //   src={history.job?.logo}
+            //   width={48}
+            //   height={48}
+            //   style={{ borderRadius: '48px' }}
+            // />
+            <div style={{ borderRadius: '48px' }}>
+              <Image
               src={history.job?.logo}
               width={48}
               height={48}
-              style={{ borderRadius: '48px' }}
             />
+            </div>
           ) : (
             <Box
               display="flex"

@@ -1,4 +1,5 @@
 import React, { useState, useEffect, SyntheticEvent } from 'react';
+import Image from 'next/image';
 import { useSelector } from 'react-redux';
 import {
   Box,
@@ -201,7 +202,8 @@ const FilterBar: React.FC<ComponentProps> = ({
                     >
                       <CloseIcon fontSize="inherit" />
                     </Box>
-                    <img src={SearchIcon} width="17px" height="17px" />
+                    {/* <img src={SearchIcon} width="17px" height="17px" /> */}
+                    <Image src={SearchIcon} width={17} height={17} />
                   </InputAdornment>
                 ),
                 placeholder: 'Search',

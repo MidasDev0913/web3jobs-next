@@ -1,4 +1,5 @@
 import React from 'react';
+import Image from 'next/image';
 import { Autocomplete, TextField, InputAdornment } from '@mui/material';
 
 import SearchIcon from '../../assets/icons/search_icon.svg';
@@ -36,7 +37,8 @@ export const CountryAutoComplete = ({ country, onChange, ...props }: Props) => {
             ...params.inputProps,
             startAdornment: (
               <InputAdornment position="start">
-                <img src={SearchIcon} width="17px" height="17px" />
+                  <Image src={SearchIcon} width={17} height={17}/>
+                {/* <img src={SearchIcon} width="17px" height="17px" /> */}
               </InputAdornment>
             ),
             placeholder: 'country',

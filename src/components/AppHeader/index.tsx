@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import Image from 'next/image';
 import {
   styled,
   Box,
@@ -94,15 +95,10 @@ const menus = [
     ],
   },
 ];
-
 const Header = () => {
-  let pathName : any;
-  if( typeof window !== undefined) {
-
-    pathName = window.location.pathname;
-  }
   const dispatch = useDispatch();
   const router = useRouter();
+  const pathName = router.pathname;
   const theme = useTheme();
   const matchDownMd = useMediaQuery(theme.breakpoints.down('md'));
   const { isMobile } = useDetectMobile();
@@ -155,10 +151,9 @@ const Header = () => {
     if (isLoggedIn && account) {
       axios
         .get(
-          `${process.env.REACT_APP_API_URL}/job/${
-            userInfo.type === 0
-              ? 'getPostedJobsByCreator'
-              : 'getFavoriteJobsByUser'
+          `${process.env.REACT_APP_API_URL}/job/${userInfo.type === 0
+            ? 'getPostedJobsByCreator'
+            : 'getFavoriteJobsByUser'
           }`,
           {
             params: {
@@ -184,17 +179,14 @@ const Header = () => {
 
   const handleConnectWallet = async () => {
     if (isMobile) {
-      if(typeof window !== undefined) {
-        
+      if (typeof window !== undefined) {
         window.open(
-          `dapp://${
-            process.env.REACT_APP_ENV === 'prod' ? '' : 'staging.'
+          `dapp://${process.env.REACT_APP_ENV === 'prod' ? '' : 'staging.'
           }web3.jobs`
         );
       }
     } else {
-      if(typeof window !== undefined && !window.ethereum) {
-
+      if (typeof window !== undefined && !window.ethereum) {
         setOpenInstallMetamaskPopup(true);
         return;
       }
@@ -241,11 +233,9 @@ const Header = () => {
 
   const handleCloseAccountInfoPopover = () => {
     setOpenAccountInfoPopup(false);
-  }; 
-  let url: any;
-  if (typeof window !== undefined) {
-     url = window.location.pathname;
-  }
+  };
+  
+  const url = router.pathname;
 
   return (
     <>
@@ -254,7 +244,14 @@ const Header = () => {
       )}
       <HeaderContainer p={{ xs: '17px 25px', md: '38px 115px 0' }}>
         <Box display="flex">
-          <LogoContainer to="/" state={{ goToJobs: url.includes('/job/') }}>
+          <LogoContainer
+            onClick={() => router.push(
+              {
+                pathname: '/',
+                query: { goToJobs: url.includes('/job/') }
+              }
+            )}
+          >
             {/* <img src={Logo} /> */}
             <span>Web3 Jobs</span>
           </LogoContainer>
@@ -294,7 +291,8 @@ const Header = () => {
                   size="medium"
                   sx={{ backgroundColor: 'rgba(158, 158, 158, 0.25)' }}
                 >
-                  <img src={MetamaskIcon} width="28px" height="27px" />
+                  <Image src={MetamaskIcon} width={28} height={27} />
+                  {/* <img src={MetamaskIcon} width="28px" height="27px" /> */}
                 </IconButton>
               </Box>
             ) : (
@@ -325,9 +323,10 @@ const Header = () => {
                 }
               >
                 <WalletAddressBox>
-                  <img src={MetamaskIcon} />
+                  <img src={MetamaskIcon.src} />
                   {getAbbrAddress(userInfo.address, 5, 4)}
-                  <img src={ArrowDownIcon} width="13px" height="7px" />
+                  <Image src={ArrowDownIcon} width={13} height={7} />
+                  {/* <img src={ArrowDownIcon} width="13px" height="7px" /> */}
                 </WalletAddressBox>
               </HtmlTooltip>
             </>

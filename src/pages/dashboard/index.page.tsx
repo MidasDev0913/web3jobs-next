@@ -437,7 +437,15 @@ const DashboardPage = () => {
               loading={loadingTableData}
               columns={columns}
               rows={rows}
-              onClickRow={(id) => router.push(`/detail-job/${id}`)}
+              onClickRow={
+                (id) => 
+                router.push({
+                  pathname: `/detail-job`,
+                  query: {
+                    id: id, // pass the id 
+                  },
+                })
+              }
             />
           </DataTableContainer>
         </TableWrapper>

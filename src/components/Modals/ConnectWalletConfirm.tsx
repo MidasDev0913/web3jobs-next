@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import Image from 'next/image';
 import { Modal, Box, styled, Button, IconButton } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 import MetaMaskSvg from '../../assets/images/metamask.svg';
@@ -93,13 +94,13 @@ const ConnectWalletModal = ({
           </CloseButton>
         </Box>
         <Box className="modal-body">
-          <img className="modal-body-logo" src={MetaMaskSvg} />
+          <img className="modal-body-logo" src={MetaMaskSvg.src} />
           <span className="modal-body-title">Metamask</span>
           <Box className="modal-body-text">
             You need to connect to wallet to use this feature.{' '}
           </Box>
           <ConfirmButton onClick={onConfirm}>
-            <img src={ConnectWalletIcon} />
+            <img src={ConnectWalletIcon.src} />
             <Box ml={2}>Connect Wallet</Box>
           </ConfirmButton>
         </Box>

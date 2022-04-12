@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import Image from 'next/image';
 import { Modal, Box, styled, Button, IconButton } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 import SuccessSVG from '../../assets/images/success_circle.svg';
@@ -88,7 +89,7 @@ const JoinEmployerConfirmModal = ({
           </CloseButton>
         </Box>
         <Box className="modal-body">
-          <img src={SuccessSVG} />
+          <img src={SuccessSVG.src} />
           <Box className="modal-body-text">
             You joined as an applicant. Search interesting jobs via filters and
             tags, save your favorite jobs and apply on them directly per email.

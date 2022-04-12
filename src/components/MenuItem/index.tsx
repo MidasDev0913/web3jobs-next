@@ -1,4 +1,6 @@
 import React from 'react';
+import Image from 'next/image';
+import { useRouter } from 'next/router';
 import { Container, MenuItem, SubMenuItem, MenuPopper } from './index.styles';
 import { Menu, Grow, Popper, ClickAwayListener, Paper } from '@mui/material';
 
@@ -25,11 +27,8 @@ export const AppMenuItem = ({
   setOpenSubmenu,
 }: TAppMenuItem) => {
   const { link, text, subMenus } = item;
-  let url: any;
-  if (typeof window !== undefined) {
-
-    url = window.location.pathname;
-  }
+  const router = useRouter();
+  const url = router.pathname;
   const anchorRef = React.useRef<HTMLAnchorElement>(null);
 
   const handleToggle = () => {
@@ -74,12 +73,19 @@ export const AppMenuItem = ({
       >
         <span onMouseEnter={() => handleToggle()}>{text}</span>
         {subMenus && subMenus.length && (
-          <img
+          // <img
+          //   src={openSubmenu ? ArrowUpIcon : ArrowDownIcon}
+          //   width="13px"
+          //   height="7px"
+          //   style={{ marginLeft: 8 }}
+          // />
+          <div style={{ marginLeft: 8 }}>
+            <Image
             src={openSubmenu ? ArrowUpIcon : ArrowDownIcon}
-            width="13px"
-            height="7px"
-            style={{ marginLeft: 8 }}
+            width={13}
+            height={17}
           />
+          </div>
         )}
       </MenuItem>
       <MenuPopper

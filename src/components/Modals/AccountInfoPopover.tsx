@@ -1,4 +1,5 @@
 import React from 'react';
+import Image from 'next/image';
 import { useRouter } from 'next/router';
 import { Box, styled, IconButton, Stack, Typography } from '@mui/material';
 
@@ -52,15 +53,26 @@ const InfoItem = ({ img, text, onClick, hiddenIcon, ...props }: any) => (
   >
     <Box display="flex" alignItems="center">
       {img ? (
-        <img
+        // <img
+        //   src={img}
+        //   width={25}
+        //   height={25}
+        //   style={{
+        //     borderRadius: 25,
+        //     border: '1px solid #B50000',
+        //   }}
+        // />
+        <div style={{
+          borderRadius: 25,
+          border: '1px solid #B50000',
+        }}>
+          <Image
           src={img}
           width={25}
           height={25}
-          style={{
-            borderRadius: 25,
-            border: '1px solid #B50000',
-          }}
+          
         />
+        </div>
       ) : (
         <Box
           display="flex"
@@ -151,7 +163,12 @@ const AccountInfoPopover = ({
               mt={2.75}
               key={job.id}
               onClick={() => {
-                router.push(`/job/${job.id}`);
+                router.push({
+                  pathname: `/job`,
+                  query: {
+                    id: job.id, // pass the id 
+                  },
+                });
                 onClose();
               }}
             />

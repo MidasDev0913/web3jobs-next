@@ -1,4 +1,5 @@
 import React from 'react';
+import Image from 'next/image';
 import { useRouter } from 'next/router';
 import { Stack, Modal, Typography, IconButton, Button } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
@@ -75,7 +76,7 @@ export const EditJobSuccess: React.FC<ComponentProps> = ({
           </CloseButton>
         </Stack>
         <Stack alignItems="center" padding="95px 99px 48px">
-          <img src={SuccessSVG} />
+          <img src={SuccessSVG.src} />
           <Typography
             fontSize={18}
             lineHeight="22px"
@@ -90,7 +91,12 @@ export const EditJobSuccess: React.FC<ComponentProps> = ({
           <ConfirmButton
             onClick={() => {
               onClose();
-              router.push(`/detail-job/${jobId}`);
+              router.push({
+                pathname: `/detail-job`,
+                query: {
+                  id: jobId, // pass the id 
+                },
+              });
             }}
           >
             View Job

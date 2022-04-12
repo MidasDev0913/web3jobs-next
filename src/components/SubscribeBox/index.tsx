@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import Image from 'next/image';
 import {
   Box,
   Autocomplete,
@@ -139,7 +140,8 @@ const SubscribeBox = ({ onSubscribe }: SubscribeBoxProps) => {
                     ...params.inputProps,
                     startAdornment: (
                       <InputAdornment position="start">
-                        <img src={SearchIcon} width="17px" height="17px" />
+                        {/* <img src={SearchIcon} width="17px" height="17px" /> */}
+                        <Image src={SearchIcon} width={17} height={17} />
                       </InputAdornment>
                     ),
                     placeholder: 'country',
@@ -167,7 +169,7 @@ const SubscribeBox = ({ onSubscribe }: SubscribeBoxProps) => {
           newsletter
         </span>
       </Box>
-      <img src={NewsletterPhonesSVG} className="phones" />
+      <img src={NewsletterPhonesSVG.src} className="phones" />
     </SubscribeContainer>
   );
 };

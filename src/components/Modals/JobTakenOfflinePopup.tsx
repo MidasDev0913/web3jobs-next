@@ -1,4 +1,5 @@
 import React from 'react';
+import Image from 'next/image';
 import { Modal, Box, styled, Button, IconButton } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 import WarningSVG from '../../assets/images/warning_circle.svg';
@@ -98,7 +99,7 @@ const JobTakenOfflinePopup = ({ open, onClose }: JobTakenOfflinePopupProps) => {
           </CloseButton>
         </Box>
         <Box className="modal-body">
-          <img className="modal-body-logo" src={WarningSVG} />
+          <img className="modal-body-logo" src={WarningSVG.src} />
           <Box className="modal-body-text">
             This job cannot be taken online because it has been taken offline by
             our moderators. You can appeal this decision by contacting support.

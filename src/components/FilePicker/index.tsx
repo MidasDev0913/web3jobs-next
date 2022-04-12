@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import Image from 'next/image';
 import { DropzoneArea } from 'react-mui-dropzone';
 import {
   Box,
@@ -80,7 +81,7 @@ export const FilePicker = ({
               </Box>
             )
           }
-          Icon={() => <img src={FileUploadIcon} />}
+          Icon={() => <img src={FileUploadIcon.src} />}
           onChange={handleChangeFile}
         />
         {/* <ProgressBar padding="0 145px 40px">
@@ -110,14 +111,15 @@ export const FilePicker = ({
               alignItems="center"
             >
               <span>
-                <img src={PictureIcon} style={{ marginRight: 8 }} />
+                <img src={PictureIcon.src} style={{ marginRight: 8 }} />
                 {file?.name}
               </span>
               <Box onClick={onDeleteFile}>
                 <img
-                  src={RubbishIcon}
+                  src={RubbishIcon.src}
                   style={{ marginRight: 8, cursor: 'pointer' }}
                 />
+                
               </Box>
             </Box>
           </PreviewBox>

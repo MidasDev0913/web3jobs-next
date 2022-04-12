@@ -1,4 +1,5 @@
 import React, { useState, useMemo } from 'react';
+import Image from 'next/image';
 import { Box, Stack, IconButton } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 
@@ -139,7 +140,8 @@ const FilterBox = ({
             >
               <MoneyIcon />
               <span>salary</span>
-              <img src={ArrowDownIcon} width="13px" height="7px" />
+              {/* <img src={ArrowDownIcon} width="13px" height="7px" /> */}
+              <Image src={ArrowDownIcon} width={13} height={7} />
             </SettingButton>
             <SettingButton
               active={Boolean(anchorLocationEl)}
@@ -148,7 +150,8 @@ const FilterBox = ({
             >
               <LocationIcon />
               <span>location</span>
-              <img src={ArrowDownIcon} width="13px" height="7px" />
+              {/* <img src={ArrowDownIcon} width="13px" height="7px" /> */}
+              <Image src={ArrowDownIcon} width={13} height={7} />
             </SettingButton>
             <SettingButton
               onClick={handleClickFav}
@@ -165,7 +168,7 @@ const FilterBox = ({
             >
               <ClockIcon />
               <span style={{ whiteSpace: 'nowrap' }}>Type</span>
-              <img src={ArrowDownIcon} />
+              <img src={ArrowDownIcon.src} />
             </SettingButton>
             <SalaryPopover
               value={filterSettings.salary}

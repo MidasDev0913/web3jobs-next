@@ -1,5 +1,5 @@
 import { ThemeOptions } from '@mui/material';
-// import { Border } from './pages/applyJob/index.styles';
+import { Border } from './job/index.styles';
 
 export const customizedTheme: ThemeOptions = {
   components: {

@@ -10,6 +10,7 @@ import {
   InputAdornment,
 } from '@mui/material';
 import { useRouter } from 'next/router';
+import Image from 'next/image';
 import { useDispatch } from 'react-redux';
 import { useWeb3React } from '@web3-react/core';
 import CloseIcon from '@mui/icons-material/Close';
@@ -174,7 +175,8 @@ const Header: React.FC<ComponentProps> = ({
                 InputProps={{
                   startAdornment: (
                     <InputAdornment position="start">
-                      <img src={SearchIcon} width="15px" height="17px" />
+                        <Image src={SearchIcon} width={15} height={17}/>
+                      {/* <img src={SearchIcon} width="15px" height="17px" /> */}
                     </InputAdornment>
                   ),
                   endAdornment: (
@@ -202,7 +204,8 @@ const Header: React.FC<ComponentProps> = ({
             </SearchBarContainer>
           )}
           <WalletAddressBox>
-            <img src={MetamaskIcon} width="28px" height="27px" />
+                <Image src={MetamaskIcon} width = {28} height = {27}/>
+            {/* <img src={MetamaskIcon} width="28px" height="27px" /> */}
             {getAbbrAddress(account || '', 5, 4)}
           </WalletAddressBox>
         </Box>

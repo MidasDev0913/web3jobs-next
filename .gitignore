@@ -2,11 +2,11 @@
 
 # dependencies
 /node_modules
-/.next
 /.pnp
 .pnp.js
 .firebase
 .firebaserc
+/.next
 # testing
 /coverage
 

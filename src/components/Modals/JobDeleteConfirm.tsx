@@ -1,4 +1,5 @@
 import React from 'react';
+import Image from 'next/image';
 import { Modal, Box, styled, Button, IconButton } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 import WarningSVG from '../../assets/images/warning_circle.svg';
@@ -111,7 +112,10 @@ const JobDeleteConfirmModal = ({
           </CloseButton>
         </Box>
         <Box className="modal-body">
-          <img className="modal-body-logo" src={WarningSVG} />
+          {/* <img className="modal-body-logo" src={WarningSVG} /> */}
+          <div className="modal-body-logo" >
+            <Image src={WarningSVG} layout='fill' />
+          </div>
           <span className="modal-body-title">Are you sure?</span>
           <Box className="modal-body-text">
             This post will be deleted from your jobs.

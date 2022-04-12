@@ -1,4 +1,6 @@
 import React from 'react';
+import Image from 'next/image';
+import { useRouter } from 'next/router';
 import { Box, Tooltip, Typography, Stack } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import { TooltipProps, tooltipClasses } from '@mui/material/Tooltip';
@@ -71,6 +73,7 @@ const JobItem = ({
   disabled,
   onClickFav,
 }: JobItemProps) => {
+  const router = useRouter();
   const mainColor =
     job.highlightColor === 'custom'
       ? getFontColorFromBG(job.highlightCustomColor ?? 'rgb(80, 0, 0)')
@@ -84,12 +87,19 @@ const JobItem = ({
               job.highlightColor === 'standard'
                 ? '#131322'
                 : job.highlightColor === 'custom'
-                ? job.highlightCustomColor || '#500000'
-                : '#05050D',
+                  ? job.highlightCustomColor || '#500000'
+                  : '#05050D',
             pointerEvents: disabled ? 'none' : 'auto',
           }}
           color={mainColor}
-          href={`/job/${job.id}`}
+          onClick={() => {
+            router.push({
+              pathname: `/job`,
+              query: {
+                id: job.id, // pass the id 
+              },
+            })
+          }}
         >
           {viewed && <Box className="is-viewed">Viewed</Box>}
           <Stack
@@ -100,13 +110,14 @@ const JobItem = ({
             {job.logo ? (
               <LazyLoad height={48}>
                 <img
-                  src={job.logo}
+                  src={job.logo.src}
                   className="logo"
                   style={{
                     objectFit: 'cover',
                     border: '1px solid #fff',
                   }}
                 />
+
               </LazyLoad>
             ) : (
               <Box className="logo-text">{job.company_name?.charAt(0)}</Box>
@@ -190,7 +201,17 @@ const JobItem = ({
               {dayjs(job.posted_at).fromNow(true).replace(' ', '')}
             </Typography>
           </Box>
-          <ApplyButton href={`/job/${job.id}`}>Apply</ApplyButton>
+          {/* <ApplyButton href={`/job/${job.id}`}>Apply</ApplyButton> */}
+          <ApplyButton
+            onClick={() => {
+              router.push({
+                pathname: `/job`,
+                query: {
+                  id: job.id, // pass the id 
+                },
+              })
+            }}>Apply
+          </ApplyButton>
         </Container>
         <HtmlTooltip
           arrow
@@ -226,8 +247,8 @@ const JobItem = ({
               job.highlightColor === 'standard'
                 ? '#131322'
                 : job.highlightColor === 'custom'
-                ? job.highlightCustomColor || '#500000'
-                : '#05050D',
+                  ? job.highlightCustomColor || '#500000'
+                  : '#05050D',
             pointerEvents: disabled ? 'none' : 'auto',
           }}
           color={mainColor}
@@ -251,17 +272,29 @@ const JobItem = ({
             >
               <Stack direction="row" alignItems="center">
                 {job.logo ? (
-                  <img
-                    src={job.logo}
-                    className="logo"
+                  // <img
+                  //   src={job.logo}
+                  //   className="logo"
+                  //   style={{
+                  //     objectFit: 'cover',
+                  //     border: '1px solid #fff',
+                  //     width: '40px',
+                  //     maxWidth: '40px',
+                  //     height: '48px',
+                  //   }}
+                  // />
+                  <div className="logo"
                     style={{
                       objectFit: 'cover',
                       border: '1px solid #fff',
-                      width: '40px',
                       maxWidth: '40px',
-                      height: '48px',
-                    }}
-                  />
+                    }}>
+                    <Image
+                      src={job.logo}
+                      width={40}
+                      height={48}
+                    />
+                  </div>
                 ) : (
                   <Box
                     className="logo-text"

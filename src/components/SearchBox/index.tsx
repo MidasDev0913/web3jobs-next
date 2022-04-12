@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import Image from 'next/image';
 import { Box, TextField, InputAdornment, Autocomplete } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 
@@ -57,7 +58,8 @@ const SearchBox = ({ onSearch, value }: SearchBoxProps) => {
               ...params.InputProps,
               startAdornment: (
                 <InputAdornment position="start">
-                  <img src={SearchIcon} width="15px" height="17px" />
+                  {/* <img src={SearchIcon} width="15px" height="17px" /> */}
+                  <Image src={SearchIcon} width={15} height={17} />
                 </InputAdornment>
               ),
               endAdornment: (

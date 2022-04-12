@@ -6,70 +6,115 @@
 * styles for global and theme
 ***
 */
-@import url("https://fonts.googleapis.com/css?family=Montserrat:400,600,700&amp;subset=latin");
-@import url("https://fonts.googleapis.com/css?family=Raleway:400,600,700&amp;subset=latin");
-@import url("https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&amp;display=swap");
-
-
-@import url("https://fonts.googleapis.com/css?family=Poppins:400,300,500,600|Nunito+Sans:400");
 @font-face {
-  font-family: "AvenirNext-Medium";
-  font-style: normal;
-  font-weight: 500;
-  src: url("/fonts/26301410506.ttf") format("truetype");
-}
-@font-face {
-  font-family: "AvenirNext-Bold";
-  font-style: normal;
-  font-weight: 700;
-  src: url("/fonts/AvenirNextLTPro-Bold.otf") format("opentype");
-}
-@font-face {
-  font-family: "AvenirNext-DemiBold";
-  font-style: normal;
-  font-weight: 700;
-  src: url("/fonts/AvenirNextLTPro-Bold.otf") format("opentype");
-}
-@font-face {
-  font-family: "Arial-Regular";
+  font-family: 'Inter';
   font-style: normal;
   font-weight: 400;
-  src: url("/fonts/Arial.ttf") format("truetype");
+  font-display: swap;
+  src: local('Inter'),
+    url(../assets/fonts/inter/Inter-Regular.ttf) format('truetype');
+}
+@font-face {
+  font-family: 'Inter';
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+  src: local('Inter'),
+    url(../assets/fonts/inter/Inter-Medium.ttf) format('truetype');
+}
+@font-face {
+  font-family: 'Inter';
+  font-style: normal;
+  font-weight: 300;
+  font-display: swap;
+  src: local('Inter'),
+    url(../assets/fonts/inter/Inter-Light.ttf) format('truetype');
+}
+@font-face {
+  font-family: 'Inter';
+  font-style: bold;
+  font-weight: 700;
+  font-display: swap;
+  src: local('Inter Bold'),
+    url(../assets/fonts/inter/Inter-Bold.ttf) format('truetype');
+}
+@font-face {
+  font-family: 'Inter';
+  font-style: bold;
+  font-weight: 800;
+  font-display: swap;
+  src: local('Inter Bold'),
+    url(../assets/fonts/inter/Inter-ExtraBold.ttf) format('truetype');
+}
+@font-face {
+  font-family: 'ArcadeClassic';
+  font-style: normal;
+  font-display: swap;
+  font-weight: 400;
+  src: local('ArcadeClassic'),
+    url(../assets/fonts/Press_Start_2P/PressStart2P-Regular.ttf)
+      format('truetype');
+}
+@font-face {
+  font-family: 'Space Mono';
+  font-style: normal;
+  font-display: swap;
+  font-weight: 400;
+  src: local('Space Mono'),
+    url(../assets/fonts/space_mono/SpaceMono-Regular.ttf) format('truetype');
+}
+@font-face {
+  font-family: 'Space Mono';
+  font-style: bold;
+  font-display: swap;
+  font-weight: 500;
+  src: local('Space Mono Bold'),
+    url(../assets/fonts/space_mono/SpaceMono-Bold.ttf) format('truetype');
 }
 
-html {
-  line-height: 1.5;
-  -webkit-text-size-adjust: 100%;
-  -moz-tab-size: 4;
-  -o-tab-size: 4;
-  tab-size: 4;
-  font-family: Montserrat, -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Helvetica Neue, Arial, sans-serif, Apple Color Emoji, Segoe UI Emoji, Segoe UI Symbol, Noto Color Emoji;
+body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+    sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  background-color: #05050d;
 }
 
-.text-green-600 {
-  --tw-text-opacity: 1;
-  color: rgb(221 7 78/var(--tw-text-opacity))
+body * {
+  color: #fff;
 }
 
-.bg-green-600 {
-  --tw-bg-opacity: 1;
-  background-color: rgb(221 7 78/var(--tw-bg-opacity));
+code {
+  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
+    monospace;
 }
 
-.bg-green-800 {
-  --tw-bg-opacity: 1;
-  background-color: rgb(221 7 78/var(--tw-bg-opacity));
+.cursor__pointer {
+  cursor: pointer;
 }
 
-.text-green-500 {
-  --tw-text-opacity: 1;
-  color: rgb(233 4 102/var(--tw-text-opacity));
+::-webkit-scrollbar {
+  -webkit-appearance: none;
+  width: 1px;
+  height: 4px;
+}
+::-webkit-scrollbar-button {
+  display: none;
+}
+::-webkit-scrollbar-thumb {
+  height: 100px;
+  background: #717278;
+  border-radius: 30px;
 }
 
-.font-heading {
-  font-family: Raleway, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Helvetica Neue, Arial, Noto Sans, sans-serif, Apple Color Emoji, Segoe UI Emoji, Segoe UI Symbol, Noto Color Emoji;
-}
-
-.h-128 {
-  height: 32rem;
+* {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  outline: 0;
+  font-size: 100%;
+  vertical-align: baseline;
+  background: transparent;
 }

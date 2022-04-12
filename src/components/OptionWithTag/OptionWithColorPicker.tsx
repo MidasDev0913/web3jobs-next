@@ -1,4 +1,5 @@
 import React from 'react';
+import Image from 'next/image';
 import { Box, Typography } from '@mui/material';
 
 import { Container } from './index.styles';
@@ -46,7 +47,7 @@ export const OptionWithColorPicker = ({
           alignItems="center"
         >
           {ratio}X more views
-          <img src={ThunderIcon} />
+          <img src={ThunderIcon.src} />
         </Box>
       )}
     </Container>
