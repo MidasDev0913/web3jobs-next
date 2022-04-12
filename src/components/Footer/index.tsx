@@ -1,12 +1,13 @@
 import React from 'react';
 import Image from 'next/image';
-import { Typography, useTheme, useMediaQuery, Box } from '@mui/material';
+import { Typography, useTheme, useMediaQuery, Box, Link } from '@mui/material';
 
 import { FooterContainer, UpButton } from './index.styles';
 import UpArrowIcon from '../SVGIcons/UpArrowWhite';
 import Logo from '../../assets/web3jobs_logo.svg';
 import MobileLogo from '../../assets/web3jobs_logo_mobile.svg';
 import TwitterIcon from '../../assets/icons/twitter.svg';
+import SupportIcon from '../../assets/icons/support.svg';
 
 const Footer = () => {
   const theme = useTheme();
@@ -31,23 +32,44 @@ const Footer = () => {
           color="#C4C4C4"
           fontSize={{ xs: 13, md: 15 }}
           lineHeight={1}
+          ml={1}
         >
           @yourweb3jobs
         </Typography>
       </Box>
-      <UpButton
-        sx={{ display: { xs: 'none', md: 'block' } }}
-        onClick={() => {
-          if (typeof window !== undefined) {
-            window.scrollTo({
-              top: 0,
-              behavior: 'smooth',
-            });
-          }
-        }}
-      >
-        <UpArrowIcon />
-      </UpButton>
+      <Box display="flex" alignItems="center">
+        <Box display="flex" alignItems="center" mt={{ xs: 1.5, md: 0 }}>
+          <Image
+            src={SupportIcon}
+            width={matchDownMd ? 15 : 25}
+            height={matchDownMd ? 14 : 22}
+          />
+          <Link
+            color="#fff"
+            fontSize={{ xs: 12, md: 15 }}
+            lineHeight={1}
+            fontWeight={300}
+            ml={1}
+            sx={{ textDecoration: 'none' }}
+            href="mailto:support@web3.jobs"
+          >
+            support@web3.jobs
+          </Link>
+        </Box>
+        <UpButton
+          sx={{ display: { xs: 'none', md: 'block' }, marginLeft: '21px' }}
+          onClick={() => {
+            if (typeof window !== undefined) {
+              window.scrollTo({
+                top: 0,
+                behavior: 'smooth',
+              });
+            }
+          }}
+        >
+          <UpArrowIcon />
+        </UpButton>
+      </Box>
     </FooterContainer>
   );
 };
