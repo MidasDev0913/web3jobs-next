@@ -112,9 +112,8 @@ const JobSwitchConfirmModal = ({
           </CloseButton>
         </Box>
         <Box className="modal-body">
-          {/* <img className="modal-body-logo" src={WarningSVG} /> */}
           <div className="modal-body-logo">
-          <Image src={WarningSVG} layout='fill'/>
+            <Image src={WarningSVG} layout="fill" />
           </div>
           <span className="modal-body-title">Are you sure?</span>
           <Box className="modal-body-text">

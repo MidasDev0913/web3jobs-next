@@ -12,7 +12,6 @@ import {
   Drawer,
 } from '@mui/material';
 import { useWeb3React } from '@web3-react/core';
-import LazyLoad from 'react-lazyload';
 import axios from 'axios';
 
 import { HomePageWrapper } from './index.styles';
@@ -24,16 +23,8 @@ import {
 } from '../../utils/helper';
 import { JOB_PAGE_SIZE, TNewsLetterDuration } from '../../utils/constants';
 import { RootState } from '../../redux/store';
-import {
-  getTags,
-  setFilterSettings,
-  setSearchSuggestions,
-} from '../../redux/reducers/commonReducer';
-import {
-  getJobs,
-  setFavorite,
-  getJobCountOfCities,
-} from '../../redux/reducers/jobReducer';
+import { setSearchSuggestions } from '../../redux/reducers/commonReducer';
+import { setFavorite } from '../../redux/reducers/jobReducer';
 import SearchBox from '../../components/SearchBox';
 import FilterTag from '../../components/FilterTag';
 import JobItem from '../../components/JobItem';
@@ -58,37 +49,49 @@ import EmptyIcon from '../../assets/images/home-empty-icon.svg';
 import { login } from '../../redux/reducers/authReducer';
 import { FilterButton } from '../../components/FilterBox/index.styles';
 import { connect } from '../../utils/web3';
+import { TJob, TJobCountyOfCity } from '../../interfaces';
 
-const HomePage = () => {
+type ComponentProps = {
+  tags: string[];
+  jobsInCities: TJobCountyOfCity[];
+  jobData: any;
+};
+
+const HomePage: React.FC<ComponentProps> = ({
+  tags,
+  jobsInCities,
+  jobData,
+}) => {
   const dispatch = useDispatch();
   const router = useRouter();
-  // const [params] : any = router.query;
-  interface paramsType {
-    [key: string]: string
-  }
-  const params: paramsType = router.query as paramsType;
-  // const { state } : any = router.asPath;
-  const { state }: any = router.pathname;
+  const {
+    search: searchKey,
+    company,
+    tags: tagsInQuery,
+    city,
+    page,
+    isRemote,
+    location,
+    salary,
+    position,
+    goToJobs,
+  } = router.query;
+  const currentPage = Number(page || '0');
+  const activeTags =
+    typeof tagsInQuery === 'string'
+      ? [tagsInQuery]
+      : Array.isArray(tagsInQuery)
+      ? tagsInQuery
+      : [];
+
   const theme = useTheme();
   const matchDownMd = useMediaQuery(theme.breakpoints.down('md'));
   const countryNameList = getCountryNames();
-  // const company = params.get('company');
-  const company = params.company;
-  const { goToJobs }: { goToJobs: boolean } = (state as any) ?? {
-    goToJobs: false,
-  };
   const { account, activate } = useWeb3React();
-  const { tags, filterSettings } = useSelector(
-    (state: RootState) => state.common
-  );
   const { userInfo } = useSelector((state: RootState) => state.auth);
   const { viewedJobs, isLoggedIn } = useSelector(
     (state: RootState) => state.auth
   );
-  const { jobs, jobData, fetchLoading, jobCountOfCities } = useSelector(
-    (state: RootState) => state.job
-  );
-  const [page, setPage] = useState<number>(0);
   const [filterSidebarAnchor, setFilterSidebarAnchor] = useState<any>(null);
   const [openNewsletterConfirmModal, setOpenNewsletterConfirmModal] =
     useState<boolean>(false);
@@ -111,7 +114,6 @@ const HomePage = () => {
           filterBarObj?.style.setProperty('top', '-100px');
         }
       }
-
     }
   };
 
@@ -124,15 +126,38 @@ const HomePage = () => {
   }, []);
 
   useEffect(() => {
-    if (goToJobs) {
+    if (goToJobs === 'true') {
       goToJobBoard();
     }
   }, [goToJobs]);
 
   useEffect(() => {
-    dispatch(getTags());
-    dispatch(getJobCountOfCities());
+    const newQuery: any = {
+      ...router.query,
+      account: userInfo.address,
+    };
 
+    for (const key in newQuery) {
+      if (newQuery[key] === undefined) {
+        delete newQuery[key];
+      }
+    }
+
+    router.push(
+      {
+        pathname: '/',
+        query: {
+          ...newQuery,
+        },
+      },
+      undefined,
+      {
+        scroll: false,
+      }
+    );
+  }, [userInfo]);
+
+  useEffect(() => {
     axios
       .get(`${process.env.REACT_APP_API_URL}/getSearchSuggestions`)
       .then(({ data }) => {
@@ -146,39 +171,6 @@ const HomePage = () => {
       });
   }, [dispatch]);
 
-  useEffect(() => {
-    if (company || (!company && filterSettings.company)) {
-      goToJobBoard();
-      dispatch(
-        setFilterSettings({
-          company,
-        })
-      );
-    }
-  }, [company]);
-
-  useEffect(() => {
-    dispatch(
-      getJobs({
-        search:
-          (filterSettings.searchKey || '').toLowerCase() === 'united states'
-            ? 'USA'
-            : (filterSettings.searchKey || '').toLowerCase() ===
-              'united kingdom'
-              ? 'UK'
-              : filterSettings.searchKey,
-        page: page,
-        pageSize: JOB_PAGE_SIZE,
-        tags: filterSettings.activeTags || [],
-        userId: account?.toLowerCase(),
-        ...filterSettings,
-        position:
-          filterSettings.position === 'all' ? '' : filterSettings.position,
-        salary: (filterSettings.salary || 0) * 1000,
-      })
-    );
-  }, [filterSettings, page]);
-
   const handleConnectWallet = (onClose?: () => void) => {
     connect(activate)
       .then(() => {
@@ -190,24 +182,32 @@ const HomePage = () => {
   };
 
   const handleClickTopCity = (city: string) => {
-    goToJobBoard();
-    setPage(0);
-    dispatch(
-      setFilterSettings({
-        city,
-      })
+    router.push(
+      {
+        pathname: '/',
+        query: {
+          ...router.query,
+          page: 0,
+          city,
+        },
+      },
+      undefined,
+      {
+        scroll: false,
+      }
     );
   };
 
   const handleClickTag = (tag: string) => {
-    const tags = [...(filterSettings.activeTags || [])];
-    setPage(0);
-    dispatch(
-      setFilterSettings({
-        ...filterSettings,
-        activeTags: insertItemToArray(tags, tag),
-      })
-    );
+    const newTags = insertItemToArray(activeTags, tag);
+    router.push({
+      pathname: '/',
+      query: {
+        ...router.query,
+        page: 0,
+        tags: newTags,
+      },
+    });
   };
 
   const handleClickFav = (
@@ -223,29 +223,29 @@ const HomePage = () => {
   };
 
   const handleSearch = (key: string) => {
-    goToJobBoard();
-    setPage(0);
-    dispatch(
-      setFilterSettings({
-        searchKey: key,
-      })
+    router.push(
+      {
+        pathname: '/',
+        query: {
+          ...router.query,
+          page: 0,
+          search: key,
+        },
+      },
+      undefined,
+      {
+        scroll: false,
+      }
     );
   };
 
   const goToJobBoard = () => {
     const obj = document.getElementById('job-board');
-    if (obj?.offsetTop) {
-      if (typeof window !== undefined) {
-
-        window.scrollTo({
-          top: (obj?.offsetTop ?? 0) + 560,
-          behavior: 'smooth',
-        });
-      }
-    } else {
-      setTimeout(() => {
-        goToJobBoard();
-      }, 1000);
+    if (typeof window !== undefined) {
+      window.scrollTo({
+        top: (obj?.offsetTop ?? 0) + 560,
+        behavior: 'smooth',
+      });
     }
   };
 
@@ -260,17 +260,45 @@ const HomePage = () => {
   };
 
   const handleChangePage = (e: any, value: number) => {
-    goToJobBoard();
-    setPage(value - 1);
+    router.push(
+      {
+        pathname: '/',
+        query: {
+          ...router.query,
+          page: currentPage - 1,
+        },
+      },
+      undefined,
+      {
+        scroll: false,
+      }
+    );
   };
 
   const handleApplyFilter = (arg: any, noScroll?: boolean) => {
-    if (!noScroll) {
-      goToJobBoard();
+    const newQuery = {
+      ...router.query,
+      ...arg,
+      page: 0,
+    };
+    for (const key in newQuery) {
+      if (newQuery[key] === undefined) {
+        delete newQuery[key];
+      }
     }
 
-    setPage(0);
-    dispatch(setFilterSettings(arg));
+    router.push(
+      {
+        pathname: '/',
+        query: {
+          ...newQuery,
+        },
+      },
+      undefined,
+      {
+        scroll: !noScroll,
+      }
+    );
   };
 
   const handleToggleExpand = (e: React.MouseEvent<HTMLDivElement>) => {
@@ -280,7 +308,7 @@ const HomePage = () => {
   const FilterTagList = React.useMemo(() => {
     const MyComp = () => (
       <>
-        {tags.map((tag: string, _i: number) => (
+        {(tags || []).map((tag: string, _i: number) => (
           <Box
             mx={{ xs: '2.5px', md: 1 }}
             my={{ xs: '2.5px', md: 0.5 }}
@@ -288,9 +316,9 @@ const HomePage = () => {
           >
             <FilterTag
               text={tag}
-              active={(filterSettings.activeTags || []).includes(tag)}
+              active={(router.query.tags || []).includes(tag)}
               onClick={() => handleClickTag(tag)}
-              disabled={(filterSettings.activeTags || []).length === 2}
+              disabled={(router.query.tags || []).length === 2}
             />
           </Box>
         ))}
@@ -298,26 +326,11 @@ const HomePage = () => {
     );
     MyComp.displayName = 'FilterTagList';
     return MyComp;
-  }, [tags, filterSettings]);
-
+  }, [tags, router.query.tags]);
 
   return (
     <HomePageWrapper position="relative">
-      <LazyLoad once>
-        <img src={WaveBgSVG.src} className="wave-bg" loading="lazy" />
-      </LazyLoad>
-      {/* <LottieAnimation
-        url={HomeWaveData}
-        loop={true}
-        speed={0.3}
-        style={{
-          width: '100%',
-          position: 'absolute',
-          opacity: 0.1,
-        }}
-      /> */}
-      {/* <iframe src="https://public.tableau.com/views/public_exercise/Dashboard1?:showVizHome=no&:embed=true"
- width="645" height="955"></iframe> */}
+      <img src={WaveBgSVG.src} className="wave-bg" loading="lazy" />
       <Box
         className="title"
         id="landing-page-title"
@@ -341,8 +354,8 @@ const HomePage = () => {
           mt={4}
           px={9}
         >
-          Browse {jobData.totalJobsCount} jobs in Web3 at{' '}
-          {jobData.totalProjectCount} Web3 Projects
+          Browse {jobData?.totalJobs || 0} jobs in Web3 at{' '}
+          {jobData?.totalCompanies || 0} Web3 Projects
         </Typography>
       </Box>
       <Box
@@ -356,21 +369,19 @@ const HomePage = () => {
         position="relative"
         boxSizing="border-box"
       >
-        {(filterSettings.activeTags || []).length > 0 && !matchDownMd && (
-          <LazyLoad height={158} once>
-            <LottieAnimation
-              width="158"
-              height="158"
-              url={upperArrowAnimationData}
-              loop={true}
-              style={{
-                position: 'absolute',
-                left: -150,
-                cursor: 'pointer',
-              }}
-              onClick={() => goToJobBoard()}
-            />
-          </LazyLoad>
+        {(router.query.tags || []).length > 0 && !matchDownMd && (
+          <LottieAnimation
+            width="158"
+            height="158"
+            url={upperArrowAnimationData}
+            loop={true}
+            style={{
+              position: 'absolute',
+              left: -150,
+              cursor: 'pointer',
+            }}
+            onClick={() => goToJobBoard()}
+          />
         )}
         <FilterTagList />
       </Box>
@@ -382,7 +393,7 @@ const HomePage = () => {
         display={{ xs: 'none', md: 'block' }}
       />
       <Box display="flex" flexDirection="column" alignItems="center" mt="20px">
-        <SearchBox onSearch={handleSearch} value={filterSettings.searchKey} />
+        <SearchBox onSearch={handleSearch} value={searchKey as string} />
       </Box>
       <Box
         height="1px"
@@ -395,33 +406,35 @@ const HomePage = () => {
       <Box width="100%" position="relative">
         <Box className="sub-title" id="job-board" mt={{ xs: 7, md: 16 }}>
           <Box>
-            <LazyLoad once>
-              <img src={FilterMaskSVG.src} className="filter-mask" loading="lazy" />
-            </LazyLoad>
+            <img
+              src={FilterMaskSVG.src}
+              className="filter-mask"
+              loading="lazy"
+            />
           </Box>
           <h1>
-            {filterSettings.searchKey &&
-              !countryNameList.includes(
-                makeWordsUpperCase(filterSettings.searchKey) as string
-              )
-              ? filterSettings.searchKey
-              : (filterSettings.activeTags || []).length
-                ? (filterSettings.activeTags || [])
+            {searchKey &&
+            !countryNameList.includes(
+              makeWordsUpperCase(searchKey as string) as string
+            )
+              ? searchKey
+              : (activeTags || []).length
+              ? ((activeTags as string[]) || [])
                   .map((tag: string) => getCaptialized(tag))
                   .join(' & ')
-                : filterSettings.company
-                  ? filterSettings.company
-                  : 'All'}{' '}
+              : company
+              ? company
+              : 'All'}{' '}
             Jobs
-            {filterSettings.location
-              ? ` in ${filterSettings.location}`
-              : filterSettings.city
-                ? ` in ${filterSettings.city}`
-                : countryNameList.includes(
-                  makeWordsUpperCase(filterSettings.searchKey) as string
+            {location
+              ? ` in ${location}`
+              : city
+              ? ` in ${city}`
+              : countryNameList.includes(
+                  makeWordsUpperCase(searchKey as string) as string
                 )
-                  ? ` in ${makeWordsUpperCase(filterSettings.searchKey)}`
-                  : ''}
+              ? ` in ${makeWordsUpperCase(searchKey as string)}`
+              : ''}
             {/* <Box ml={3}>
             <NewsletterButton
               onClick={() => setOpenNewsletterConfirmModal(true)}
@@ -442,7 +455,7 @@ const HomePage = () => {
               textAlign="center"
               mt={{ xs: '16px', md: '27px' }}
             >
-              {jobData.filterJobsCount || 0} Jobs found
+              {jobData?.filterJobsCount || 0} Jobs found
             </Typography>
             <Box display="flex" alignItems="center" ml={{ xs: 0, md: 11 }}>
               <Box mt={{ xs: '10px', md: '30px' }} mr={1}>
@@ -454,7 +467,7 @@ const HomePage = () => {
                 textAlign="center"
                 mt={{ xs: '10px', md: '27px' }}
               >
-                Average Salary ${jobData.averagePrice || 0}
+                Average Salary ${jobData?.averagePrice || 0}
               </Typography>
             </Box>
           </Box>
@@ -467,7 +480,14 @@ const HomePage = () => {
         >
           <FilterBox
             account={account}
-            filterSettings={filterSettings}
+            filterSettings={{
+              search: searchKey,
+              company,
+              isRemote: isRemote && isRemote === 'true',
+              location,
+              salary: Number(salary || '0'),
+              position,
+            }}
             setFilterSettings={(v) => handleApplyFilter(v, true)}
             handleConnectWallet={handleConnectWallet}
           />
@@ -480,16 +500,19 @@ const HomePage = () => {
         >
           <Box position="relative" id="job-list">
             <FilterBar
-              filterSettings={filterSettings}
+              filterSettings={{
+                search: searchKey,
+                company,
+                isRemote: isRemote && isRemote === 'true',
+                location,
+                salary: Number(salary || '0'),
+                position,
+              }}
               setFilterSettings={handleApplyFilter}
               onSearch={handleSearch}
             />
-            {fetchLoading ? (
-              new Array(4)
-                .fill(0)
-                .map((item, _i) => <JobItemSkeleton key={_i} />)
-            ) : jobs.length > 0 ? (
-              jobs.map((job) => (
+            {(jobData?.jobs || []).length > 0 ? (
+              (jobData?.jobs || []).map((job: TJob) => (
                 <Box key={job.id} marginTop="5px">
                   <JobItem
                     job={job}
@@ -501,20 +524,12 @@ const HomePage = () => {
               ))
             ) : (
               <Stack alignItems="center">
-                <LazyLoad once>
                 <Image
-                    src={EmptyIcon}
-                    width={140}
-                    height={127}
-                    loading="lazy"
-                  />
-                  {/* <img
-                    src={EmptyIcon}
-                    width={140}
-                    height={127}
-                    loading="lazy"
-                  /> */}
-                </LazyLoad>
+                  src={EmptyIcon}
+                  width={140}
+                  height={127}
+                  loading="lazy"
+                />
                 <Typography
                   fontSize={{ xs: 14, md: 20 }}
                   lineHeight={1.5}
@@ -536,10 +551,10 @@ const HomePage = () => {
               </Stack>
             )}
           </Box>
-          {jobs.length > 0 && (
+          {(jobData?.jobs || []).length > 0 && (
             <Box display="flex" justifyContent="center" marginTop="52px">
               <Pagination
-                count={Math.ceil(jobData.filterJobsCount / JOB_PAGE_SIZE)}
+                count={Math.ceil(jobData?.filterJobsCount / JOB_PAGE_SIZE)}
                 variant="outlined"
                 shape="rounded"
                 siblingCount={0}
@@ -572,7 +587,15 @@ const HomePage = () => {
         <FilterSidebar
           onSearch={handleApplyFilter}
           onClose={() => setFilterSidebarAnchor(null)}
-          settings={filterSettings}
+          settings={{
+            search: searchKey,
+            company,
+            tags: activeTags,
+            isRemote: isRemote && isRemote === 'true',
+            location,
+            salary: Number(salary || '0'),
+            position,
+          }}
         />
       </Drawer>
       {/* <Box marginTop="86px" className="home-newsletter">
@@ -585,12 +608,12 @@ const HomePage = () => {
         onGetJob={() => goToJobBoard()}
       />
       <TopWeb3CitiesSection
-        cities={jobCountOfCities}
+        cities={jobsInCities || []}
         onClick={handleClickTopCity}
       />
       <NewsletterConfirmModal
         open={openNewsletterConfirmModal}
-        tags={filterSettings.activeTags || []}
+        tags={(activeTags as string[]) || []}
         onClose={() => setOpenNewsletterConfirmModal(false)}
         onConfirm={handleSubscribe}
       />

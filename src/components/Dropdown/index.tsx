@@ -68,8 +68,7 @@ export const AppDropdown = ({
               className="expand-icon cursor__pointer"
               style={{ pointerEvents: 'none' }}
             >
-                <Image src={ArrowDownIcon} width={16} height={9}/>
-              {/* <img src={ArrowDownIcon} width="16px" height="9px" /> */}
+              <Image src={ArrowDownIcon} width={16} height={9} />
             </Box>
           )}
           renderValue={(selected) => {

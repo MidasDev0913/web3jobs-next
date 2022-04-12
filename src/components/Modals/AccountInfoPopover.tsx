@@ -53,25 +53,13 @@ const InfoItem = ({ img, text, onClick, hiddenIcon, ...props }: any) => (
   >
     <Box display="flex" alignItems="center">
       {img ? (
-        // <img
-        //   src={img}
-        //   width={25}
-        //   height={25}
-        //   style={{
-        //     borderRadius: 25,
-        //     border: '1px solid #B50000',
-        //   }}
-        // />
-        <div style={{
-          borderRadius: 25,
-          border: '1px solid #B50000',
-        }}>
-          <Image
-          src={img}
-          width={25}
-          height={25}
-          
-        />
+        <div
+          style={{
+            borderRadius: 25,
+            border: '1px solid #B50000',
+          }}
+        >
+          <Image src={img} width={25} height={25} />
         </div>
       ) : (
         <Box
@@ -166,7 +154,7 @@ const AccountInfoPopover = ({
                 router.push({
                   pathname: `/job`,
                   query: {
-                    id: job.id, // pass the id 
+                    id: job.id, // pass the id
                   },
                 });
                 onClose();

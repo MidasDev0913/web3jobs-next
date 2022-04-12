@@ -73,18 +73,12 @@ export const AppMenuItem = ({
       >
         <span onMouseEnter={() => handleToggle()}>{text}</span>
         {subMenus && subMenus.length && (
-          // <img
-          //   src={openSubmenu ? ArrowUpIcon : ArrowDownIcon}
-          //   width="13px"
-          //   height="7px"
-          //   style={{ marginLeft: 8 }}
-          // />
           <div style={{ marginLeft: 8 }}>
             <Image
-            src={openSubmenu ? ArrowUpIcon : ArrowDownIcon}
-            width={13}
-            height={17}
-          />
+              src={openSubmenu ? ArrowUpIcon : ArrowDownIcon}
+              width={13}
+              height={17}
+            />
           </div>
         )}
       </MenuItem>

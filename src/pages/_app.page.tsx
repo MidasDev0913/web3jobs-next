@@ -1,8 +1,7 @@
-import '../styles/globals.scss'
-import type { AppProps } from 'next/app';
+import '../styles/globals.scss';
+import type { AppProps, AppContext } from 'next/app';
 import React, { useEffect } from 'react';
 import { Provider } from 'react-redux';
-import { BrowserRouter } from 'react-router-dom';
 import { useRouter } from 'next/router';
 import { Web3ReactProvider as Web3Provider } from '@web3-react/core';
 import { UseWalletProvider as WalletProvider } from 'use-wallet';
@@ -10,17 +9,16 @@ import { ThemeProvider, createTheme } from '@mui/material/styles';
 import { SnackbarProvider } from 'notistack';
 import axios from 'axios';
 
-import { walletConnect, chainId } from '../utils/constants';
+import { walletConnect } from '../utils/constants';
 import { store } from '../redux/store';
 import { customizedTheme } from './theme';
 import { getLibrary } from '../utils/helper';
 import MainLayout from '../components/MainLayout';
-import PersonalDashboardLayout from '../components/PersonalDashboardLayout'
+import PersonalDashboardLayout from '../components/PersonalDashboardLayout';
 
 interface Route {
-  [key: string]: boolean
+  [key: string]: boolean;
 }
-
 
 const routes: Route = {
   '/:company': true,
@@ -35,8 +33,8 @@ const routes: Route = {
   '/detail-job/:id': false,
   '/edit-job/:id': false,
   '/history': false,
-  '/invoices': false
-}
+  '/invoices': false,
+};
 
 function MyApp({ Component, pageProps }: AppProps) {
   const router = useRouter();
@@ -47,13 +45,12 @@ function MyApp({ Component, pageProps }: AppProps) {
   }, []);
 
   if (process.env.REACT_APP_ENV === 'prod') {
-    console.log = () => { }
+    console.log = () => {};
   }
 
   const path = router.pathname;
   const isMainLayout = routes[path];
 
-  console.log("path changed", router);
   return (
     <WalletProvider connectors={walletConnect}>
       <Web3Provider getLibrary={getLibrary}>
@@ -62,23 +59,22 @@ function MyApp({ Component, pageProps }: AppProps) {
           @ts-ignore */}
           <SnackbarProvider maxSnack={3}>
             <Provider store={store}>
-              {isMainLayout &&
+              {isMainLayout && (
                 <MainLayout>
                   <Component {...pageProps} />
-                </MainLayout> 
-              }
-              {!isMainLayout &&
+                </MainLayout>
+              )}
+              {!isMainLayout && (
                 <PersonalDashboardLayout>
                   <Component {...pageProps} />
                 </PersonalDashboardLayout>
-              }
-
+              )}
             </Provider>
           </SnackbarProvider>
         </ThemeProvider>
       </Web3Provider>
     </WalletProvider>
-  )
+  );
 }
 
-export default MyApp
+export default MyApp;

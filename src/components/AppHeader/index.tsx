@@ -38,10 +38,7 @@ import ConnectWalletIcon from '../SVGIcons/ConnectWalletIcon';
 import MetamaskIcon from '../../assets/icons/metamask_icon.svg';
 import ArrowDownIcon from '../../assets/icons/arrow_up_tri_icon.svg';
 import { MenuPopper } from '../MenuItem/index.styles';
-import {
-  injected,
-  maybeFixMetamaskConnection,
-} from '../../provider/MetamaskProvider';
+import { maybeFixMetamaskConnection } from '../../provider/MetamaskProvider';
 import JoinOptionModal from '../Modals/JoinOption';
 import JoinEmployerConfirmModal from '../Modals/JoinEmployerConfirm';
 import JoinJobseekerConfirmModal from '../Modals/JoinJobseekerConfirm';
@@ -52,6 +49,8 @@ import AnnounceBar from './AnnounceBar';
 import InstallMetamaskModal from '../Modals/InstallMetamask';
 import { connect } from '../../utils/web3';
 import useDetectMobile from '../../hooks/useDetectMobile';
+import Logo from '../../assets/web3jobs_logo.svg';
+import MobileLogo from '../../assets/web3jobs_logo_mobile.svg';
 
 const HtmlTooltip = styled(({ className, ...props }: TooltipProps) => (
   <Tooltip {...props} classes={{ popper: className }} />
@@ -151,9 +150,10 @@ const Header = () => {
     if (isLoggedIn && account) {
       axios
         .get(
-          `${process.env.REACT_APP_API_URL}/job/${userInfo.type === 0
-            ? 'getPostedJobsByCreator'
-            : 'getFavoriteJobsByUser'
+          `${process.env.REACT_APP_API_URL}/job/${
+            userInfo.type === 0
+              ? 'getPostedJobsByCreator'
+              : 'getFavoriteJobsByUser'
           }`,
           {
             params: {
@@ -181,7 +181,8 @@ const Header = () => {
     if (isMobile) {
       if (typeof window !== undefined) {
         window.open(
-          `dapp://${process.env.REACT_APP_ENV === 'prod' ? '' : 'staging.'
+          `dapp://${
+            process.env.REACT_APP_ENV === 'prod' ? '' : 'staging.'
           }web3.jobs`
         );
       }
@@ -234,7 +235,7 @@ const Header = () => {
   const handleCloseAccountInfoPopover = () => {
     setOpenAccountInfoPopup(false);
   };
-  
+
   const url = router.pathname;
 
   return (
@@ -245,15 +246,18 @@ const Header = () => {
       <HeaderContainer p={{ xs: '17px 25px', md: '38px 115px 0' }}>
         <Box display="flex">
           <LogoContainer
-            onClick={() => router.push(
-              {
+            onClick={() =>
+              router.push({
                 pathname: '/',
-                query: { goToJobs: url.includes('/job/') }
-              }
-            )}
+                query: { goToJobs: url.includes('/job/') },
+              })
+            }
           >
-            {/* <img src={Logo} /> */}
-            <span>Web3 Jobs</span>
+            <Image
+              src={matchDownMd ? MobileLogo : Logo}
+              width={matchDownMd ? 35 : 180}
+              height={matchDownMd ? 35 : 48}
+            />
           </LogoContainer>
           {/* <MenuContainer>
             {menus.map((menu: TMenuItem, _i: number) => (
@@ -292,7 +296,6 @@ const Header = () => {
                   sx={{ backgroundColor: 'rgba(158, 158, 158, 0.25)' }}
                 >
                   <Image src={MetamaskIcon} width={28} height={27} />
-                  {/* <img src={MetamaskIcon} width="28px" height="27px" /> */}
                 </IconButton>
               </Box>
             ) : (
@@ -326,7 +329,6 @@ const Header = () => {
                   <img src={MetamaskIcon.src} />
                   {getAbbrAddress(userInfo.address, 5, 4)}
                   <Image src={ArrowDownIcon} width={13} height={7} />
-                  {/* <img src={ArrowDownIcon} width="13px" height="7px" /> */}
                 </WalletAddressBox>
               </HtmlTooltip>
             </>

@@ -13,18 +13,6 @@ export const LogoContainer = styled(Link)(({ theme }) => ({
   alignItems: 'center',
   cursor: 'pointer',
   textDecoration: 'none',
-
-  '& span': {
-    fontSize: '25px',
-    lineHeight: 1.5,
-    color: '#ffffff',
-    fontWeight: 700,
-  },
-  [theme.breakpoints.down('md')]: {
-    '& span': {
-      fontSize: '18px',
-    },
-  },
 }));
 
 export const MenuContainer = styled(Box)({

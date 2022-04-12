@@ -33,18 +33,8 @@ export const JobHistoryItem = ({
         <Typography width="24px">{index}.</Typography>
         <Box display="flex" alignItems="center" justifyContent="center">
           {history.job?.logo ? (
-            // <img
-            //   src={history.job?.logo}
-            //   width={48}
-            //   height={48}
-            //   style={{ borderRadius: '48px' }}
-            // />
             <div style={{ borderRadius: '48px' }}>
-              <Image
-              src={history.job?.logo}
-              width={48}
-              height={48}
-            />
+              <Image src={history.job?.logo} width={48} height={48} />
             </div>
           ) : (
             <Box

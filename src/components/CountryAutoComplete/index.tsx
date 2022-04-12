@@ -17,11 +17,13 @@ export const CountryAutoComplete = ({ country, onChange, ...props }: Props) => {
     e: React.SyntheticEvent<Element, Event>,
     value: string | null
   ) => {
-    onChange((value === 'United States'
-      ? 'USA'
-      : value === 'United Kingdom'
-      ? 'UK'
-      : value) as string);
+    onChange(
+      (value === 'United States'
+        ? 'USA'
+        : value === 'United Kingdom'
+        ? 'UK'
+        : value) as string
+    );
   };
 
   return (
@@ -37,8 +39,7 @@ export const CountryAutoComplete = ({ country, onChange, ...props }: Props) => {
             ...params.inputProps,
             startAdornment: (
               <InputAdornment position="start">
-                  <Image src={SearchIcon} width={17} height={17}/>
-                {/* <img src={SearchIcon} width="17px" height="17px" /> */}
+                <Image src={SearchIcon} width={17} height={17} />
               </InputAdornment>
             ),
             placeholder: 'country',
