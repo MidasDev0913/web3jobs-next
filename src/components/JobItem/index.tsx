@@ -1,6 +1,7 @@
 import React from 'react';
 import Image from 'next/image';
 import { useRouter } from 'next/router';
+import Link from 'next/link';
 import { Box, Tooltip, Typography, Stack } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import { TooltipProps, tooltipClasses } from '@mui/material/Tooltip';
@@ -9,7 +10,6 @@ import relativeTime from 'dayjs/plugin/relativeTime';
 import updateLocale from 'dayjs/plugin/updateLocale';
 import { Carousel } from 'react-responsive-carousel';
 import 'react-responsive-carousel/lib/styles/carousel.min.css';
-import LazyLoad from 'react-lazyload';
 
 import { TJob, PositionMap } from '../../interfaces';
 import { Container, ApplyButton } from './index.styles';
@@ -81,34 +81,26 @@ const JobItem = ({
   return (
     <>
       <Box position="relative" display={{ xs: 'none', md: 'block' }}>
-        <Container
-          style={{
-            background:
-              job.highlightColor === 'standard'
-                ? '#131322'
-                : job.highlightColor === 'custom'
+        <Link href={`/job?id=${job.id}`}>
+          <Container
+            style={{
+              background:
+                job.highlightColor === 'standard'
+                  ? '#131322'
+                  : job.highlightColor === 'custom'
                   ? job.highlightCustomColor || '#500000'
                   : '#05050D',
-            pointerEvents: disabled ? 'none' : 'auto',
-          }}
-          color={mainColor}
-          onClick={() => {
-            router.push({
-              pathname: `/job`,
-              query: {
-                id: job.id, // pass the id 
-              },
-            })
-          }}
-        >
-          {viewed && <Box className="is-viewed">Viewed</Box>}
-          <Stack
-            direction="row"
-            alignItems="center"
-            minWidth={{ xs: 416, xl: 616 }}
+              pointerEvents: disabled ? 'none' : 'auto',
+            }}
+            color={mainColor}
           >
-            {job.logo ? (
-              <LazyLoad height={48}>
+            {viewed && <Box className="is-viewed">Viewed</Box>}
+            <Stack
+              direction="row"
+              alignItems="center"
+              minWidth={{ xs: 416, xl: 616 }}
+            >
+              {job.logo ? (
                 <img
                   src={job.logo.src}
                   className="logo"
@@ -117,102 +109,103 @@ const JobItem = ({
                     border: '1px solid #fff',
                   }}
                 />
+              ) : (
+                <Box className="logo-text">{job.company_name?.charAt(0)}</Box>
+              )}
 
-              </LazyLoad>
-            ) : (
-              <Box className="logo-text">{job.company_name?.charAt(0)}</Box>
-            )}
-
+              <Box
+                display="flex"
+                flexDirection="column"
+                justifyContent="space-between"
+                height="66px"
+                ml={4}
+                flex={1}
+              >
+                <Box display="flex" flexDirection="column">
+                  <Typography
+                    color={mainColor}
+                    fontFamily="Space Mono"
+                    fontWeight={700}
+                    fontSize={17}
+                    lineHeight="20px"
+                    textOverflow="ellipsis"
+                    whiteSpace="nowrap"
+                    overflow="hidden"
+                    textAlign="left"
+                    maxWidth={300}
+                  >
+                    {job.title}
+                  </Typography>
+                  <Typography
+                    color={mainColor}
+                    fontWeight={300}
+                    fontSize={14}
+                    lineHeight={1.5}
+                    mt={0.5}
+                  >
+                    {job.company_name}
+                  </Typography>
+                </Box>
+                {Boolean(job.salary?.min || job.salary?.max) && (
+                  <Box
+                    display="flex"
+                    alignItems="center"
+                    className="salary"
+                    mt={0.3}
+                  >
+                    <MoneyIcon color={mainColor} />
+                    <span>
+                      ${formatPriceAmount(job.salary?.min)}
+                      <span> - </span>${formatPriceAmount(job.salary?.max)}
+                    </span>
+                  </Box>
+                )}
+              </Box>
+            </Stack>
+            <Box display="flex" alignItems="center" minWidth={240}>
+              <Typography
+                color={mainColor}
+                fontWeight={400}
+                fontSize={14}
+                lineHeight={1.5}
+                sx={{ overflowWrap: 'break-word' }}
+              >
+                {getLocationText(job)}
+              </Typography>
+            </Box>
+            <Box display="flex" flexWrap="wrap" width={300} ml={3}>
+              {(job.tags || []).slice(0, 5).map((tag) => (
+                <span className="tag" key={tag}>
+                  {tag}
+                </span>
+              ))}
+            </Box>
             <Box
               display="flex"
-              flexDirection="column"
-              justifyContent="space-between"
-              height="66px"
-              ml={4}
-              flex={1}
+              alignItems="center"
+              className="created-time"
+              width={100}
             >
-              <Box display="flex" flexDirection="column">
-                <Typography
-                  color={mainColor}
-                  fontFamily="Space Mono"
-                  fontWeight={700}
-                  fontSize={17}
-                  lineHeight="20px"
-                  textOverflow="ellipsis"
-                  whiteSpace="nowrap"
-                  overflow="hidden"
-                  textAlign="left"
-                  maxWidth={300}
-                >
-                  {job.title}
-                </Typography>
-                <Typography
-                  color={mainColor}
-                  fontWeight={300}
-                  fontSize={14}
-                  lineHeight={1.5}
-                  mt={0.5}
-                >
-                  {job.company_name}
-                </Typography>
-              </Box>
-              {Boolean(job.salary?.min || job.salary?.max) && (
-                <Box
-                  display="flex"
-                  alignItems="center"
-                  className="salary"
-                  mt={0.3}
-                >
-                  <MoneyIcon color={mainColor} />
-                  <span>
-                    ${formatPriceAmount(job.salary?.min)}
-                    <span> - </span>${formatPriceAmount(job.salary?.max)}
-                  </span>
-                </Box>
-              )}
+              <ClockIcon color={mainColor} />
+              <Typography fontSize={13} ml={1.5} color={mainColor}>
+                {dayjs(job.posted_at).fromNow(true).replace(' ', '')}
+              </Typography>
             </Box>
-          </Stack>
-          <Box display="flex" alignItems="center" minWidth={240}>
-            <Typography
-              color={mainColor}
-              fontWeight={400}
-              fontSize={14}
-              lineHeight={1.5}
-              sx={{ overflowWrap: 'break-word' }}
+            {/* <ApplyButton href={`/job/${job.id}`}>Apply</ApplyButton> */}
+            <ApplyButton
+              onClick={() => {
+                router.push({
+                  pathname: `/job`,
+                  query: {
+                    id: job.id, // pass the id
+                  },
+                });
+              }}
             >
-              {getLocationText(job)}
-            </Typography>
-          </Box>
-          <Box display="flex" flexWrap="wrap" width={300} ml={3}>
-            {(job.tags || []).slice(0, 5).map((tag) => (
-              <span className="tag" key={tag}>
-                {tag}
-              </span>
-            ))}
-          </Box>
-          <Box
-            display="flex"
-            alignItems="center"
-            className="created-time"
-            width={100}
-          >
-            <ClockIcon color={mainColor} />
-            <Typography fontSize={13} ml={1.5} color={mainColor}>
-              {dayjs(job.posted_at).fromNow(true).replace(' ', '')}
-            </Typography>
-          </Box>
-          {/* <ApplyButton href={`/job/${job.id}`}>Apply</ApplyButton> */}
-          <ApplyButton
-            onClick={() => {
-              router.push({
-                pathname: `/job`,
-                query: {
-                  id: job.id, // pass the id 
-                },
-              })
-            }}>Apply
-          </ApplyButton>
-        </Container>
+              Apply
+            </ApplyButton>
+          </Container>
+        </Link>
         <HtmlTooltip
           arrow
           placement="top"
@@ -240,194 +233,186 @@ const JobItem = ({
         </HtmlTooltip>
       </Box>
       <Stack display={{ xs: 'block', md: 'none' }}>
-        <Container
-          style={{
-            padding: 0,
-            background:
-              job.highlightColor === 'standard'
-                ? '#131322'
-                : job.highlightColor === 'custom'
+        <Link href={`/job?id=${job.id}`}>
+          <Container
+            style={{
+              padding: 0,
+              background:
+                job.highlightColor === 'standard'
+                  ? '#131322'
+                  : job.highlightColor === 'custom'
                   ? job.highlightCustomColor || '#500000'
                   : '#05050D',
-            pointerEvents: disabled ? 'none' : 'auto',
-          }}
-          color={mainColor}
-          href={`/job/${job.id}`}
-        >
-          {/*
-        // @ts-ignore */}
-          <Carousel
-            showArrows={false}
-            showStatus={false}
-            infiniteLoop={false}
-            autoPlay={false}
-            showThumbs={false}
-            preventMovementUntilSwipeScrollTolerance
+              pointerEvents: disabled ? 'none' : 'auto',
+            }}
+            color={mainColor}
           >
-            <Box
-              display="flex"
-              justifyContent="space-between"
-              padding="12px 8px"
-              paddingRight={5}
+            {/*
+        // @ts-ignore */}
+            <Carousel
+              showArrows={false}
+              showStatus={false}
+              infiniteLoop={false}
+              autoPlay={false}
+              showThumbs={false}
+              preventMovementUntilSwipeScrollTolerance
             >
-              <Stack direction="row" alignItems="center">
-                {job.logo ? (
-                  // <img
-                  //   src={job.logo}
-                  //   className="logo"
-                  //   style={{
-                  //     objectFit: 'cover',
-                  //     border: '1px solid #fff',
-                  //     width: '40px',
-                  //     maxWidth: '40px',
-                  //     height: '48px',
-                  //   }}
-                  // />
-                  <div className="logo"
-                    style={{
-                      objectFit: 'cover',
-                      border: '1px solid #fff',
-                      maxWidth: '40px',
-                    }}>
-                    <Image
-                      src={job.logo}
+              <Box
+                display="flex"
+                justifyContent="space-between"
+                padding="12px 8px"
+                paddingRight={5}
+              >
+                <Stack direction="row" alignItems="center">
+                  {job.logo ? (
+                    <div
+                      className="logo"
+                      style={{
+                        objectFit: 'cover',
+                        border: '1px solid #fff',
+                        maxWidth: '40px',
+                      }}
+                    >
+                      <Image src={job.logo} width={40} height={48} />
+                    </div>
+                  ) : (
+                    <Box
+                      className="logo-text"
                       width={40}
                       height={48}
-                    />
-                  </div>
-                ) : (
+                      maxWidth={40}
+                    >
+                      {job.company_name?.charAt(0)}
+                    </Box>
+                  )}
                   <Box
-                    className="logo-text"
-                    width={40}
-                    height={48}
-                    maxWidth={40}
+                    display="flex"
+                    flexDirection="column"
+                    alignItems="start"
+                    justifyContent="space-between"
+                    ml={1.25}
+                    flex={1}
                   >
-                    {job.company_name?.charAt(0)}
+                    <Box
+                      display="flex"
+                      flexDirection="column"
+                      alignItems="start"
+                    >
+                      <Typography
+                        color={mainColor}
+                        fontFamily="Space Mono"
+                        fontWeight={700}
+                        fontSize={{ xs: 12, md: 17 }}
+                        lineHeight={1}
+                        whiteSpace="break-spaces"
+                        textAlign="left"
+                        maxWidth={195}
+                      >
+                        {job.title}
+                      </Typography>
+                      <Typography
+                        color={mainColor}
+                        fontWeight={300}
+                        fontSize={{ xs: 10, md: 14 }}
+                        lineHeight={1.5}
+                        mt={0.3}
+                        whiteSpace="nowrap"
+                      >
+                        {job.company_name}
+                      </Typography>
+                    </Box>
+                    {Boolean(job.salary?.min || job.salary?.max) && (
+                      <Typography
+                        color={mainColor}
+                        fontWeight={300}
+                        fontSize={{ xs: 10, md: 14 }}
+                        lineHeight={1.5}
+                        whiteSpace="nowrap"
+                      >
+                        ${formatPriceAmount(job.salary?.min)}
+                        <span style={{ color: mainColor }}> - </span>$
+                        {formatPriceAmount(job.salary?.max)}
+                      </Typography>
+                    )}
+                    <Typography
+                      fontSize={10}
+                      color={mainColor}
+                      textAlign="left"
+                      whiteSpace="nowrap"
+                    >
+                      {getLocationText(job)}
+                    </Typography>
                   </Box>
-                )}
+                </Stack>
                 <Box
                   display="flex"
-                  flexDirection="column"
-                  alignItems="start"
-                  justifyContent="space-between"
-                  ml={1.25}
-                  flex={1}
+                  alignItems="center"
+                  className="created-time"
+                  width="46px"
                 >
-                  <Box display="flex" flexDirection="column" alignItems="start">
-                    <Typography
-                      color={mainColor}
-                      fontFamily="Space Mono"
-                      fontWeight={700}
-                      fontSize={{ xs: 12, md: 17 }}
-                      lineHeight={1}
-                      whiteSpace="break-spaces"
-                      textAlign="left"
-                      maxWidth={195}
-                    >
-                      {job.title}
-                    </Typography>
-                    <Typography
-                      color={mainColor}
-                      fontWeight={300}
-                      fontSize={{ xs: 10, md: 14 }}
-                      lineHeight={1.5}
-                      mt={0.3}
-                      whiteSpace="nowrap"
-                    >
-                      {job.company_name}
-                    </Typography>
-                  </Box>
-                  {Boolean(job.salary?.min || job.salary?.max) && (
-                    <Typography
-                      color={mainColor}
-                      fontWeight={300}
-                      fontSize={{ xs: 10, md: 14 }}
-                      lineHeight={1.5}
-                      whiteSpace="nowrap"
-                    >
-                      ${formatPriceAmount(job.salary?.min)}
-                      <span style={{ color: mainColor }}> - </span>$
-                      {formatPriceAmount(job.salary?.max)}
-                    </Typography>
-                  )}
+                  <ClockIcon color={mainColor} size={10} />
                   <Typography
                     fontSize={10}
+                    ml={0.5}
+                    fontWeight={500}
                     color={mainColor}
-                    textAlign="left"
-                    whiteSpace="nowrap"
                   >
-                    {getLocationText(job)}
+                    {dayjs(job.posted_at).fromNow(true).replace(' ', '')}
                   </Typography>
                 </Box>
-              </Stack>
+              </Box>
               <Box
                 display="flex"
                 alignItems="center"
-                className="created-time"
-                width="46px"
+                justifyContent="space-between"
+                height="100%"
+                padding="12px 8px"
+                paddingRight={12}
               >
-                <ClockIcon color={mainColor} size={10} />
+                <Box display="flex" flexWrap="wrap" width={250}>
+                  {(job.tags || []).slice(0, 5).map((tag) => (
+                    <Box
+                      fontSize={12}
+                      lineHeight={1.5}
+                      color="#fff"
+                      border={`0.5px solid ${mainColor}`}
+                      borderRadius="2px"
+                      padding="5px"
+                      mr="5px"
+                      mt="5px"
+                      bgcolor={mainColor === '#000' ? mainColor : 'transparent'}
+                      key={tag}
+                    >
+                      {tag}
+                    </Box>
+                  ))}
+                </Box>
                 <Typography
-                  fontSize={10}
-                  ml={0.5}
+                  fontSize="10px"
                   fontWeight={500}
                   color={mainColor}
+                  whiteSpace="nowrap"
                 >
-                  {dayjs(job.posted_at).fromNow(true).replace(' ', '')}
+                  {PositionMap[job.position]}
                 </Typography>
               </Box>
-            </Box>
+            </Carousel>
+            {viewed && <Box className="is-viewed">Viewed</Box>}
             <Box
-              display="flex"
-              alignItems="center"
-              justifyContent="space-between"
-              height="100%"
-              padding="12px 8px"
-              paddingRight={12}
+              className="cursor__pointer"
+              onClick={onClickFav}
+              position="absolute"
+              top="50%"
+              right="8px"
+              sx={{ transform: 'translate(0, -50%)' }}
             >
-              <Box display="flex" flexWrap="wrap" width={250}>
-                {(job.tags || []).slice(0, 5).map((tag) => (
-                  <Box
-                    fontSize={12}
-                    lineHeight={1.5}
-                    color="#fff"
-                    border={`0.5px solid ${mainColor}`}
-                    borderRadius="2px"
-                    padding="5px"
-                    mr="5px"
-                    mt="5px"
-                    bgcolor={mainColor === '#000' ? mainColor : 'transparent'}
-                    key={tag}
-                  >
-                    {tag}
-                  </Box>
-                ))}
-              </Box>
-              <Typography
-                fontSize="10px"
-                fontWeight={500}
-                color={mainColor}
-                whiteSpace="nowrap"
-              >
-                {PositionMap[job.position]}
-              </Typography>
+              <FavIcon
+                color={mainColor === '#fff' ? '#FFC700' : mainColor}
+                isFill={job.likes?.includes(userId || '')}
+              />
             </Box>
-          </Carousel>
-          {viewed && <Box className="is-viewed">Viewed</Box>}
-          <Box
-            className="cursor__pointer"
-            onClick={onClickFav}
-            position="absolute"
-            top="50%"
-            right="8px"
-            sx={{ transform: 'translate(0, -50%)' }}
-          >
-            <FavIcon
-              color={mainColor === '#fff' ? '#FFC700' : mainColor}
-              isFill={job.likes?.includes(userId || '')}
-            />
-          </Box>
-        </Container>
+          </Container>
+        </Link>
       </Stack>
     </>
   );

@@ -74,12 +74,10 @@ const FilterBox = ({
   };
 
   const handleChangeSalary = (value: number) => {
-    setFilterSettings(
-      {
-        ...filterSettings,
-        salary: value,
-      }
-    );
+    setFilterSettings({
+      ...filterSettings,
+      salary: value,
+    });
   };
 
   const handleChangeLocation = (value: string) => {
@@ -140,7 +138,6 @@ const FilterBox = ({
             >
               <MoneyIcon />
               <span>salary</span>
-              {/* <img src={ArrowDownIcon} width="13px" height="7px" /> */}
               <Image src={ArrowDownIcon} width={13} height={7} />
             </SettingButton>
             <SettingButton
@@ -150,7 +147,6 @@ const FilterBox = ({
             >
               <LocationIcon />
               <span>location</span>
-              {/* <img src={ArrowDownIcon} width="13px" height="7px" /> */}
               <Image src={ArrowDownIcon} width={13} height={7} />
             </SettingButton>
             <SettingButton
@@ -297,7 +293,7 @@ const FilterBox = ({
                 </IconButton>
               </SettingButton>
             )}
-            {Boolean(filterSettings.searchKey) && (
+            {Boolean(filterSettings.search) && (
               <SettingButton
                 active
                 width="auto"
@@ -307,11 +303,11 @@ const FilterBox = ({
                   marginTop: 1,
                 }}
               >
-                <span>{filterSettings.searchKey}</span>
+                <span>{filterSettings.search}</span>
                 <IconButton
                   aria-label="delete"
                   size="small"
-                  onClick={handleClear('searchKey')}
+                  onClick={handleClear('search')}
                 >
                   <CloseIcon fontSize="inherit" />
                 </IconButton>

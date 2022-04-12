@@ -98,9 +98,8 @@ const DraftPostJobSuccessModal: React.FC<ComponentProps> = ({
           </CloseButton>
         </Box>
         <Box className="modal-body">
-          {/* <img className="modal-body-logo" src={SuccessSVG} /> */}
           <div className="modal-body-logo">
-          <Image  src={SuccessSVG} layout='fill'/>
+            <Image src={SuccessSVG} layout="fill" />
           </div>
           <Box className="modal-body-text">
             Your Job has been successfully saved to draft.

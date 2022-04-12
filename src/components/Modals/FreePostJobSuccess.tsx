@@ -33,7 +33,7 @@ const Container = styled(Stack)`
   transform: translate(-50%, -50%);
   width: 868px;
   background: #05050d;
-  border: 0.7px solid #199FD9;
+  border: 0.7px solid #199fd9;
   border-radius: 20px;
 
   ${(props) => props.theme.breakpoints.down('md')} {
@@ -41,7 +41,7 @@ const Container = styled(Stack)`
   }
 `;
 
-const ConfirmButton = styled(Button)(({theme}) => ({
+const ConfirmButton = styled(Button)(({ theme }) => ({
   display: 'flex',
   alignItems: 'center',
   marginTop: 46,
@@ -55,7 +55,7 @@ const ConfirmButton = styled(Button)(({theme}) => ({
 
   [theme.breakpoints.down('md')]: {
     fontSize: '15px',
-  }
+  },
 }));
 
 export const FreePostJobSuccess: React.FC<ComponentProps> = ({
@@ -89,9 +89,11 @@ export const FreePostJobSuccess: React.FC<ComponentProps> = ({
             <CloseIcon fontSize="small" />
           </CloseButton>
         </Stack>
-        <Stack alignItems="center" padding={{ xs: "38px 51px 51px", md: "95px 99px 48px" }}>
-          {/* <img src={SuccessSVG} /> */}
-          <Image src={SuccessSVG} layout='fill'/>
+        <Stack
+          alignItems="center"
+          padding={{ xs: '38px 51px 51px', md: '95px 99px 48px' }}
+        >
+          <Image src={SuccessSVG} layout="fill" />
           <Typography
             fontSize={18}
             lineHeight="22px"
@@ -100,7 +102,11 @@ export const FreePostJobSuccess: React.FC<ComponentProps> = ({
           >
             Success
           </Typography>
-          <Typography color="#A3A1A1" mt={{xs: 3, md: "37px"}} textAlign="center">
+          <Typography
+            color="#A3A1A1"
+            mt={{ xs: 3, md: '37px' }}
+            textAlign="center"
+          >
             Your job post will be reviewed by our team.
           </Typography>
           <Typography color="#A3A1A1" textAlign="center">
@@ -110,8 +116,8 @@ export const FreePostJobSuccess: React.FC<ComponentProps> = ({
             Back to homepage
           </ConfirmButton>
           <Typography
-            mt={{xs: 1, md: "21px"}}
-            fontSize={{xs: 12, md: 15}}
+            mt={{ xs: 1, md: '21px' }}
+            fontSize={{ xs: 12, md: 15 }}
             className="cursor__pointer"
             onClick={onViewInManageJobs}
           >

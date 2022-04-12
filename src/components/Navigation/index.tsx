@@ -1,5 +1,12 @@
 import React, { useState } from 'react';
-import { Link, Box, IconButton, Typography } from '@mui/material';
+import {
+  Link,
+  Box,
+  IconButton,
+  Typography,
+  useTheme,
+  useMediaQuery,
+} from '@mui/material';
 import { useRouter } from 'next/router';
 
 import {
@@ -11,7 +18,8 @@ import { NavigationLinks } from '../../utils/constants';
 import { NavigationLinkProps } from '../../interfaces';
 import { NavLink } from '../NavLink';
 import ArrowLeftIcon from '../../components/SVGIcons/ArrowLeftIcon_small';
-import InfoIcon from '../../components/SVGIcons/InfoIcon_italic';
+import Logo from '../../assets/web3jobs_logo.svg';
+import MobileLogo from '../../assets/web3jobs_logo_mobile.svg';
 
 const Navigation = ({
   collapsed,
@@ -21,6 +29,8 @@ const Navigation = ({
   setCollapsed: (arg: boolean) => void;
 }) => {
   const router = useRouter();
+  const theme = useTheme();
+  const matchDownMd = useMediaQuery(theme.breakpoints.down('md'));
   const url = router.pathname;
 
   const handleCollapse = () => {
@@ -40,7 +50,7 @@ const Navigation = ({
         position="relative"
       >
         <Link href="/" className="nav-logo">
-          <span>Web3 Jobs</span>
+          <img src={matchDownMd ? MobileLogo : Logo} />
         </Link>
         <CollapseIconButton
           onClick={handleCollapse}

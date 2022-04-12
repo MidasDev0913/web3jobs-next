@@ -202,7 +202,6 @@ const FilterBar: React.FC<ComponentProps> = ({
                     >
                       <CloseIcon fontSize="inherit" />
                     </Box>
-                    {/* <img src={SearchIcon} width="17px" height="17px" /> */}
                     <Image src={SearchIcon} width={17} height={17} />
                   </InputAdornment>
                 ),

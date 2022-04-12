@@ -131,7 +131,7 @@ const ApplyJobPage = () => {
     }
   }, [selectedJob]);
 
-  const handleSubscribe = () => { };
+  const handleSubscribe = () => {};
 
   const handleApplyJob = () => {
     axios.post(`${process.env.REACT_APP_API_URL}/job/applyJob`, {
@@ -140,12 +140,17 @@ const ApplyJobPage = () => {
   };
 
   const handleGoToCompany = () => {
-    router.push({pathname:`/?company=${selectedJob.company_name}`, 
-      query: { goToJobs: true },
+    router.push({
+      pathname: '/',
+      query: {
+        ...router.query,
+        company: selectedJob.company_name,
+        goToJobs: true,
+      },
     });
   };
 
-  const handleClickFav = (e: React.MouseEvent<HTMLDivElement>) => { 
+  const handleClickFav = (e: React.MouseEvent<HTMLDivElement>) => {
     if (!isLoggedIn || !userInfo.address) {
       document.getElementById('header-connect-wallet-btn')?.click();
     } else {
@@ -180,7 +185,9 @@ const ApplyJobPage = () => {
         ml="115px"
         mt={2.5}
         className="cursor__pointer"
-        onClick={() => router.push({pathname: '/', query: { goToJobs: true } })}
+        onClick={() =>
+          router.push({ pathname: '/', query: { goToJobs: true } })
+        }
       >
         <ArrowLeftIcon />
         <Typography ml="15px">Back to Web3Jobs</Typography>
@@ -304,22 +311,22 @@ const ApplyJobPage = () => {
             {selectedJob.logo ? (
               <img src={selectedJob.logo} className="apply-job-logo" />
             ) : (
-                <Box
-                  display="flex"
-                  alignItems="center"
-                  justifyContent="center"
-                  width={35}
-                  minWidth={35}
-                  height={35}
-                  borderRadius={18}
-                  fontSize={30}
-                  lineHeight={1.5}
-                  fontWeight={700}
-                  border="1px solid #fff"
-                >
-                  {selectedJob.company_name?.charAt(0).toUpperCase()}
-                </Box>
-              )}
+              <Box
+                display="flex"
+                alignItems="center"
+                justifyContent="center"
+                width={35}
+                minWidth={35}
+                height={35}
+                borderRadius={18}
+                fontSize={30}
+                lineHeight={1.5}
+                fontWeight={700}
+                border="1px solid #fff"
+              >
+                {selectedJob.company_name?.charAt(0).toUpperCase()}
+              </Box>
+            )}
             <Typography fontSize="30px" lineHeight={1.5} ml={1}>
               {selectedJob.company_name}
             </Typography>
@@ -350,8 +357,8 @@ const ApplyJobPage = () => {
               selectedJob.applyBy === 'email'
                 ? `mailto:${selectedJob.applyByUrl}?subject=${selectedJob.title} via Web3.jobs`
                 : selectedJob.applyByUrl?.includes('http')
-                  ? selectedJob.applyByUrl
-                  : `https://${selectedJob.applyByUrl}`
+                ? selectedJob.applyByUrl
+                : `https://${selectedJob.applyByUrl}`
             }
             target="_blank"
             rel="noreferrer"
@@ -399,22 +406,22 @@ const ApplyJobPage = () => {
             {selectedJob.logo ? (
               <img src={selectedJob.logo} className="apply-job-logo" />
             ) : (
-                <Box
-                  display="flex"
-                  alignItems="center"
-                  justifyContent="center"
-                  width={23}
-                  minWidth={23}
-                  height={23}
-                  borderRadius={12}
-                  fontSize={18}
-                  lineHeight={1.5}
-                  fontWeight={700}
-                  border="1px solid #fff"
-                >
-                  {selectedJob.company_name?.charAt(0).toUpperCase()}
-                </Box>
-              )}
+              <Box
+                display="flex"
+                alignItems="center"
+                justifyContent="center"
+                width={23}
+                minWidth={23}
+                height={23}
+                borderRadius={12}
+                fontSize={18}
+                lineHeight={1.5}
+                fontWeight={700}
+                border="1px solid #fff"
+              >
+                {selectedJob.company_name?.charAt(0).toUpperCase()}
+              </Box>
+            )}
             <Typography fontSize={15} lineHeight={1.5} ml={1}>
               {selectedJob.company_name}
             </Typography>
@@ -440,7 +447,7 @@ const ApplyJobPage = () => {
           <Box display="flex" flexDirection="column" mt={3}>
             <Typography fontSize={12} fontWeight={300}>
               COMPENSATION:
-          </Typography>
+            </Typography>
             <Typography fontWeight={500} mt={1}>{`$${formatPriceAmount(
               selectedJob.salary?.min
             )} - $${formatPriceAmount(selectedJob.salary?.max)}`}</Typography>
@@ -467,8 +474,8 @@ const ApplyJobPage = () => {
             selectedJob.applyBy === 'email'
               ? `mailto:${selectedJob.applyByUrl}?subject=${selectedJob.title} via Web3.jobs`
               : selectedJob.applyByUrl?.includes('http')
-                ? selectedJob.applyByUrl
-                : `https://${selectedJob.applyByUrl}`
+              ? selectedJob.applyByUrl
+              : `https://${selectedJob.applyByUrl}`
           }
           target="_blank"
           rel="noreferrer"
@@ -500,8 +507,8 @@ const ApplyJobPage = () => {
             selectedJob.applyBy === 'email'
               ? `mailto:${selectedJob.applyByUrl}?subject=${selectedJob.title} via Web3.jobs`
               : selectedJob.applyByUrl?.includes('http')
-                ? selectedJob.applyByUrl
-                : `https://${selectedJob.applyByUrl}`
+              ? selectedJob.applyByUrl
+              : `https://${selectedJob.applyByUrl}`
           }
           target="_blank"
           rel="noreferrer"
@@ -629,9 +636,7 @@ const ApplyJobPage = () => {
         <EnjoyFeatureSection
           onHireTalent={() => router.push('/post-job')}
           onGetJob={() =>
-            router.push({pathname:'/', 
-              query: { goToJobs: true },
-          })
+            router.push({ pathname: '/', query: { goToJobs: true } })
           }
         />
         {/* <Box marginTop="86px" className="home-newsletter">

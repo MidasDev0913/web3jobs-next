@@ -1,6 +1,5 @@
 import React from 'react';
 import { Box, Typography, Stack, Button } from '@mui/material';
-import LazyLoad from 'react-lazyload';
 
 import CheckIcon from '../SVGIcons/CheckIcon';
 import ArrowRightIcon from '../SVGIcons/ArrowRightIcon_2';

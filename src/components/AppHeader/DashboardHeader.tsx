@@ -87,7 +87,8 @@ const Header: React.FC<ComponentProps> = ({
 
   useEffect(() => {
     auth.onAuthStateChanged((user: any) => {
-      if (typeof window !== 'undefined') { //added by midas start
+      if (typeof window !== 'undefined') {
+        //added by midas start
         const { pathname } = window.location;
         if (!user && privateUrls.includes(pathname)) {
           dispatch(logout());
@@ -175,8 +176,7 @@ const Header: React.FC<ComponentProps> = ({
                 InputProps={{
                   startAdornment: (
                     <InputAdornment position="start">
-                        <Image src={SearchIcon} width={15} height={17}/>
-                      {/* <img src={SearchIcon} width="15px" height="17px" /> */}
+                      <Image src={SearchIcon} width={15} height={17} />
                     </InputAdornment>
                   ),
                   endAdornment: (
@@ -204,8 +204,7 @@ const Header: React.FC<ComponentProps> = ({
             </SearchBarContainer>
           )}
           <WalletAddressBox>
-                <Image src={MetamaskIcon} width = {28} height = {27}/>
-            {/* <img src={MetamaskIcon} width="28px" height="27px" /> */}
+            <Image src={MetamaskIcon} width={28} height={27} />
             {getAbbrAddress(account || '', 5, 4)}
           </WalletAddressBox>
         </Box>
