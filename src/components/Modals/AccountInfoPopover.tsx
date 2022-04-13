@@ -53,14 +53,19 @@ const InfoItem = ({ img, text, onClick, hiddenIcon, ...props }: any) => (
   >
     <Box display="flex" alignItems="center">
       {img ? (
-        <div
-          style={{
-            borderRadius: 25,
-            border: '1px solid #B50000',
-          }}
+        <Box
+          width="25px"
+          height="25px"
+          borderRadius="25px"
+          border="1px solid #B50000"
         >
-          <Image src={img} width={25} height={25} />
-        </div>
+          <Image
+            src={img}
+            width={25}
+            height={25}
+            style={{ borderRadius: '25px' }}
+          />
+        </Box>
       ) : (
         <Box
           display="flex"

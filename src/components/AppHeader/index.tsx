@@ -309,7 +309,7 @@ const Header = () => {
           ) : isLoggedIn ? (
             <>
               <HtmlTooltip
-                open={openAccountInfoPopup}
+                open
                 onClose={handleCloseAccountInfoPopover}
                 onOpen={handleOpenAccountInfoPopover}
                 placement="bottom-end"

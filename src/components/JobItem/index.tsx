@@ -101,14 +101,16 @@ const JobItem = ({
               minWidth={{ xs: 416, xl: 616 }}
             >
               {job.logo ? (
-                <img
-                  src={job.logo.src}
+                <div
                   className="logo"
                   style={{
                     objectFit: 'cover',
                     border: '1px solid #fff',
+                    maxWidth: '48px',
                   }}
-                />
+                >
+                  <Image src={job.logo} width={48} height={56} layout="fixed" />
+                </div>
               ) : (
                 <Box className="logo-text">{job.company_name?.charAt(0)}</Box>
               )}

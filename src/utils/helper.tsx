@@ -203,7 +203,12 @@ export const createPostedJobTableData = (job: TJob): PostedJobTableData => {
               marginRight: 16,
             }}
           >
-            <Image src={logo} width={48} height={48} />
+            <Image
+              src={logo}
+              width={48}
+              height={48}
+              style={{ borderRadius: 12 }}
+            />
           </div>
         ) : (
           <Box
@@ -257,7 +262,12 @@ export const createManageJobTableData = (
               marginRight: 16,
             }}
           >
-            <Image src={logo} width={48} height={48} />
+            <Image
+              src={logo}
+              width={48}
+              height={48}
+              style={{ borderRadius: 12 }}
+            />
           </div>
         ) : (
           <Box
@@ -316,7 +326,12 @@ export const createInvoiceTableData = (
               marginRight: 16,
             }}
           >
-            <Image src={logo} width={48} height={48} />
+            <Image
+              src={logo}
+              width={48}
+              height={48}
+              style={{ borderRadius: 12 }}
+            />
           </div>
         ) : (
           <Box
