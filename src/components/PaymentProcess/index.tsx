@@ -191,7 +191,6 @@ export const PaymentProcessPopup: React.FC<ComponentProps> = ({
             process.env.REACT_APP_ENV === 'prod'
               ? [ETH_MAINNET_CHAIN_ID]
               : [ETH_TESTNET_CHAIN_ID];
-          console.log(chainId, availableChains);
           if (chainId && !availableChains.includes(chainId as number)) {
             const isCorrectChain = await switchNetwork(availableChains[0]);
             if (!isCorrectChain) {
@@ -258,8 +257,8 @@ export const PaymentProcessPopup: React.FC<ComponentProps> = ({
     return activeStep === 0
       ? 'Payment'
       : activeStep === 1
-        ? 'Confirmation'
-        : 'Transaction Complete';
+      ? 'Confirmation'
+      : 'Transaction Complete';
   }, [activeStep]);
 
   const handleConfirmJoinOption = (type: number) => {
@@ -367,21 +366,20 @@ export const PaymentProcessPopup: React.FC<ComponentProps> = ({
                 onViewJob={() =>
                   isEdit
                     ? router.push({
-                      pathname: `/detail-job`,
-                      query: {
-                        id: newJobId, // pass the id 
-                      }
-                    })
+                        pathname: `/detail-job`,
+                        query: {
+                          id: newJobId, // pass the id
+                        },
+                      })
                     : router.push({
-                      pathname: `/job`,
-                      query: {
-                        id: newJobId, // pass the id 
-                      }
-                    })
+                        pathname: `/job`,
+                        query: {
+                          id: newJobId, // pass the id
+                        },
+                      })
                 }
                 onGotoHomePage={() => {
                   if (typeof window !== undefined) {
-
                     window.scrollTo({
                       top: 0,
                       behavior: 'auto',
