@@ -41,10 +41,10 @@ function MyApp({ Component, pageProps }: AppProps) {
   const theme = createTheme(customizedTheme);
 
   useEffect(() => {
-    axios.post(`${process.env.REACT_APP_API_URL}/history/increaseVisitors`);
+    axios.post(`${process.env.NEXT_PUBLIC_API_URL}/history/increaseVisitors`);
   }, []);
 
-  if (process.env.REACT_APP_ENV === 'prod') {
+  if (process.env.NEXT_PUBLIC_ENV === 'prod') {
     console.log = () => {};
   }
 

@@ -100,7 +100,7 @@ const ManageJobsPage = () => {
     if (!account) return;
     setLoading(true);
     axios
-      .get(`${process.env.REACT_APP_API_URL}/job/getJobsByCreator`, {
+      .get(`${process.env.NEXT_PUBLIC_API_URL}/job/getJobsByCreator`, {
         params: {
           userId: account?.toLowerCase(),
           search: searchKey,
@@ -182,7 +182,7 @@ const ManageJobsPage = () => {
     const idToken = localStorage.getItem('jwt_token');
     axios
       .put(
-        `${process.env.REACT_APP_API_URL}/job/editJob`,
+        `${process.env.NEXT_PUBLIC_API_URL}/job/editJob`,
         {
           job: job,
         },
@@ -208,7 +208,7 @@ const ManageJobsPage = () => {
     const idToken = localStorage.getItem('jwt_token');
     axios
       .delete(
-        `${process.env.REACT_APP_API_URL}/job/deleteJob/${selectedJob?.id}`,
+        `${process.env.NEXT_PUBLIC_API_URL}/job/deleteJob/${selectedJob?.id}`,
         {
           headers: {
             Authorization: 'Bearer ' + idToken,

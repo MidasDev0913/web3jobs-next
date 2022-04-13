@@ -108,7 +108,7 @@ const ApplyJobPage = () => {
   useEffect(() => {
     if (selectedJob.tags && selectedJob.tags?.length) {
       axios
-        .get(`${process.env.REACT_APP_API_URL}/job/getSimilarJobsByTags`, {
+        .get(`${process.env.NEXT_PUBLIC_API_URL}/job/getSimilarJobsByTags`, {
           params: { tags: selectedJob.tags },
         })
         .then(({ data }) => {
@@ -120,7 +120,7 @@ const ApplyJobPage = () => {
 
     if (selectedJob.company_name) {
       axios
-        .get(`${process.env.REACT_APP_API_URL}/job/getMoreJobsInCompany`, {
+        .get(`${process.env.NEXT_PUBLIC_API_URL}/job/getMoreJobsInCompany`, {
           params: {
             company: selectedJob.company_name,
           },
@@ -136,7 +136,7 @@ const ApplyJobPage = () => {
   const handleSubscribe = () => { };
 
   const handleApplyJob = () => {
-    axios.post(`${process.env.REACT_APP_API_URL}/job/applyJob`, {
+    axios.post(`${process.env.NEXT_PUBLIC_API_URL}/job/applyJob`, {
       jobId: id,
     });
   };

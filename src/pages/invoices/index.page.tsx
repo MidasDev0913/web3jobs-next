@@ -52,7 +52,7 @@ const InvoicesPage = () => {
     if (!account) return;
     setLoading(true);
     axios
-      .get(`${process.env.REACT_APP_API_URL}/invoice/getInvoicesByCreator`, {
+      .get(`${process.env.NEXT_PUBLIC_API_URL}/invoice/getInvoicesByCreator`, {
         params: {
           userId: account?.toLowerCase(),
           isSortByAsc: sortOrder === 'asc',
