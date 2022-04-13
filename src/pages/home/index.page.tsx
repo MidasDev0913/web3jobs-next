@@ -216,7 +216,17 @@ const HomePage: React.FC<ComponentProps> = ({
   ) => {
     e.stopPropagation();
     if (isLoggedIn) {
-      dispatch(setFavorite({ jobId, userId: account?.toLowerCase() }));
+      dispatch(
+        setFavorite({
+          jobId,
+          userId: account?.toLowerCase(),
+          reload: () => {
+            router.replace(router.asPath, undefined, {
+              scroll: false,
+            });
+          },
+        })
+      );
     } else {
       setOpenConnectWalletModal(true);
     }
