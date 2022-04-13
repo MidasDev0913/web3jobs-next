@@ -17,11 +17,11 @@ const Footer = () => {
       flexDirection={{ xs: 'column', md: 'row' }}
       padding={{ xs: '13px 37px', md: '11px 77px' }}
     >
-      <Image
-        src={matchDownMd ? MobileLogo : Logo}
-        width={matchDownMd ? 35 : 180}
-        height={matchDownMd ? 35 : 48}
-      />
+      {matchDownMd ? (
+        <Image src={MobileLogo} width={35} height={35} />
+      ) : (
+        <Image src={Logo} width={180} height={48} />
+      )}
       <Box display="flex" alignItems="center" mt={{ xs: '10px', md: 0 }}>
         <Image
           src={TwitterIcon}

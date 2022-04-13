@@ -1,4 +1,4 @@
-import { styled, Link } from '@mui/material';
+import { styled, Link, Box } from '@mui/material';
 
 export const Container = styled(Link)(({ color }: { color?: string }) => ({
   display: 'flex',
@@ -86,7 +86,7 @@ export const Container = styled(Link)(({ color }: { color?: string }) => ({
   },
 }));
 
-export const ApplyButton = styled(Link)({
+export const ApplyButton = styled(Box)({
   background: '#B50000',
   padding: '10px 15px',
   borderRadius: 5,

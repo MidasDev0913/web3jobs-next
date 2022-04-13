@@ -257,6 +257,7 @@ const Header = () => {
               src={matchDownMd ? MobileLogo : Logo}
               width={matchDownMd ? 35 : 180}
               height={matchDownMd ? 35 : 48}
+              priority
             />
           </LogoContainer>
           {/* <MenuContainer>

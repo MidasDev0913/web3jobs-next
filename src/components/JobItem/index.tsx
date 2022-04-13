@@ -193,7 +193,6 @@ const JobItem = ({
                 {dayjs(job.posted_at).fromNow(true).replace(' ', '')}
               </Typography>
             </Box>
-            {/* <ApplyButton href={`/job/${job.id}`}>Apply</ApplyButton> */}
             <ApplyButton
               onClick={() => {
                 router.push({
