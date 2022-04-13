@@ -35,8 +35,8 @@ dayjs.updateLocale('en', {
     hh: '%d h',
     d: '1 d',
     dd: '%d d',
-    M: '1 month',
-    MM: '%d months',
+    M: '1 mo',
+    MM: '%d mo',
     y: '1 year',
     yy: '%d years',
   },
@@ -193,7 +193,6 @@ const JobItem = ({
                 {dayjs(job.posted_at).fromNow(true).replace(' ', '')}
               </Typography>
             </Box>
-            {/* <ApplyButton href={`/job/${job.id}`}>Apply</ApplyButton> */}
             <ApplyButton
               onClick={() => {
                 router.push({

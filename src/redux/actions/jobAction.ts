@@ -263,7 +263,7 @@ export function* getJobCountByCity(): any {
 
 export function* handleSetFavorite(action: any): any {
   try {
-    const { jobId, userId } = action.payload;
+    const { jobId, userId, reload } = action.payload;
     const { data }: any = yield axios.post(
       `${process.env.NEXT_PUBLIC_API_URL}/job/setFavoriteJob`,
       {
@@ -272,6 +272,9 @@ export function* handleSetFavorite(action: any): any {
       }
     );
     if (data.success) {
+      if (reload) {
+        reload();
+      }
       const newJob = data.newJob;
       yield put(setNewJob(newJob));
     }

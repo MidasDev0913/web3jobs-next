@@ -257,6 +257,7 @@ const Header = () => {
               src={matchDownMd ? MobileLogo : Logo}
               width={matchDownMd ? 35 : 180}
               height={matchDownMd ? 35 : 48}
+              priority
             />
           </LogoContainer>
           {/* <MenuContainer>
@@ -309,7 +310,7 @@ const Header = () => {
           ) : isLoggedIn ? (
             <>
               <HtmlTooltip
-                open
+                open={openAccountInfoPopup}
                 onClose={handleCloseAccountInfoPopover}
                 onOpen={handleOpenAccountInfoPopover}
                 placement="bottom-end"

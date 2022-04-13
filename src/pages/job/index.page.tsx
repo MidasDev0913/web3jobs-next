@@ -1,22 +1,15 @@
 import React, { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
-import Image from 'next/image';
-// import Link from 'next/link'
 
 import { useDispatch, useSelector } from 'react-redux';
 import Moment from 'react-moment';
-import { Box, Stack, Link, styled, Typography, Tooltip } from '@mui/material';
+import { Box, Link, Stack, styled, Typography, Tooltip } from '@mui/material';
 import { TooltipProps, tooltipClasses } from '@mui/material/Tooltip';
 import axios from 'axios';
-import { LinkedinShareButton, TwitterShareButton } from 'react-share';
-import { useGA4React } from 'ga-4-react';
+// import { LinkedinShareButton, TwitterShareButton } from 'react-share';
 import { logEvent } from 'firebase/analytics';
 
-import {
-  getOneJob,
-  viewJob,
-  setFavorite,
-} from '../../redux/reducers/jobReducer';
+import { viewJob, setFavorite } from '../../redux/reducers/jobReducer';
 import { RootState } from '../../redux/store';
 import { TJob } from '../../interfaces';
 import {
@@ -27,8 +20,8 @@ import {
   MobilePageContainer,
 } from './index.styles';
 import { WORKING_HOURS_MAPPING } from '../../utils/constants';
-import LinkedinIcon from '../../components/SVGIcons/LinkedinIcon';
-import TwitterIcon from '../../components/SVGIcons/TwitterIcon';
+// import LinkedinIcon from '../../components/SVGIcons/LinkedinIcon';
+// import TwitterIcon from '../../components/SVGIcons/TwitterIcon';
 
 import ClockIcon from '../../assets/icons/clock_icon.svg';
 // import NewsletterBgSvg from '../../assets/images/newsletter-bg.svg';
@@ -38,6 +31,7 @@ import ArrowRightIconHigh from '../../components/SVGIcons/ArrowRightIcon';
 import ArrowLeftIcon from '../../components/SVGIcons/ArrowLeftIcon';
 import { analytics } from '../../firebase';
 import { formatPriceAmount, getLocationText } from '../../utils/helper';
+import { NextPageContext } from 'next';
 const JobItem = React.lazy(() => import('../../components/JobItem'));
 // const SubscribeBox = React.lazy(() => import('../../components/SubscribeBox'));
 const EnjoyFeatureSection = React.lazy(
@@ -59,20 +53,20 @@ const HtmlTooltip = styled(({ className, ...props }: TooltipProps) => (
   },
 }));
 
-const ApplyJobPage = () => {
+type ComponentProps = {
+  job: TJob;
+};
+
+const ApplyJobPage: React.FC<ComponentProps> = (props) => {
   const dispatch = useDispatch();
   const router = useRouter();
-  // const { id } = useParams();
   const { id } = router.query;
-  const ga = useGA4React();
+  const { job } = props;
+  const selectedJob = job || {};
 
-  const { selectedJob: currentJob, loading } = useSelector(
-    (state: RootState) => state.job
-  );
   const { isLoggedIn, userInfo } = useSelector(
     (state: RootState) => state.auth
   );
-  const [selectedJob, setSelectedJob] = useState<TJob>(currentJob);
   const [similarJobs, setSimilarJobs] = useState<TJob[]>([]);
   const [companyJobs, setCompanyJobs] = useState<TJob[]>([]);
 
@@ -81,15 +75,10 @@ const ApplyJobPage = () => {
   // };
 
   useEffect(() => {
-    setSelectedJob(currentJob);
-  }, [currentJob]);
-
-  useEffect(() => {
     window.scrollTo({
       top: 0,
       behavior: 'auto',
     });
-    dispatch(getOneJob({ id }));
     logEvent(analytics, 'view_job', { id });
   }, [id]);
 
@@ -133,7 +122,7 @@ const ApplyJobPage = () => {
     }
   }, [selectedJob]);
 
-  const handleSubscribe = () => { };
+  const handleSubscribe = () => {};
 
   const handleApplyJob = () => {
     axios.post(`${process.env.NEXT_PUBLIC_API_URL}/job/applyJob`, {
@@ -142,14 +131,12 @@ const ApplyJobPage = () => {
   };
 
   const handleGoToCompany = () => {
-    // navigate(`/?company=${selectedJob.company_name}`, {
-    //   state: { goToJobs: true },
-    // });
     router.push({
       pathname: '/',
-      query: { 
+      query: {
+        ...router.query,
         company: selectedJob.company_name,
-        goToJobs: true ,
+        goToJobs: true,
       },
     });
   };
@@ -161,26 +148,19 @@ const ApplyJobPage = () => {
       e.stopPropagation();
 
       dispatch(
-        setFavorite({ jobId: id, userId: userInfo.address?.toLowerCase() })
+        setFavorite({
+          jobId: id,
+          userId: userInfo.address?.toLowerCase(),
+          reload: () => {
+            router.replace(router.asPath, undefined, {
+              scroll: false,
+            });
+          },
+        })
       );
-      const updateLikes: string[] = [...(selectedJob.likes || [])];
-      const index = updateLikes.findIndex(
-        (l) => l === userInfo.address?.toLowerCase()
-      );
-
-      if (index === -1) {
-        updateLikes.push(userInfo.address?.toLowerCase() || '');
-      } else {
-        updateLikes.splice(index, 1);
-      }
-
-      setSelectedJob({
-        ...selectedJob,
-        likes: [...updateLikes],
-      });
     }
   };
-  
+
   return (
     <>
       <Box
@@ -189,7 +169,9 @@ const ApplyJobPage = () => {
         ml="115px"
         mt={2.5}
         className="cursor__pointer"
-        onClick={() => router.push({ pathname: '/', query: { goToJobs: true } })}
+        onClick={() =>
+          router.push({ pathname: '/', query: { goToJobs: true } })
+        }
       >
         <ArrowLeftIcon />
         <Typography ml="15px">Back to Web3Jobs</Typography>
@@ -220,7 +202,7 @@ const ApplyJobPage = () => {
             </Typography>
             <Box display="flex" alignItems="center" ml="41px">
               <Box display="flex" alignItems="center" mr={1.5}>
-                <img src={ClockIcon.src} />
+                <img src={ClockIcon} />
               </Box>
               {/*
               // @ts-ignore */}
@@ -311,7 +293,7 @@ const ApplyJobPage = () => {
         >
           <Box display="flex" alignItems="start">
             {selectedJob.logo ? (
-              <img src={selectedJob.logo.src} className="apply-job-logo" />
+              <img src={selectedJob.logo} className="apply-job-logo" />
             ) : (
               <Box
                 display="flex"
@@ -359,8 +341,8 @@ const ApplyJobPage = () => {
               selectedJob.applyBy === 'email'
                 ? `mailto:${selectedJob.applyByUrl}?subject=${selectedJob.title} via Web3.jobs`
                 : selectedJob.applyByUrl?.includes('http')
-                  ? selectedJob.applyByUrl
-                  : `https://${selectedJob.applyByUrl}`
+                ? selectedJob.applyByUrl
+                : `https://${selectedJob.applyByUrl}`
             }
             target="_blank"
             rel="noreferrer"
@@ -378,7 +360,6 @@ const ApplyJobPage = () => {
             <Link className="link-to-company" onClick={handleGoToCompany}>
               Company Profile
             </Link>
-            
             <ArrowRightIcon />
           </Box>
         </CompanyInfoContainer>
@@ -407,7 +388,7 @@ const ApplyJobPage = () => {
           </Box>
           <Box display="flex" alignItems="center" mt="15px">
             {selectedJob.logo ? (
-              <img src={selectedJob.logo.src} className="apply-job-logo" />
+              <img src={selectedJob.logo} className="apply-job-logo" />
             ) : (
               <Box
                 display="flex"
@@ -477,8 +458,8 @@ const ApplyJobPage = () => {
             selectedJob.applyBy === 'email'
               ? `mailto:${selectedJob.applyByUrl}?subject=${selectedJob.title} via Web3.jobs`
               : selectedJob.applyByUrl?.includes('http')
-                ? selectedJob.applyByUrl
-                : `https://${selectedJob.applyByUrl}`
+              ? selectedJob.applyByUrl
+              : `https://${selectedJob.applyByUrl}`
           }
           target="_blank"
           rel="noreferrer"
@@ -487,23 +468,6 @@ const ApplyJobPage = () => {
         >
           Apply Now
         </a>
-        {/* <Link
-          href={
-            selectedJob.applyBy === 'email'
-              ? `mailto:${selectedJob.applyByUrl}?subject=${selectedJob.title} via Web3.jobs`
-              : selectedJob.applyByUrl?.includes('http')
-                ? selectedJob.applyByUrl
-                : `https://${selectedJob.applyByUrl}`
-          }
-          target="_blank"
-          rel="noreferrer"
-          onClick={handleApplyJob}
-          className="apply-button"
-        >
-          <a>
-            Apply Now
-          </a>
-        </Link> */}
         <Box mt={5.25} className="apply-job-description">
           <div dangerouslySetInnerHTML={{ __html: selectedJob.description }} />
         </Box>
@@ -522,14 +486,13 @@ const ApplyJobPage = () => {
             </LinkedinShareButton>
           </Box>
         </Box> */}
-        
-        {/* <a
+        <a
           href={
             selectedJob.applyBy === 'email'
               ? `mailto:${selectedJob.applyByUrl}?subject=${selectedJob.title} via Web3.jobs`
               : selectedJob.applyByUrl?.includes('http')
-                ? selectedJob.applyByUrl
-                : `https://${selectedJob.applyByUrl}`
+              ? selectedJob.applyByUrl
+              : `https://${selectedJob.applyByUrl}`
           }
           target="_blank"
           rel="noreferrer"
@@ -537,21 +500,7 @@ const ApplyJobPage = () => {
           className="apply-button"
         >
           Apply Now
-        </a> */}
-        <Link href={
-            selectedJob.applyBy === 'email'
-              ? `mailto:${selectedJob.applyByUrl}?subject=${selectedJob.title} via Web3.jobs`
-              : selectedJob.applyByUrl?.includes('http')
-                ? selectedJob.applyByUrl
-                : `https://${selectedJob.applyByUrl}`
-          }
-          target="_blank"
-          rel="noreferrer"
-          onClick={handleApplyJob}
-          className="apply-button"
-          >
-          <a>Apply Now</a>
-        </Link>
+        </a>
         <Stack
           direction="row"
           width="100%"
@@ -562,17 +511,11 @@ const ApplyJobPage = () => {
             <Link className="link-to-company" onClick={handleGoToCompany}>
               Company Profile
             </Link>
-            {/* <Link href={{
-              pathname: `/?company=${selectedJob.company_name}`,
-              query: { goToJobs: true },
-            }} className="link-to-company">
-              Company Profile
-            </Link> */}
             <ArrowRightIcon />
           </Box>
           <Box display="flex" alignItems="center" fontSize={13}>
             <Box display="flex" alignItems="center" mr={1.5}>
-              <img src={ClockIcon.src} />
+              <img src={ClockIcon} />
             </Box>
             {/*
               // @ts-ignore */}
@@ -627,12 +570,6 @@ const ApplyJobPage = () => {
               <Link className="link-to-jobs" onClick={handleGoToCompany}>
                 Company Profile
               </Link>
-              {/* <Link href={{
-                pathname: `/?company=${selectedJob.company_name}`,
-                query: { goToJobs: true },
-              }} className="link-to-jobs">
-                Company Profile
-              </Link> */}
               <ArrowRightIconHigh />
             </Box>
           </Box>
@@ -683,10 +620,7 @@ const ApplyJobPage = () => {
         <EnjoyFeatureSection
           onHireTalent={() => router.push('/post-job')}
           onGetJob={() =>
-            router.push({
-              pathname: '/',
-              query: { goToJobs: true },
-            })
+            router.push({ pathname: '/', query: { goToJobs: true } })
           }
         />
         {/* <Box marginTop="86px" className="home-newsletter">
@@ -698,6 +632,22 @@ const ApplyJobPage = () => {
       </BottomContainer>
     </>
   );
+};
+
+export const getServerSideProps = async (ctx: NextPageContext) => {
+  const { query } = ctx;
+  const { data } = await axios.get(
+    `${process.env.REACT_APP_API_URL}/job/getJobById`,
+    {
+      params: { id: query.id },
+    }
+  );
+
+  return {
+    props: {
+      job: data.job,
+    },
+  };
 };
 
 export default ApplyJobPage;

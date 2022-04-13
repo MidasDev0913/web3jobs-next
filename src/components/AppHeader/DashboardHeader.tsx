@@ -205,7 +205,9 @@ const Header: React.FC<ComponentProps> = ({
           )}
           <WalletAddressBox>
             <Image src={MetamaskIcon} width={28} height={27} />
-            {getAbbrAddress(account || '', 5, 4)}
+            <Typography ml={2}>
+              {getAbbrAddress(account || '', 5, 4)}
+            </Typography>
           </WalletAddressBox>
         </Box>
       </ButtonContainer>
