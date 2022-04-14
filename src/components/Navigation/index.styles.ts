@@ -72,4 +72,5 @@ export const CollapseIconButton = styled(IconButton)`
   justify-content: center;
   background: rgba(255, 255, 255, 0.15);
   border-radius: 24px;
+  transform-origin: left center;
 `;

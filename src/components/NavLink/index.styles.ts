@@ -66,10 +66,14 @@ export const LinkWrapper = styled(Box)(
     },
 
     '& > span': {
+      display: "flex",
+      alignItems: "center",
+      columnGap: "20px",
+      marginLeft: 0,
+
       fontSize: 14,
       fontWeight: 500,
       lineHeight: '100%',
-      marginLeft: 16,
       color: active ? '#fff' : '#A3A1A1',
 
       '&:only-child': {
