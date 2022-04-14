@@ -113,7 +113,7 @@ const JobDeleteConfirmModal = ({
         </Box>
         <Box className="modal-body">
           <div className="modal-body-logo">
-            <Image src={WarningSVG} layout="fill" />
+            <Image src={WarningSVG} />
           </div>
           <span className="modal-body-title">Are you sure?</span>
           <Box className="modal-body-text">
