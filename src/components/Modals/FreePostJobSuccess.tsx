@@ -93,7 +93,7 @@ export const FreePostJobSuccess: React.FC<ComponentProps> = ({
           alignItems="center"
           padding={{ xs: '38px 51px 51px', md: '95px 99px 48px' }}
         >
-          <Image src={SuccessSVG} />
+          <Image src={SuccessSVG} layout="fill" />
           <Typography
             fontSize={18}
             lineHeight="22px"

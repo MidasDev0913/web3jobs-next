@@ -125,6 +125,12 @@ const PaymentConfirmModal = ({
         >
           {loading && <CircularProgress thickness={5} size={24} />}
           <Box ml={2}>Proceed to Metamask</Box>
+          {/* <img
+            src={MetamaskIcon}
+            width="28px"
+            height="27px"
+            style={{ marginLeft: '12px' }}
+          /> */}
           <div style={{ marginLeft: '12px' }}>
           <Image
             src={MetamaskIcon}
