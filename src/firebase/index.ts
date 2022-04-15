@@ -3,12 +3,12 @@ import { getAnalytics } from 'firebase/analytics';
 import { getAuth } from 'firebase/auth';
 import { getStorage } from 'firebase/storage';
 
-// const key = JSON.parse(process.env.NEXT_PUBLIC_FIREBASE_KEY || '{}');
+// const key = JSON.parse(process.env.REACT_APP_FIREBASE_KEY || '{}');
 // const app = initializeApp(key);
 // const analytics = getAnalytics(app);
 
 const firebaseConfig = JSON.parse(
-  process?.env?.NEXT_PUBLIC_FIREBASE_KEY ?? '{}',
+  process?.env?.REACT_APP_FIREBASE_KEY ?? '{}',
 );
 
 let analytics: any;

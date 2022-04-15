@@ -9,7 +9,7 @@ export function* getAllOrganizations(action: any): any {
   try {
     const { userId } = action.payload;
     const { data }: any = yield axios.get(
-      `${process.env.NEXT_PUBLIC_API_URL}/organization/getOrganizationsByUserId`,
+      `${process.env.REACT_APP_API_URL}/organization/getOrganizationsByUserId`,
       {
         params: { userId },
       }
@@ -26,7 +26,7 @@ export function* getAllCompanies(action: any): any {
   try {
     const { userId } = action.payload;
     const { data }: any = yield axios.get(
-      `${process.env.NEXT_PUBLIC_API_URL}/organization/getCompaniesByUserId`,
+      `${process.env.REACT_APP_API_URL}/organization/getCompaniesByUserId`,
       {
         params: { userId },
       }

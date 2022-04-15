@@ -148,7 +148,7 @@ export function* handlePostNewJob(action: any): any {
 
     const idToken = localStorage.getItem('jwt_token');
     const { data } = yield axios.post(
-      `${process.env.NEXT_PUBLIC_API_URL}/job/addNewJob`,
+      `${process.env.REACT_APP_API_URL}/job/addNewJob`,
       {
         job: {
           ...newJob,
@@ -183,7 +183,7 @@ export function* getAllJobs(action: any): any {
   try {
     const params = action.payload;
     const { data }: any = yield axios.get(
-      `${process.env.NEXT_PUBLIC_API_URL}/job/getAllJobs`,
+      `${process.env.REACT_APP_API_URL}/job/getAllJobs`,
       {
         params,
       }
@@ -209,7 +209,7 @@ export function* getJobById(action: any): any {
   try {
     const { id } = action.payload;
     const { data }: any = yield axios.get(
-      `${process.env.NEXT_PUBLIC_API_URL}/job/getJobById`,
+      `${process.env.REACT_APP_API_URL}/job/getJobById`,
       {
         params: { id },
       }
@@ -226,7 +226,7 @@ export function* handleViewJob(action: any): any {
   try {
     const { account, jobId } = action.payload;
     const { data }: any = yield axios.post(
-      `${process.env.NEXT_PUBLIC_API_URL}/job/viewJob`,
+      `${process.env.REACT_APP_API_URL}/job/viewJob`,
       {
         userId: account || '',
         jobId,
@@ -234,7 +234,7 @@ export function* handleViewJob(action: any): any {
     );
     if (data.success && account) {
       const { data }: any = yield axios.get(
-        `${process.env.NEXT_PUBLIC_API_URL}/job/getViewedJobs`,
+        `${process.env.REACT_APP_API_URL}/job/getViewedJobs`,
         {
           params: { userId: account },
         }
@@ -251,7 +251,7 @@ export function* handleViewJob(action: any): any {
 export function* getJobCountByCity(): any {
   try {
     const { data }: any = yield axios.get(
-      `${process.env.NEXT_PUBLIC_API_URL}/job/getJobCountByCity`
+      `${process.env.REACT_APP_API_URL}/job/getJobCountByCity`
     );
     if (data.success) {
       yield put(setJobInCities(data.data));
@@ -265,7 +265,7 @@ export function* handleSetFavorite(action: any): any {
   try {
     const { jobId, userId, reload } = action.payload;
     const { data }: any = yield axios.post(
-      `${process.env.NEXT_PUBLIC_API_URL}/job/setFavoriteJob`,
+      `${process.env.REACT_APP_API_URL}/job/setFavoriteJob`,
       {
         jobId,
         userId,
@@ -288,7 +288,7 @@ export function* handleEditJob(action: any): any {
     const { job, userId, saveHistory, onSuccess } = action.payload;
     const idToken = localStorage.getItem('jwt_token');
     const { data }: any = yield axios.put(
-      `${process.env.NEXT_PUBLIC_API_URL}/job/editJobByManager`,
+      `${process.env.REACT_APP_API_URL}/job/editJobByManager`,
       {
         job,
         userId,

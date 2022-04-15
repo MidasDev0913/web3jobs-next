@@ -18,7 +18,7 @@ const handleSignIn = async (
   openJoinPopup?: () => void
 ) => {
   const response = await axios.get(
-    `${process.env.NEXT_PUBLIC_API_URL}/user/getMessageToSign?address=${address}&type=${type}`
+    `${process.env.REACT_APP_API_URL}/user/getMessageToSign?address=${address}&type=${type}`
   );
   if (!response.data.isExisting) {
     if (openJoinPopup) {
@@ -42,7 +42,7 @@ const handleSignIn = async (
   );
 
   const jwtResponse = await axios.get(
-    `${process.env.NEXT_PUBLIC_API_URL}/user/getJwt?address=${address}&signature=${signature}`
+    `${process.env.REACT_APP_API_URL}/user/getJwt?address=${address}&signature=${signature}`
   );
 
   const customToken = jwtResponse?.data?.customToken;
@@ -77,7 +77,7 @@ export function* handleConnectWallet(action: any): any {
     }
 
     const { data }: any = yield axios.get(
-      `${process.env.NEXT_PUBLIC_API_URL}/job/getViewedJobs`,
+      `${process.env.REACT_APP_API_URL}/job/getViewedJobs`,
       {
         params: { userId: account.toLowerCase() },
       }
@@ -126,7 +126,7 @@ export function* handleLoginWithToken(action: any): any {
       axios.defaults.headers.common['Authorization'] = 'Bearer ' + idToken;
 
       const { data }: any = yield axios.get(
-        `${process.env.NEXT_PUBLIC_API_URL}/user/getUserInfo`,
+        `${process.env.REACT_APP_API_URL}/user/getUserInfo`,
         {
           params: { id: account },
         }
@@ -161,7 +161,7 @@ export function* handleGetViewedJobs(action: any): any {
   try {
     const { account } = action.payload;
     const { data }: any = yield axios.get(
-      `${process.env.NEXT_PUBLIC_API_URL}/job/getViewedJobs`,
+      `${process.env.REACT_APP_API_URL}/job/getViewedJobs`,
       {
         params: { userId: account },
       }

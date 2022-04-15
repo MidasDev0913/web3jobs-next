@@ -97,7 +97,7 @@ const ApplyJobPage: React.FC<ComponentProps> = (props) => {
   useEffect(() => {
     if (selectedJob.tags && selectedJob.tags?.length) {
       axios
-        .get(`${process.env.NEXT_PUBLIC_API_URL}/job/getSimilarJobsByTags`, {
+        .get(`${process.env.REACT_APP_API_URL}/job/getSimilarJobsByTags`, {
           params: { tags: selectedJob.tags },
         })
         .then(({ data }) => {
@@ -109,7 +109,7 @@ const ApplyJobPage: React.FC<ComponentProps> = (props) => {
 
     if (selectedJob.company_name) {
       axios
-        .get(`${process.env.NEXT_PUBLIC_API_URL}/job/getMoreJobsInCompany`, {
+        .get(`${process.env.REACT_APP_API_URL}/job/getMoreJobsInCompany`, {
           params: {
             company: selectedJob.company_name,
           },
@@ -125,7 +125,7 @@ const ApplyJobPage: React.FC<ComponentProps> = (props) => {
   const handleSubscribe = () => {};
 
   const handleApplyJob = () => {
-    axios.post(`${process.env.NEXT_PUBLIC_API_URL}/job/applyJob`, {
+    axios.post(`${process.env.REACT_APP_API_URL}/job/applyJob`, {
       jobId: id,
     });
   };

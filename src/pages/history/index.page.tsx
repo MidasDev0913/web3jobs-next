@@ -20,7 +20,7 @@ const HistoryPage = () => {
   useEffect(() => {
     setLoading(true);
     axios
-      .get(`${process.env.NEXT_PUBLIC_API_URL}/job/getJobEditHistory`, {
+      .get(`${process.env.REACT_APP_API_URL}/job/getJobEditHistory`, {
         params: {
           userId: account?.toLowerCase(),
         },

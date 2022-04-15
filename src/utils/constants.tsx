@@ -80,7 +80,7 @@ export const ETH_MAINNET_CHAIN_ID = 1;
 export const ETH_TESTNET_CHAIN_ID = 4;
 
 export const walletConnect = {
-  walletconnect: { rpcUrl: process.env.NEXT_PUBLIC_INFURA_URL || '' },
+  walletconnect: { rpcUrl: process.env.REACT_APP_INFURA_URL || '' },
   bsc: {
     web3ReactConnector() {
       return new BscConnector({ supportedChainIds: [56, 97] });

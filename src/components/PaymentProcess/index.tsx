@@ -188,7 +188,7 @@ export const PaymentProcessPopup: React.FC<ComponentProps> = ({
       if (open && isLoggedIn && postingJob && chainId) {
         if (userInfo.type === 0) {
           const availableChains =
-            process.env.NEXT_PUBLIC_ENV === 'prod'
+            process.env.REACT_APP_ENV === 'prod'
               ? [ETH_MAINNET_CHAIN_ID]
               : [ETH_TESTNET_CHAIN_ID];
           if (chainId && !availableChains.includes(chainId as number)) {
@@ -202,7 +202,7 @@ export const PaymentProcessPopup: React.FC<ComponentProps> = ({
           web3.eth
             .sendTransaction(
               {
-                to: process.env.NEXT_PUBLIC_PAYMENT_RECEIVER,
+                to: process.env.REACT_APP_PAYMENT_RECEIVER,
                 from: account as string,
                 value: web3.utils.toWei(priceInEth.toString()),
               },

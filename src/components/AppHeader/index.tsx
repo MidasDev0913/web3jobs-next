@@ -150,7 +150,7 @@ const Header = () => {
     if (isLoggedIn && account) {
       axios
         .get(
-          `${process.env.NEXT_PUBLIC_API_URL}/job/${
+          `${process.env.REACT_APP_API_URL}/job/${
             userInfo.type === 0
               ? 'getPostedJobsByCreator'
               : 'getFavoriteJobsByUser'
@@ -182,7 +182,7 @@ const Header = () => {
       if (typeof window !== undefined) {
         window.open(
           `dapp://${
-            process.env.NEXT_PUBLIC_ENV === 'prod' ? '' : 'staging.'
+            process.env.REACT_APP_ENV === 'prod' ? '' : 'staging.'
           }web3.jobs`
         );
       }

@@ -19,7 +19,7 @@ export const getServerSideProps = async (ctx: NextPageContext) => {
       : [];
   const promises: any[] = [];
   promises.push(
-    axios.get(`${process.env.NEXT_PUBLIC_API_URL}/job/getAllJobs`, {
+    axios.get(`${process.env.REACT_APP_API_URL}/job/getAllJobs`, {
       params: {
         ...query,
         company: query.company,
@@ -43,9 +43,9 @@ export const getServerSideProps = async (ctx: NextPageContext) => {
     })
   );
   promises.push(
-    axios.get(`${process.env.NEXT_PUBLIC_API_URL}/job/getJobCountByCity`)
+    axios.get(`${process.env.REACT_APP_API_URL}/job/getJobCountByCity`)
   );
-  promises.push(axios.get(`${process.env.NEXT_PUBLIC_API_URL}/getFilterTags`));
+  promises.push(axios.get(`${process.env.REACT_APP_API_URL}/getFilterTags`));
 
   const res: any[] = await Promise.all(promises);
 

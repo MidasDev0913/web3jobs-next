@@ -84,7 +84,7 @@ const DashboardPage = () => {
       if (period === HistoryPeriod.TODAY) {
         const date: number = new Date(curYear, curMonth, curDate).getTime();
         const { data } = await axios.get(
-          `${process.env.NEXT_PUBLIC_API_URL}/job/getJobStatusHistoryByDate`,
+          `${process.env.REACT_APP_API_URL}/job/getJobStatusHistoryByDate`,
           {
             params: {
               userId: (account || '').toLowerCase(),
@@ -116,7 +116,7 @@ const DashboardPage = () => {
           new Date(curYear, curMonth, curDate).getTime() -
           24 * 3600 * 1000 * curWeekDay;
         const { data } = await axios.get(
-          `${process.env.NEXT_PUBLIC_API_URL}/job/getJobStatusHistoryByDate`,
+          `${process.env.REACT_APP_API_URL}/job/getJobStatusHistoryByDate`,
           {
             params: {
               userId: (account || '').toLowerCase(),
@@ -157,7 +157,7 @@ const DashboardPage = () => {
           new Date(curYear, curMonth + 1, 1).getTime() - 1;
 
         const { data } = await axios.get(
-          `${process.env.NEXT_PUBLIC_API_URL}/job/getJobStatusHistoryByDate`,
+          `${process.env.REACT_APP_API_URL}/job/getJobStatusHistoryByDate`,
           {
             params: {
               userId: (account || '').toLowerCase(),
@@ -203,7 +203,7 @@ const DashboardPage = () => {
     if (!account) return;
     setLoadingTableData(true);
     axios
-      .get(`${process.env.NEXT_PUBLIC_API_URL}/job/getPostedJobsByCreator`, {
+      .get(`${process.env.REACT_APP_API_URL}/job/getPostedJobsByCreator`, {
         params: {
           userId: account?.toLowerCase(),
           limit: 10,

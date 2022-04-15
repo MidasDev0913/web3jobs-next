@@ -15,7 +15,6 @@ import { customizedTheme } from './theme';
 import { getLibrary } from '../utils/helper';
 import MainLayout from '../components/MainLayout';
 import PersonalDashboardLayout from '../components/PersonalDashboardLayout';
-import LoadScript from '../components/LoadScript'
 
 interface Route {
   [key: string]: boolean;
@@ -42,24 +41,22 @@ function MyApp({ Component, pageProps }: AppProps) {
   const theme = createTheme(customizedTheme);
 
   useEffect(() => {
-    axios.post(`${process.env.NEXT_PUBLIC_API_URL}/history/increaseVisitors`);
+    axios.post(`${process.env.REACT_APP_API_URL}/history/increaseVisitors`);
   }, []);
 
-  if (process.env.NEXT_PUBLIC_ENV === 'prod') {
-    console.log = () => { };
+  if (process.env.REACT_APP_ENV === 'prod') {
+    console.log = () => {};
   }
 
   const path = router.pathname;
   const isMainLayout = routes[path];
 
-  return (<>
-    <LoadScript />
+  return (
     <WalletProvider connectors={walletConnect}>
       <Web3Provider getLibrary={getLibrary}>
         <ThemeProvider theme={theme}>
           {/*
           @ts-ignore */}
-
           <SnackbarProvider maxSnack={3}>
             <Provider store={store}>
               {isMainLayout && (
@@ -77,7 +74,6 @@ function MyApp({ Component, pageProps }: AppProps) {
         </ThemeProvider>
       </Web3Provider>
     </WalletProvider>
-  </>
   );
 }
 
