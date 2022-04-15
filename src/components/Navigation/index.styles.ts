@@ -11,8 +11,7 @@ export const NavigationContainer = styled(Box)(
       letterSpacing: '0.01em',
       marginLeft: collapsed ? 0 : 65,
       color: '#FFFFFF',
-      display: 'flex',
-      alignItems: 'center',
+
       '&:hover': {
         textDecoration: 'none',
       },
@@ -32,17 +31,18 @@ export const NavigationContainer = styled(Box)(
       boxSizing: 'border-box',
       transition: 'width 0.3s',
 
-      '& .menu-wapper': {
+      '& > .menu-wapper': {
         height: '100%',
         overflowY: 'hidden',
         overflowX: 'hidden',
         scrollbarWidth: 'none' /* Firefox */,
         width: '100%',
-        padding: '70px 0px !important',
 
         '& > ul': {
           minHeight: '100%',
           margin: 0,
+          padding: '70px 0',
+
           '& > li:last-child a svg': {
             color: 'red',
           },
@@ -50,11 +50,11 @@ export const NavigationContainer = styled(Box)(
       },
 
       '& img': {
-        width: '140px',
-        height: '40px',
-        // marginTop: '14px',
-        // marginLeft: '31px',
-        // marginBottom: '21px',
+        width: '74px',
+        height: '32px',
+        marginTop: '14px',
+        marginLeft: '31px',
+        marginBottom: '21px',
       },
     },
   })

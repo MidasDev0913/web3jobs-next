@@ -117,7 +117,7 @@ const Header: React.FC<ComponentProps> = ({
   return (
     <HeaderContainer width="100%">
       <ButtonContainer justifyContent="space-between" width="100%">
-        <Box display="flex" alignItems="center" padding="0px 16px">
+        <Box display="flex" alignItems="center">
           <Box
             bgcolor="#199FD9"
             padding="3px 25px 4px 14px"
