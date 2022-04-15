@@ -54,7 +54,7 @@ const Navigation = ({
           position="relative"
         >
           <Link href="/" className="nav-logo">
-            <img src={matchDownMd || collapsed ? MobileLogo.src : Logo.src} />
+            <img src={matchDownMd ? MobileLogo.src : Logo.src} />
           </Link>
           <CollapseIconButton
             onClick={handleCollapse}

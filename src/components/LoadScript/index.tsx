@@ -22,11 +22,10 @@ const LoadScript = () => {
         strategy="beforeInteractive"
         dangerouslySetInnerHTML={{
           __html: `window.dataLayer = window.dataLayer || [];
-          function gtag() {
-            dataLayer.push(arguments);
-          }
-          gtag('js', new Date());
-          gtag('config', 'AW-10924165313');` }} />
+            function gtag() {
+              dataLayer.push(arguments);
+              gtag('js', new Date());
+        gtag('config', 'AW-10924165313');` }} />
       <Script
         strategy="beforeInteractive"
         src="https://unpkg.com/pdfjs-dist/build/pdf.min.js"></Script>
