@@ -312,15 +312,21 @@ const DashboardPage = () => {
               flexDirection="column"
               justifyContent="space-between"
               width={230}
-              height="142px"
+              height="312px"
               border="0.7px solid #FFFFFF"
               borderRadius="5px"
-              padding="15px 25px"
+              padding="35px 25px"
               bgcolor="#181824"
               boxSizing="border-box"
               mt={1}
             >
-              
+              <Box display="flex" flexDirection="column">
+                <Typography fontWeight={500}>Total Impression</Typography>
+                <Typography fontWeight={700} fontSize={30} mt={1}>
+                  723
+                </Typography>
+                <Typography color="#A3A1A1">From 14 Jan to 21 Jan</Typography>
+              </Box>
               <Box display="flex">
                 <Box
                   bgcolor="#B50000"
