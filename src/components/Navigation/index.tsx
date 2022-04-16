@@ -39,44 +39,50 @@ const Navigation = ({
 
   const renderNavigation = () => (
     <>
+
       <Box
-        display="flex"
-        alignItems="center"
-        justifyContent="space-between"
-        height="fit-content"
-        width="calc(100% - 24px)"
-        padding={collapsed ? '0 8px 0 16px' : '0px'}
-        mr={collapsed ? 0 : 3}
-        position="relative"
+        display="block"
       >
-        <Link href="/" className="nav-logo">
-          <img src={matchDownMd ? MobileLogo : Logo} />
-        </Link>
-        <CollapseIconButton
-          onClick={handleCollapse}
-          style={{ transform: collapsed ? 'rotate(180deg)' : 'none' }}
+        <Box
+          display="flex"
+          alignItems="center"
+          justifyContent="space-between"
+          height="fit-content"
+          width="calc(100% - 24px)"
+          padding={collapsed ? '0 8px 0 16px' : '0px'}
+          mr={collapsed ? 0 : 3}
+          position="relative"
         >
-          <ArrowLeftIcon />
-        </CollapseIconButton>
+          <Link href="/" className="nav-logo">
+            <img src={matchDownMd ? MobileLogo.src : Logo.src} />
+          </Link>
+          <CollapseIconButton
+            onClick={handleCollapse}
+            style={{ transform: collapsed ? 'rotate(180deg)' : 'none' }}
+          >
+            <ArrowLeftIcon />
+          </CollapseIconButton>
+        </Box>
+        <div className="menu-wapper">
+          <ul>
+            {NavigationLinks.map((link: NavigationLinkProps) => {
+              console.log("midas",link);
+              return <NavLink
+                href={link.link || '/'}
+                key={link.key}
+                id={link.key}
+                active={url === link.link}
+                collapsed={collapsed}
+              >
+                <Box className="icon-wrapper">{link.icon}</Box>
+                {!collapsed && (
+                  <span style={{ whiteSpace: 'nowrap' }}>{link.title}</span>
+                )}
+              </NavLink>
+            })}
+          </ul>
+        </div>
       </Box>
-      <div className="menu-wapper">
-        <ul>
-          {NavigationLinks.map((link: NavigationLinkProps) => (
-            <NavLink
-              href={link.link || '/'}
-              key={link.key}
-              id={link.key}
-              active={url === link.link}
-              collapsed={collapsed}
-            >
-              <Box className="icon-wrapper">{link.icon}</Box>
-              {!collapsed && (
-                <span style={{ whiteSpace: 'nowrap' }}>{link.title}</span>
-              )}
-            </NavLink>
-          ))}
-        </ul>
-      </div>
     </>
   );
 
