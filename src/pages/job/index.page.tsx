@@ -202,7 +202,7 @@ const ApplyJobPage: React.FC<ComponentProps> = (props) => {
             </Typography>
             <Box display="flex" alignItems="center" ml="41px">
               <Box display="flex" alignItems="center" mr={1.5}>
-                <img src={ClockIcon} />
+                <img src={ClockIcon.src} />
               </Box>
               {/*
               // @ts-ignore */}
@@ -293,7 +293,7 @@ const ApplyJobPage: React.FC<ComponentProps> = (props) => {
         >
           <Box display="flex" alignItems="start">
             {selectedJob.logo ? (
-              <img src={selectedJob.logo} className="apply-job-logo" />
+              <img src={selectedJob.logo.src} className="apply-job-logo" />
             ) : (
               <Box
                 display="flex"
@@ -388,7 +388,7 @@ const ApplyJobPage: React.FC<ComponentProps> = (props) => {
           </Box>
           <Box display="flex" alignItems="center" mt="15px">
             {selectedJob.logo ? (
-              <img src={selectedJob.logo} className="apply-job-logo" />
+              <img src={selectedJob.logo.src} className="apply-job-logo" />
             ) : (
               <Box
                 display="flex"
@@ -515,7 +515,7 @@ const ApplyJobPage: React.FC<ComponentProps> = (props) => {
           </Box>
           <Box display="flex" alignItems="center" fontSize={13}>
             <Box display="flex" alignItems="center" mr={1.5}>
-              <img src={ClockIcon} />
+              <img src={ClockIcon.src} />
             </Box>
             {/*
               // @ts-ignore */}
