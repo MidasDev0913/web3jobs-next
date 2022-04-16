@@ -647,7 +647,6 @@ const PostJobPage = () => {
               ) : price.total ? (
                 <>
                   <Box>Proceed to Metamask</Box>
-                  {/* <img src={MetamaskIcon} width="28px" height="27px" /> */}
                   <Image src={MetamaskIcon} width={28} height={27} />
                 </>
               ) : (

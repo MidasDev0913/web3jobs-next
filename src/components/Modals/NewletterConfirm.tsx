@@ -311,7 +311,6 @@ const NewsletterConfirm = ({
                       ...params.inputProps,
                       startAdornment: (
                         <InputAdornment position="start">
-                          {/* <img src={SearchIcon} width="17px" height="17px" /> */}
                           <Image src={SearchIcon} width={17} height={17} />
                         </InputAdornment>
                       ),

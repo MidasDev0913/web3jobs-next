@@ -212,7 +212,6 @@ const FilterSidebar: React.FC<ComponentProps> = ({
                 startAdornment: (
                   <InputAdornment position="start">
                     <Image src={SearchIcon} width={17} height={17}/>
-                    {/* <img src={SearchIcon} width="17px" height="17px" /> */}
                   </InputAdornment>
                 ),
                 endAdornment: (
