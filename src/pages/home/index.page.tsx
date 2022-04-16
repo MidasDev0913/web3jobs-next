@@ -364,7 +364,7 @@ const HomePage: React.FC<ComponentProps> = ({
           mt={4}
           px={9}
         >
-          Browse {jobData?.totalJobs || 0} jobs in Web3 at{' '}
+          Browse {jobData?.totalJobs || 0} jobs at{' '}
           {jobData?.totalCompanies || 0} Web3 Projects
         </Typography>
       </Box>

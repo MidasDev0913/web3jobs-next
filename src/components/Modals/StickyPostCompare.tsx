@@ -133,10 +133,6 @@ const StickyPostCompare = ({
       })
     );
   }, []);
-  //modified by midas start
-  // const fr = new FileReader();
-  // if (logo) fr.readAsDataURL(logo);
-  //modified by midas end
 
   const Container = () => (
     <ContainerBox
@@ -152,13 +148,13 @@ const StickyPostCompare = ({
         {matchDownMd ? (
           <Box height="8px" />
         ) : (
-            <Box className="filter-button">
-              <FilterButton>
-                <FilterIcon />
-              </FilterButton>
-              <span>Filter</span>
-            </Box>
-          )}
+          <Box className="filter-button">
+            <FilterButton>
+              <FilterIcon />
+            </FilterButton>
+            <span>Filter</span>
+          </Box>
+        )}
         {fetchLoading ? (
           <>
             <JobItemSkeleton />
@@ -177,34 +173,34 @@ const StickyPostCompare = ({
             </Box>
           </>
         ) : (
-            <>
-              <Box style={{ border: '1px solid #fff' }}>
-                <JobItem
-                  job={{ ...job, logo: logo ? URL.createObjectURL(logo) : '' }}
-                  disabled={true}
-                />
+          <>
+            <Box style={{ border: '1px solid #fff' }}>
+              <JobItem
+                job={{ ...job, logo: logo ? URL.createObjectURL(logo) : '' }}
+                disabled={true}
+              />
+            </Box>
+            {jobs.length > 0 && (
+              <Box
+                marginTop="5px"
+                marginBottom={{ xs: '23px', md: '114px' }}
+                position="relative"
+              >
+                <JobItem job={jobs[0]} disabled={true} />
+                {!isHiddenMask && (
+                  <Box
+                    bgcolor="rgba(5, 5, 13, 0.85)"
+                    position="absolute"
+                    top={0}
+                    left={0}
+                    width="100%"
+                    height="100%"
+                  />
+                )}
               </Box>
-              {jobs.length > 0 && (
-                <Box
-                  marginTop="5px"
-                  marginBottom={{ xs: '23px', md: '114px' }}
-                  position="relative"
-                >
-                  <JobItem job={jobs[0]} disabled={true} />
-                  {!isHiddenMask && (
-                    <Box
-                      bgcolor="rgba(5, 5, 13, 0.85)"
-                      position="absolute"
-                      top={0}
-                      left={0}
-                      width="100%"
-                      height="100%"
-                    />
-                  )}
-                </Box>
-              )}
-            </>
-          )}
+            )}
+          </>
+        )}
       </Box>
     </ContainerBox>
   );
@@ -212,7 +208,12 @@ const StickyPostCompare = ({
   if (matchDownMd) {
     return (
       <Drawer anchor={'bottom'} open={open} onClose={onClose}>
-        <Stack width="100%" height="fit-content" bgcolor="#05050D" overflow="hidden">
+        <Stack
+          width="100%"
+          height="fit-content"
+          bgcolor="#05050D"
+          overflow="hidden"
+        >
           <Container />
         </Stack>
       </Drawer>

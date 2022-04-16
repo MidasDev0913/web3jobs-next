@@ -1,21 +1,29 @@
 import React, { ReactNode, useState } from 'react';
-import { Box } from '@mui/material';
+import { Box, useTheme, useMediaQuery } from '@mui/material';
 
 import { Wrapper, MainContainer } from './index.styles';
 import { Navigation } from '../Navigation';
-import Header from '../AppHeader/DashboardHeader';
 
 export type Props = {
   children?: ReactNode;
 };
 
 const PersonalDashboardLayout = ({ children }: Props) => {
+  const theme = useTheme();
+  const matchDownMd = useMediaQuery(theme.breakpoints.down('md'));
   const [collapsed, setCollapsed] = useState<boolean>(false);
 
   return (
     <Wrapper>
-      <Navigation collapsed={collapsed} setCollapsed={setCollapsed} />
-      <MainContainer collapsed={collapsed}>
+      {!matchDownMd && (
+        <Navigation collapsed={collapsed} setCollapsed={setCollapsed} />
+      )}
+      <MainContainer
+        padding={{
+          xs: '27px 15px',
+          md: collapsed ? '32px 36px 90px 137px' : '32px 36px 90px 283px',
+        }}
+      >
         <Box>{children}</Box>
       </MainContainer>
     </Wrapper>

@@ -1,4 +1,4 @@
-import { styled, Stack, Box, Popover } from '@mui/material';
+import { styled, Stack, Box } from '@mui/material';
 
 export const ChartWrapper = styled(Stack)`
   & .MuiSelect-select {
@@ -56,6 +56,20 @@ export const DataTableContainer = styled(Box)`
     max-height: 325px;
     & .MuiTableCell-root {
       padding: 8px 0px;
+      border: none;
+    }
+  }
+  & .MuiTablePagination-selectLabel {
+    display: none;
+  }
+  ${(props) => props.theme.breakpoints.down('md')} {
+    & .MuiTableRow-root.MuiTableRow-head {
+      background: #313145;
+    }
+    & .MuiTableContainer-root {
+      & .MuiTableCell-root {
+        font-size: 12px;
+      }
     }
   }
 `;

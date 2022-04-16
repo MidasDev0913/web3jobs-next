@@ -14,6 +14,8 @@ import {
   styled,
   Typography,
   Skeleton,
+  useTheme,
+  useMediaQuery,
 } from '@mui/material';
 
 import { TableColumn } from '../../interfaces';
@@ -21,6 +23,7 @@ import MenuIcon from '../SVGIcons/MenuIcon';
 import DeleteIcon from '../SVGIcons/DeleteIcon';
 import DetailIcon from '../SVGIcons/DetailIcon';
 import EditIcon from '../SVGIcons/EditIcon';
+import EyeIcon from '../SVGIcons/EyeIcon';
 import { MenuWrapper } from './index.styles';
 
 type DataTableProps = {
@@ -52,6 +55,8 @@ export default function JobManageDataTable({
   onClickRow,
   handleManageJob,
 }: DataTableProps) {
+  const theme = useTheme();
+  const matchDownMd = useMediaQuery(theme.breakpoints.down('md'));
   const [page, setPage] = React.useState(0);
   const rowsPerPage = 20;
   const [selId, setSelId] = React.useState<string>('');
@@ -111,58 +116,90 @@ export default function JobManageDataTable({
                                   cursor: column.clickable ? 'pointer' : 'auto',
                                 }}
                               >
-                                <IconButton
-                                  onClick={(e) => handleClickMenu(e, row.id)}
-                                >
-                                  <MenuIcon />
-                                </IconButton>
-                                <Popover
-                                  id={row.id}
-                                  open={Boolean(anchorEl)}
-                                  anchorEl={anchorEl}
-                                  onClose={() => setAnchorEl(null)}
-                                  anchorOrigin={{
-                                    vertical: 'bottom',
-                                    horizontal: 'right',
-                                  }}
-                                  transformOrigin={{
-                                    vertical: 'top',
-                                    horizontal: 'right',
-                                  }}
-                                  sx={{ boxShadow: 'none' }}
-                                >
-                                  <MenuWrapper direction="column">
+                                {matchDownMd ? (
+                                  <Box display="flex" alignItems="center">
                                     <Box
-                                      className="menu-item"
                                       onClick={() => {
-                                        handleManageJob(0, selId);
-                                        setAnchorEl(null);
+                                        handleManageJob(0, row.id);
                                       }}
                                     >
-                                      <DetailIcon /> Detail
+                                      <EyeIcon />
                                     </Box>
                                     <Box
-                                      className="menu-item"
+                                      ml={1}
                                       onClick={() => {
-                                        handleManageJob(1, selId);
-                                        setAnchorEl(null);
+                                        handleManageJob(2, row.id);
                                       }}
                                     >
-                                      <DeleteIcon /> Delete
+                                      <EditIcon />
                                     </Box>
-                                    {row.action !== 'pending' && (
-                                      <Box
-                                        className="menu-item"
-                                        onClick={() => {
-                                          handleManageJob(2, selId);
-                                          setAnchorEl(null);
-                                        }}
-                                      >
-                                        <EditIcon /> Edit
-                                      </Box>
-                                    )}
-                                  </MenuWrapper>
-                                </Popover>
+                                    <Box
+                                      ml={1}
+                                      onClick={() => {
+                                        handleManageJob(1, row.id);
+                                      }}
+                                    >
+                                      <DeleteIcon />
+                                    </Box>
+                                  </Box>
+                                ) : (
+                                  <>
+                                    <IconButton
+                                      onClick={(e) =>
+                                        handleClickMenu(e, row.id)
+                                      }
+                                    >
+                                      <MenuIcon />
+                                    </IconButton>
+                                    <Popover
+                                      id={row.id}
+                                      open={Boolean(anchorEl)}
+                                      anchorEl={anchorEl}
+                                      onClose={() => setAnchorEl(null)}
+                                      anchorOrigin={{
+                                        vertical: 'bottom',
+                                        horizontal: 'right',
+                                      }}
+                                      transformOrigin={{
+                                        vertical: 'top',
+                                        horizontal: 'right',
+                                      }}
+                                      sx={{ boxShadow: 'none' }}
+                                    >
+                                      <MenuWrapper direction="column">
+                                        <Box
+                                          className="menu-item"
+                                          onClick={() => {
+                                            handleManageJob(0, selId);
+                                            setAnchorEl(null);
+                                          }}
+                                        >
+                                          <DetailIcon /> Detail
+                                        </Box>
+                                        <Box
+                                          className="menu-item"
+                                          onClick={() => {
+                                            handleManageJob(1, selId);
+                                            setAnchorEl(null);
+                                          }}
+                                        >
+                                          <DeleteIcon /> Delete
+                                        </Box>
+                                        {row.action !== 'pending' && (
+                                          <Box
+                                            className="menu-item"
+                                            onClick={() => {
+                                              handleManageJob(2, selId);
+                                              setAnchorEl(null);
+                                            }}
+                                          >
+                                            <EditIcon /> Edit
+                                          </Box>
+                                        )}
+                                      </MenuWrapper>
+                                    </Popover>
+                                  </>
+                                )}
                               </TableCell>
                             );
                           }

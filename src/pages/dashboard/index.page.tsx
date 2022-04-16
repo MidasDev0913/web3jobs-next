@@ -14,6 +14,8 @@ import {
   TooltipProps,
   tooltipClasses,
   styled,
+  useTheme,
+  useMediaQuery,
 } from '@mui/material';
 import { AppDropdown } from '../../components/Dropdown';
 import { AppBarChart } from '../../components/BarChart';
@@ -64,6 +66,8 @@ const HtmlTooltip = styled(({ className, ...props }: TooltipProps) => (
 
 const DashboardPage = () => {
   const router = useRouter();
+  const theme = useTheme();
+  const matchDownMd = useMediaQuery(theme.breakpoints.down('md'));
   const curYear = new Date().getFullYear();
   const curMonth = new Date().getMonth();
   const curDate = new Date().getDate();
@@ -72,6 +76,7 @@ const DashboardPage = () => {
   const { account, activate } = useWeb3React();
   const [jobStatusData, setJobStatusData] = useState<JobStatusProps[]>([]);
   const [postedJobs, setPostedJobs] = useState<TJob[]>([]);
+  const [filteredJobs, setFilteredJobs] = useState<TJob[]>([]);
 
   const [period, setPeriod] = useState<HistoryPeriod>(HistoryPeriod.TODAY);
   const [jobSortBy, setJobSortBy] = useState<JobSortType>(JobSortType.DATE);
@@ -226,7 +231,7 @@ const DashboardPage = () => {
         id: 'name',
         label: 'Details',
         minWidth: 100,
-        align: 'left',
+        align: matchDownMd ? 'center' : 'left',
         clickable: true,
       },
       {
@@ -255,14 +260,16 @@ const DashboardPage = () => {
   );
 
   const rows: PostedJobTableData[] = useMemo(() => {
-    return postedJobs.map((admin) => createPostedJobTableData(admin));
+    return postedJobs.map((admin) =>
+      createPostedJobTableData(admin, matchDownMd)
+    );
   }, [postedJobs]);
 
-  const totalViews = postedJobs
-    .map((job) => job.views)
+  const totalViews = jobStatusData
+    .map((item) => item.view)
     .reduce((a, b) => (a ?? 0) + (b ?? 0), 0);
-  const totalApplies = postedJobs
-    .map((job) => job.applies)
+  const totalApplies = jobStatusData
+    .map((item) => item.apply)
     .reduce((a, b) => (a ?? 0) + (b ?? 0), 0);
 
   const isEmptyBarChart = jobStatusData.every(
@@ -276,23 +283,32 @@ const DashboardPage = () => {
         direction="column"
         justifyContent="space-between"
         width="100%"
-        p="44px 0 0 47px"
+        p={{ xs: '40px 0 0', md: '44px 0 0 47px' }}
         boxSizing="border-box"
       >
         <ChartWrapper
           direction="column"
           width="100%"
-          bgcolor="#131322"
+          bgcolor={{ xs: 'transparent', md: '#131322' }}
           boxSizing="border-box"
           borderRadius="10px"
-          p="27px 62px 47px 46px"
+          p={{ xs: 0, md: '27px 62px 47px 46px' }}
         >
-          <Box display="flex" justifyContent="space-between">
-            <Typography fontWeight={700} fontSize={22} lineHeight="26.4px">
-              Performance Overview
+          <Box display="flex" justifyContent="space-between" px={2}>
+            <Typography
+              fontWeight={700}
+              fontSize={{ xs: 18, md: 22 }}
+              lineHeight={1.2}
+            >
+              {matchDownMd ? 'Statistic' : 'Performance Overview'}
             </Typography>
             <Box display="flex" alignItems="center">
-              <Typography color="#A3A1A1" mr={1} whiteSpace="nowrap">
+              <Typography
+                color="#A3A1A1"
+                mr={1}
+                whiteSpace="nowrap"
+                fontSize={{ xs: 12, md: 15 }}
+              >
                 Filter by:
               </Typography>
               <AppDropdown
@@ -306,80 +322,109 @@ const DashboardPage = () => {
               />
             </Box>
           </Box>
-          <Box display="flex" mt={4}>
+          <Stack
+            display="flex"
+            direction={{ xs: 'column', md: 'row' }}
+            bgcolor={{ xs: '#131322', md: 'transparent' }}
+            mt={{ xs: 1.5, md: 4 }}
+            padding={{ xs: '27px 19px', md: 0 }}
+          >
             <Box
               display="flex"
               flexDirection="column"
               justifyContent="space-between"
-              width={230}
-              height="142px"
-              border="0.7px solid #FFFFFF"
-              borderRadius="5px"
-              padding="15px 25px"
+              alignItems={{ xs: 'center', md: 'start' }}
+              width={{ xs: '100%', md: '230px' }}
+              height={{ xs: 'auto', md: '142px' }}
+              border={{ xs: '0.7px solid #DBDBDB', md: '0.7px solid #FFFFFF' }}
+              borderRadius={{ xs: '3px', md: '5px' }}
+              padding={{ xs: '12px 45px', md: '15px 25px' }}
               bgcolor="#181824"
               boxSizing="border-box"
               mt={1}
             >
-              
-              <Box display="flex">
-                <Box
-                  bgcolor="#B50000"
-                  width={16}
-                  height={16}
-                  borderRadius={16}
-                  mt="7px"
-                />
-                <Box display="flex" flexDirection="column" ml="14px">
-                  <Typography fontWeight={600} fontSize={20}>
-                    {totalViews}
-                  </Typography>
-                  <Typography fontWeight={300} fontSize={12}>
-                    Views
-                  </Typography>
-                </Box>
-              </Box>
-              <Box display="flex">
-                <Box
-                  bgcolor="#DBDBDB"
-                  width={16}
-                  height={16}
-                  borderRadius={16}
-                  mt="7px"
-                />
-                <Box
-                  display="flex"
-                  flexDirection="column"
-                  justifyContent="start"
-                  ml="14px"
-                >
-                  <Box display="flex" alignItems="center">
-                    <Typography fontWeight={600} fontSize={20} mr={1}>
-                      {totalApplies}
+              <Box
+                display="flex"
+                width="100%"
+                flexDirection={{ xs: 'row', md: 'column' }}
+                flex={1}
+                justifyContent="space-between"
+                mt={{ xs: '11px', md: '0' }}
+              >
+                <Box display="flex">
+                  <Box
+                    bgcolor="#B50000"
+                    width={16}
+                    height={16}
+                    borderRadius={16}
+                    mt={{ xs: '2px', md: '7px' }}
+                  />
+                  <Box
+                    display="flex"
+                    flexDirection="column"
+                    ml={{ xs: 1, md: '14px' }}
+                  >
+                    <Typography fontWeight={600} fontSize={{ xs: 15, md: 20 }}>
+                      {totalViews}
                     </Typography>
-                    <HtmlTooltip
-                      arrow
-                      placement="right-end"
-                      title={
-                        <React.Fragment>
-                          <Typography fontSize={12} lineHeight="18px">
-                            The data on the dashboard may differ from actual
-                            applications.
-                          </Typography>
-                        </React.Fragment>
-                      }
-                    >
-                      <TooltipIcon>
-                        <InfoIcon size={16} />
-                      </TooltipIcon>
-                    </HtmlTooltip>
+                    <Typography fontWeight={300} fontSize={12}>
+                      Views
+                    </Typography>
                   </Box>
-                  <Typography fontWeight={300} fontSize={12}>
-                    Applications
-                  </Typography>
+                </Box>
+                <Box display="flex">
+                  <Box
+                    bgcolor="#DBDBDB"
+                    width={16}
+                    height={16}
+                    borderRadius={16}
+                    mt={{ xs: '2px', md: '7px' }}
+                  />
+                  <Box
+                    display="flex"
+                    flexDirection="column"
+                    justifyContent="start"
+                    ml={{ xs: 1, md: '14px' }}
+                  >
+                    <Box display="flex" alignItems="center">
+                      <Typography
+                        fontWeight={600}
+                        fontSize={{ xs: 15, md: 20 }}
+                        mr={1}
+                      >
+                        {totalApplies}
+                      </Typography>
+                      <HtmlTooltip
+                        arrow
+                        placement="right-end"
+                        title={
+                          <React.Fragment>
+                            <Typography fontSize={12} lineHeight="18px">
+                              The data on the dashboard may differ from actual
+                              applications.
+                            </Typography>
+                          </React.Fragment>
+                        }
+                      >
+                        <TooltipIcon>
+                          <InfoIcon size={16} />
+                        </TooltipIcon>
+                      </HtmlTooltip>
+                    </Box>
+                    <Typography fontWeight={300} fontSize={12}>
+                      Applications
+                    </Typography>
+                  </Box>
                 </Box>
               </Box>
             </Box>
-            <Box width="calc(100% - 230px)" height={340} position="relative">
+            <Box
+              width={{ xs: 'calc(100% + 64px)', md: 'calc(100% - 230px)' }}
+              ml={{ xs: -8, md: 0 }}
+              mt={{ xs: 2, md: 0 }}
+              height={{ xs: 300, md: 340 }}
+              position="relative"
+            >
               <AppBarChart
                 loading={loadingChartData}
                 isEmpty={isEmptyBarChart}
@@ -390,27 +435,33 @@ const DashboardPage = () => {
                 }))}
               />
             </Box>
-          </Box>
+          </Stack>
         </ChartWrapper>
         <TableWrapper
           direction="column"
           width="100%"
-          bgcolor="#131322"
+          bgcolor={{ xs: 'transparent', md: '#131322' }}
           boxSizing="border-box"
           borderRadius={3}
-          p="25px 55px 37px 46px"
+          p={{ xs: 0, md: '25px 55px 37px 46px' }}
           mt={4}
         >
           <HeaderWrapper
             display="flex"
             alignItems="center"
             justifyContent="space-between"
+            px={1.5}
           >
-            <Typography fontWeight={500} fontSize={18} lineHeight="21.6px">
-              Recent Posted Jobs
+            <Typography fontWeight={500} fontSize={18}>
+              {matchDownMd ? 'Job Posted' : 'Recent Posted Jobs'}
             </Typography>
             <Box display="flex" alignItems="center">
-              <Typography color="#A3A1A1" mr={1} whiteSpace="nowrap">
+              <Typography
+                color="#A3A1A1"
+                fontSize={{ xs: 12, md: 15 }}
+                mr={1}
+                whiteSpace="nowrap"
+              >
                 Sort by:
               </Typography>
               <AppDropdown
@@ -431,12 +482,11 @@ const DashboardPage = () => {
               loading={loadingTableData}
               columns={columns}
               rows={rows}
-              onClickRow={
-                (id) => 
+              onClickRow={(id) =>
                 router.push({
                   pathname: `/detail-job`,
                   query: {
-                    id: id, // pass the id 
+                    id: id, // pass the id
                   },
                 })
               }

@@ -42,12 +42,21 @@ export const AppBarChart = ({ loading, isEmpty, data }: ComponentProps) => {
     return null;
   };
 
+  const sortedNums = data
+    .map((item) => Number(item.view))
+    .concat(data.map((item) => Number(item.apply)))
+    .sort((a, b) => a - b);
+
   return (
     <>
       <ResponsiveContainer width="100%" height="100%">
         <BarChart width={532} height={300} data={data}>
           <XAxis dataKey="name" />
-          <YAxis type="number" domain={[0, 'auto']} allowDecimals={false} />
+          <YAxis
+            type="number"
+            domain={[0, sortedNums[sortedNums.length - 1]]}
+            allowDecimals={false}
+          />
           <Tooltip
             contentStyle={{
               background: '#1A1B1F',

@@ -36,7 +36,6 @@ export const Container = styled(Box)(
       '& .MuiInputBase-input': {
         width: 49,
         borderWidth: 1.5,
-        height: 1,
         '&:focus': {
           border: '2px solid #FFFFFF',
           borderRadius: 2,

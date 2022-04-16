@@ -7,12 +7,13 @@ import { Wrapper } from './MainLayout.styles';
 
 export type MainLayoutProps = {
   children?: ReactNode;
+  showBanner: boolean | undefined;
 };
 
-const MainLayout = ({ children }: MainLayoutProps) => {
+const MainLayout = ({ children, showBanner }: MainLayoutProps) => {
   return (
     <Wrapper>
-      <Header />
+      <Header showBanner={showBanner} />
       {children}
       <Footer />
     </Wrapper>

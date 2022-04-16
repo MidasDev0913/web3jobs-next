@@ -1,5 +1,4 @@
-import { Box, Button, Link, styled, MenuItem } from '@mui/material';
-// import Link from 'next/link';
+import { Box, Button, styled, MenuItem, Link } from '@mui/material';
 
 export const HeaderContainer = styled(Box)({
   width: '100%',
@@ -13,6 +12,11 @@ export const LogoContainer = styled(Link)(({ theme }) => ({
   alignItems: 'center',
   cursor: 'pointer',
   textDecoration: 'none',
+  [theme.breakpoints.down('md')]: {
+    '& span': {
+      fontSize: '18px',
+    },
+  },
 }));
 
 export const MenuContainer = styled(Box)({

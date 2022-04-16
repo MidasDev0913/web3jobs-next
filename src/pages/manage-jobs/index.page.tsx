@@ -1,13 +1,15 @@
 import React, { useMemo, useEffect, useState } from 'react';
 import axios from 'axios';
 import { useWeb3React } from '@web3-react/core';
-import { Box, Stack, Typography } from '@mui/material';
+import { Box, Stack, Typography, useTheme, useMediaQuery } from '@mui/material';
+import Image from 'next/image';
 import { useRouter } from 'next/router';
 
 import {
   DataTableContainer,
   AppToggleContainer,
   FilterWrapper,
+  CustomDrawer,
 } from './index.styles';
 import {
   TableColumn,
@@ -24,8 +26,12 @@ import JobSwitchConfirmModal from '../../components/Modals/JobSwitchConfirm';
 import JobTakenOfflinePopup from '../../components/Modals/JobTakenOfflinePopup';
 import { AppDropdown } from '../../components/Dropdown';
 import Header from '../../components/AppHeader/DashboardHeader';
+import SearchIcon from '../../assets/icons/search_icon.svg';
+import UpDownArrow from '../../assets/icons/up_down_arrow.svg';
+import FilterDrawer from './FilterDrawer';
+import SearchDrawer from './SearchDrawer';
 
-const formatStatus = ({
+export const formatStatus = ({
   status,
   setStatus,
 }: {
@@ -85,7 +91,9 @@ const formatStatus = ({
 
 const ManageJobsPage = () => {
   const router = useRouter();
-  const { account, activate } = useWeb3React();
+  const theme = useTheme();
+  const matchDownMd = useMediaQuery(theme.breakpoints.down('md'));
+  const { account } = useWeb3React();
   const [jobs, setJobs] = useState<TJob[]>([]);
   const [selectedJob, setSelectedJob] = useState<any>(null);
   const [openJobDeleteModal, setOpenJobDeleteModal] = useState<boolean>(false);
@@ -95,6 +103,8 @@ const ManageJobsPage = () => {
   const [searchKey, setSearchKey] = useState<string>('');
   const [openTakenOfflinePopup, setOpenTakenOfflinePopup] =
     useState<boolean>(false);
+  const [openSearchDrawer, setOpenSearchDrawer] = useState<boolean>(false);
+  const [openSortDrawer, setOpenSortDrawer] = useState<boolean>(false);
 
   useEffect(() => {
     if (!account) return;
@@ -123,17 +133,30 @@ const ManageJobsPage = () => {
 
   const columns: TableColumn[] = useMemo(
     () => [
-      { id: 'name', label: 'Jobs', minWidth: 100, align: 'left' },
       {
-        id: 'price',
-        label: 'Compensation',
-        minWidth: 100,
+        id: 'name',
+        label: 'Jobs',
+        minWidth: matchDownMd ? 70 : 100,
+        align: 'left',
       },
-      {
-        id: 'date',
-        label: 'Date Posted',
-        minWidth: 50,
-      },
+      ...(matchDownMd
+        ? []
+        : [
+            {
+              id: 'price',
+              label: 'Compensation',
+              minWidth: 100,
+            },
+          ]),
+      ...(matchDownMd
+        ? []
+        : [
+            {
+              id: 'date',
+              label: 'Date Posted',
+              minWidth: 50,
+            },
+          ]),
       {
         id: 'action',
         label: 'Status',
@@ -143,7 +166,7 @@ const ManageJobsPage = () => {
       {
         id: 'menu',
         label: 'Action',
-        minWidth: 50,
+        minWidth: 70,
       },
     ],
     []
@@ -159,16 +182,16 @@ const ManageJobsPage = () => {
       router.push({
         pathname: `/detail-job`,
         query: {
-          id: id, // pass the id 
+          id: id, // pass the id
         },
       });
     } else if (type === 1) {
       setOpenJobDeleteModal(true);
     } else {
       router.push({
-        pathname: `/detail-job`,
+        pathname: `/edit-job`,
         query: {
-          id: id, // pass the id 
+          id: id, // pass the id
         },
       });
     }
@@ -240,17 +263,26 @@ const ManageJobsPage = () => {
 
   return (
     <>
-      <Header searchkey={searchKey} onSearch={handleSearch} visibleSearchBar />
-      <Stack p="44px 0 0 47px">
+      <Header
+        searchkey={searchKey}
+        onSearch={handleSearch}
+        visibleSearchBar={!matchDownMd}
+      />
+      <Stack p={{ xs: '60px 0 0', md: '44px 0 0 47px' }}>
         <Stack
           direction="row"
           justifyContent="space-between"
           alignItems="center"
         >
-          <Typography fontWeight={700} fontSize={22} lineHeight="26.4px">
+          <Typography
+            fontWeight={700}
+            fontSize={{ xs: 15, md: 22 }}
+            lineHeight={1.2}
+            ml={{ xs: 2, md: 0 }}
+          >
             Manage Jobs
           </Typography>
-          <Box display="flex" alignItems="center">
+          <Box display={{ xs: 'none', md: 'flex' }} alignItems="center">
             <Typography color="#A3A1A1" mr={1} whiteSpace="nowrap">
               Filter by:
             </Typography>
@@ -268,9 +300,31 @@ const ManageJobsPage = () => {
               />
             </FilterWrapper>
           </Box>
+          <Box display={{ xs: 'flex', md: 'none' }}>
+            <Box
+              display="flex"
+              alignItems="center"
+              onClick={() => setOpenSearchDrawer(true)}
+            >
+              <Image src={SearchIcon} width={11} height={11} />
+              <Typography ml="6px" fontSize={12} lineHeight={1.2}>
+                Search
+              </Typography>
+            </Box>
+            <Box
+              display="flex"
+              alignItems="center"
+              ml="21px"
+              onClick={() => setOpenSortDrawer(true)}
+            >
+              <Image src={UpDownArrow} width={11} height={14} />
+              <Typography ml="6px" fontSize={12} lineHeight={1.2}>
+                Sort
+              </Typography>
+            </Box>
+          </Box>
         </Stack>
-
-        <DataTableContainer mt={5}>
+        <DataTableContainer mt={{ xs: 2, md: 5 }}>
           <JobManageDataTable
             loading={loading}
             columns={columns}
@@ -293,6 +347,31 @@ const ManageJobsPage = () => {
           open={openTakenOfflinePopup}
           onClose={() => setOpenTakenOfflinePopup(false)}
         />
+        <CustomDrawer
+          anchor={'bottom'}
+          open={Boolean(openSortDrawer)}
+          onClose={() => setOpenSortDrawer(false)}
+        >
+          <FilterDrawer
+            onClose={() => setOpenSortDrawer(false)}
+            filterBy={filterBy}
+            setFilterBy={setFilterBy}
+          />
+        </CustomDrawer>
+        <CustomDrawer
+          anchor={'bottom'}
+          open={Boolean(openSearchDrawer)}
+          onClose={() => setOpenSearchDrawer(false)}
+        >
+          <SearchDrawer
+            onClose={() => setOpenSearchDrawer(false)}
+            searchkey={searchKey}
+            onSearch={handleSearch}
+            jobs={jobs.slice(0, 4)}
+            handleManageJob={handleManageJob}
+            handleChangeAction={handleChangeAction}
+          />
+        </CustomDrawer>
       </Stack>
     </>
   );

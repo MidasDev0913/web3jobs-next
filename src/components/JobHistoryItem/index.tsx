@@ -1,7 +1,7 @@
 import React from 'react';
 import Image from 'next/image';
 import Moment from 'react-moment';
-import { Box, Stack, Typography } from '@mui/material';
+import { Box, Stack, Typography, useTheme, useMediaQuery } from '@mui/material';
 import { THistory } from '../../interfaces';
 
 export type JobHistoryItemProps = {
@@ -17,15 +17,19 @@ export const JobHistoryItem = ({
   selected,
   onClick,
 }: JobHistoryItemProps) => {
+  const theme = useTheme();
+  const matchDownMd = useMediaQuery(theme.breakpoints.down('md'));
+
   return (
     <Stack
       direction="row"
       alignItems="center"
       justifyContent="space-between"
-      padding={4}
+      padding="27px 17px 27px 13px"
       bgcolor={selected ? '#10101E' : 'transparent'}
       borderLeft={selected ? '3px solid #B50000' : 'none'}
-      width={354}
+      width={{ xs: '100%', md: 282 }}
+      boxSizing="border-box"
       className="cursor__pointer"
       onClick={onClick}
     >
@@ -41,10 +45,9 @@ export const JobHistoryItem = ({
               display="flex"
               alignItems="center"
               justifyContent="center"
-              width={48}
-              height={48}
-              borderRadius="24px"
-              mr={2}
+              width={{ xs: 40, md: 48 }}
+              height={{ xs: 40, md: 48 }}
+              borderRadius={{ xs: '20px', md: '24px' }}
               border="1px solid #fff"
             >
               <Typography fontSize={30} lineHeight={1.5} fontWeight={700}>
@@ -57,22 +60,27 @@ export const JobHistoryItem = ({
           display="flex"
           justifyContent="center"
           flexDirection="column"
-          ml={1}
+          ml={{ xs: 1.5, md: 1 }}
         >
           <Typography
             fontWeight={600}
-            fontSize="16px"
-            lineHeight="19.2px"
-            maxWidth={171}
+            fontSize={{ xs: 13, md: 16 }}
+            lineHeight={1.2}
+            maxWidth={{ xs: 171, md: 120 }}
           >
             {history.job?.title}
           </Typography>
-          <Typography fontSize="14px" lineHeight="21px" color="#FFA51B">
+          <Typography
+            fontSize={{ xs: 12, md: 14 }}
+            lineHeight={1.5}
+            color="#FFA51B"
+            mt={{ xs: 0.5, md: 0 }}
+          >
             Edited
           </Typography>
         </Box>
       </Box>
-      <Box display="flex" alignItems="start" height="100%">
+      <Box display="flex" alignItems="start" height="100%" fontSize="14px">
         {/*
        @ts-ignore */}
         <Moment fromNow ago>

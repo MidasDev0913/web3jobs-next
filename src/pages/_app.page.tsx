@@ -15,7 +15,7 @@ import { customizedTheme } from './theme';
 import { getLibrary } from '../utils/helper';
 import MainLayout from '../components/MainLayout';
 import PersonalDashboardLayout from '../components/PersonalDashboardLayout';
-import LoadScript from '../components/LoadScript'
+import LoadScript from '../components/LoadScript';
 
 interface Route {
   [key: string]: boolean;
@@ -46,38 +46,39 @@ function MyApp({ Component, pageProps }: AppProps) {
   }, []);
 
   if (process.env.NEXT_PUBLIC_ENV === 'prod') {
-    console.log = () => { };
+    console.log = () => {};
   }
 
   const path = router.pathname;
   const isMainLayout = routes[path];
 
-  return (<>
-    <LoadScript />
-    <WalletProvider connectors={walletConnect}>
-      <Web3Provider getLibrary={getLibrary}>
-        <ThemeProvider theme={theme}>
-          {/*
+  return (
+    <>
+      <LoadScript />
+      <WalletProvider connectors={walletConnect}>
+        <Web3Provider getLibrary={getLibrary}>
+          <ThemeProvider theme={theme}>
+            {/*
           @ts-ignore */}
 
-          <SnackbarProvider maxSnack={3}>
-            <Provider store={store}>
-              {isMainLayout && (
-                <MainLayout>
-                  <Component {...pageProps} />
-                </MainLayout>
-              )}
-              {!isMainLayout && (
-                <PersonalDashboardLayout>
-                  <Component {...pageProps} />
-                </PersonalDashboardLayout>
-              )}
-            </Provider>
-          </SnackbarProvider>
-        </ThemeProvider>
-      </Web3Provider>
-    </WalletProvider>
-  </>
+            <SnackbarProvider maxSnack={3}>
+              <Provider store={store}>
+                {isMainLayout && (
+                  <MainLayout showBanner={pageProps.showBanner}>
+                    <Component {...pageProps} />
+                  </MainLayout>
+                )}
+                {!isMainLayout && (
+                  <PersonalDashboardLayout>
+                    <Component {...pageProps} />
+                  </PersonalDashboardLayout>
+                )}
+              </Provider>
+            </SnackbarProvider>
+          </ThemeProvider>
+        </Web3Provider>
+      </WalletProvider>
+    </>
   );
 }
 

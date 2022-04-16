@@ -1,4 +1,4 @@
-import { styled, Box } from '@mui/material';
+import { styled, Box, Drawer } from '@mui/material';
 
 export const DataTableContainer = styled(Box)`
   & .MuiPaper-root {
@@ -13,12 +13,32 @@ export const DataTableContainer = styled(Box)`
 
     & .MuiTableHead-root {
       & .MuiTableRow-root {
-        background: #313145;
+        background: #313145 !important;
       }
     }
     & .MuiTableRow-root {
       background: #10101e;
     }
+  }
+  
+  ${(props) => props.theme.breakpoints.down('md')} {
+    & .MuiTableRow-root {
+      background: transparent !important;
+    }
+    & .MuiTablePagination-selectLabel {
+      display: none;
+    }
+    & .MuiTableContainer-root {
+      & .MuiTableHead-root {
+        & .MuiTableRow-root {
+          & th:first-child {
+            border-top-left-radius: 10px;
+          }
+          & th:last-child {
+            border-top-right-radius: 10px;
+          }
+        }
+      }
   }
 `;
 
@@ -93,5 +113,12 @@ export const FilterWrapper = styled(Box)`
   }
   & .MuiOutlinedInput-notchedOutline {
     border: none;
+  }
+`;
+
+export const CustomDrawer = styled(Drawer)`
+  & .MuiPaper-root {
+    border-top-left-radius: 20px;
+    border-top-right-radius: 20px;
   }
 `;

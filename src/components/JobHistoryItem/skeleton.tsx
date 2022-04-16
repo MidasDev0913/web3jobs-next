@@ -2,7 +2,12 @@ import React from 'react';
 import { Stack, Skeleton } from '@mui/material';
 
 export const JobHistoryItemSkeleton = () => (
-  <Stack mt="5px" position="relative" width={421} height={112}>
+  <Stack
+    mt="5px"
+    position="relative"
+    width={{ xs: '100%', md: 315 }}
+    height={104}
+  >
     <Skeleton
       variant="rectangular"
       animation="wave"
@@ -13,7 +18,6 @@ export const JobHistoryItemSkeleton = () => (
         position: 'absolute',
       }}
     />
-
     <Skeleton
       variant="circular"
       animation="wave"

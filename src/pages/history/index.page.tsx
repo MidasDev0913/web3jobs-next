@@ -1,6 +1,13 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import Box from '@mui/material/Box';
-import { Stack, Typography, Skeleton } from '@mui/material';
+import {
+  Stack,
+  Typography,
+  Skeleton,
+  Drawer,
+  useTheme,
+  useMediaQuery,
+} from '@mui/material';
 import { useWeb3React } from '@web3-react/core';
 import axios from 'axios';
 
@@ -12,10 +19,13 @@ import { DiffSection } from './index.styles';
 import Header from '../../components/AppHeader/DashboardHeader';
 
 const HistoryPage = () => {
+  const theme = useTheme();
+  const matchDownMd = useMediaQuery(theme.breakpoints.down('md'));
   const { account, activate } = useWeb3React();
   const [jobHistory, setJobHistory] = useState<THistory[]>([]);
   const [selectedHistory, setSelectedHistory] = useState<string>('');
   const [loading, setLoading] = useState<boolean>(true);
+  const [openDiffDrawer, setOpenDiffDrawer] = useState<boolean>(false);
 
   useEffect(() => {
     setLoading(true);
@@ -42,20 +52,21 @@ const HistoryPage = () => {
 
   const handleClickHistory = (val: string) => {
     setSelectedHistory(val);
+    if (matchDownMd) setOpenDiffDrawer(true);
   };
 
   return (
     <>
       <Header />
-      <Stack
-        direction="row"
-        width="100%"
-        p="44px 0 0 47px"
-        boxSizing="border-box"
-      >
+      <Stack direction="row" width="100%" p="44px 0 0 0" boxSizing="border-box">
         {jobHistory.length <= 0 && !loading ? (
           <Stack direction="column" width="100%">
-            <Typography fontWeight={700} fontSize="18px" lineHeight="21.6px">
+            <Typography
+              fontWeight={700}
+              fontSize="18px"
+              lineHeight="21.6px"
+              ml={4}
+            >
               History
             </Typography>
             <Typography
@@ -70,12 +81,21 @@ const HistoryPage = () => {
           </Stack>
         ) : (
           <>
-            <Stack direction="column">
-              <Typography fontWeight={700} fontSize="18px" lineHeight="21.6px">
+            <Stack direction="column" width={{ xs: '100%', md: 'auto' }}>
+              <Typography
+                fontWeight={700}
+                fontSize="18px"
+                lineHeight="21.6px"
+                ml={{ xs: 0, md: 4 }}
+              >
                 History
               </Typography>
 
-              <Box display="flex" flexDirection="column" mt="38px">
+              <Box
+                display="flex"
+                flexDirection="column"
+                mt={{ xs: 1.5, md: '38px' }}
+              >
                 {loading
                   ? new Array(3)
                       .fill(0)
@@ -92,18 +112,13 @@ const HistoryPage = () => {
               </Box>
             </Stack>
             <Stack
+              display={{ xs: 'none', md: 'flex' }}
               direction="column"
-              ml={7.5}
+              ml={1}
               width="100%"
               boxSizing="border-box"
             >
-              <Typography fontWeight={700} fontSize="18px" lineHeight="21.6px">
-                Changes
-              </Typography>
               <Box display="flex" flexDirection="column" mt={3}>
-                <Typography fontWeight={500} fontSize="15px" lineHeight="30px">
-                  Job Description:
-                </Typography>
                 {loading ? (
                   <Skeleton
                     variant="rectangular"
@@ -115,40 +130,64 @@ const HistoryPage = () => {
                     }}
                   />
                 ) : (
-                  <DiffSection
-                    p={4}
-                    borderRadius="10px"
-                    bgcolor="#10101E"
-                    fontSize="15px"
-                    lineHeight="30px"
-                    maxHeight="614px"
-                    overflow="auto"
-                    width="100%"
-                    boxSizing="border-box"
-                  >
-                    <StringDiff
-                      dangerouslySetInnerHTML
-                      oldValue={currentHistory?.old || ''}
-                      newValue={currentHistory?.new || ''}
-                      styles={{
-                        added: {
-                          backgroundColor: 'transparent',
-                          color: '#B50000',
-                        },
-                        removed: {
-                          backgroundColor: 'transparent',
-                          color: '#FFA51B',
-                        },
-                        default: {},
-                      }}
-                    />
-                  </DiffSection>
+                  <Box>
+                    <Box display="flex" mb="10px">
+                      <Box flex={1}>Old Version:</Box>
+                      <Box flex={1}>New Version:</Box>
+                    </Box>
+                    <DiffSection
+                      padding="32px 32px 32px 10px"
+                      borderRadius="10px"
+                      bgcolor="#090913"
+                      border="0.5px solid #8C7D7D"
+                      fontSize="15px"
+                      lineHeight="30px"
+                      maxHeight="614px"
+                      overflow="auto"
+                      width="100%"
+                      boxSizing="border-box"
+                    >
+                      <StringDiff
+                        oldValue={currentHistory?.old || ''}
+                        newValue={currentHistory?.new || ''}
+                        splitView
+                      />
+                    </DiffSection>
+                  </Box>
                 )}
               </Box>
             </Stack>
           </>
         )}
       </Stack>
+      <Drawer
+        anchor={'bottom'}
+        open={Boolean(openDiffDrawer)}
+        onClose={() => setOpenDiffDrawer(false)}
+      >
+        <Box width="100vw" padding="12px" boxSizing="border-box">
+          <Box display="flex" mb="10px">
+            <Box flex={1}>New Version:</Box>
+          </Box>
+          <DiffSection
+            padding="16px 6px 16px 6px"
+            border="1px solid #8C7D7D"
+            borderRadius="5px"
+            bgcolor="#090913"
+            fontSize="15px"
+            lineHeight="30px"
+            maxHeight="614px"
+            overflow="auto"
+            width="100%"
+            boxSizing="border-box"
+          >
+            <StringDiff
+              oldValue={currentHistory?.old || ''}
+              newValue={currentHistory?.new || ''}
+            />
+          </DiffSection>
+        </Box>
+      </Drawer>
     </>
   );
 };

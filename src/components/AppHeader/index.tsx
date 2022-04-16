@@ -8,6 +8,8 @@ import {
   useTheme,
   useMediaQuery,
   IconButton,
+  ClickAwayListener,
+  Typography,
 } from '@mui/material';
 import Tooltip, { TooltipProps, tooltipClasses } from '@mui/material/Tooltip';
 import { useDispatch, useSelector } from 'react-redux';
@@ -236,8 +238,6 @@ const Header = () => {
     setOpenAccountInfoPopup(false);
   };
 
-  const url = router.pathname;
-
   return (
     <>
       {showAnnounceBar && !matchDownMd && (
@@ -249,7 +249,7 @@ const Header = () => {
             onClick={() =>
               router.push({
                 pathname: '/',
-                query: { goToJobs: url.includes('/job/') },
+                query: { goToJobs: pathName.includes('/job/') },
               })
             }
           >
@@ -291,14 +291,41 @@ const Header = () => {
           </Box>
           {matchDownMd ? (
             isLoggedIn ? (
-              <Box>
-                <IconButton
-                  size="medium"
-                  sx={{ backgroundColor: 'rgba(158, 158, 158, 0.25)' }}
-                >
-                  <Image src={MetamaskIcon} width={28} height={27} />
-                </IconButton>
-              </Box>
+              <ClickAwayListener onClickAway={handleCloseAccountInfoPopover}>
+                <Box>
+                  <HtmlTooltip
+                    open={openAccountInfoPopup}
+                    onClose={handleCloseAccountInfoPopover}
+                    onOpen={handleOpenAccountInfoPopover}
+                    placement="bottom-end"
+                    enterDelay={10}
+                    disableFocusListener
+                    disableHoverListener
+                    disableTouchListener
+                    PopperProps={{
+                      disablePortal: true,
+                    }}
+                    title={
+                      <React.Fragment>
+                        <AccountInfoPopover
+                          isEmployer={userInfo.type === 0}
+                          account={account || ''}
+                          jobs={latestPostJobs}
+                          onClose={handleCloseAccountInfoPopover}
+                        />
+                      </React.Fragment>
+                    }
+                  >
+                    <IconButton
+                      size="medium"
+                      onClick={handleOpenAccountInfoPopover}
+                      sx={{ backgroundColor: 'rgba(158, 158, 158, 0.25)' }}
+                    >
+                      <Image src={MetamaskIcon} width={28} height={27} />
+                    </IconButton>
+                  </HtmlTooltip>
+                </Box>
+              </ClickAwayListener>
             ) : (
               <ConnectWalletButton
                 id="header-connect-wallet-btn"
@@ -327,8 +354,10 @@ const Header = () => {
                 }
               >
                 <WalletAddressBox>
-                  <img src={MetamaskIcon.src} />
-                  {getAbbrAddress(userInfo.address, 5, 4)}
+                  <Image src={MetamaskIcon} width={28} height={27} />
+                  <Typography mx={2}>
+                    {getAbbrAddress(userInfo.address, 5, 4)}
+                  </Typography>
                   <Image src={ArrowDownIcon} width={13} height={7} />
                 </WalletAddressBox>
               </HtmlTooltip>

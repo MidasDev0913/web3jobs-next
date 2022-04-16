@@ -190,13 +190,16 @@ export const getDaysOptions = (inputYear?: number, inputMonth?: number) => {
   }));
 };
 
-export const createPostedJobTableData = (job: TJob): PostedJobTableData => {
+export const createPostedJobTableData = (
+  job: TJob,
+  matchDownMd: boolean
+): PostedJobTableData => {
   const { id, logo, title, posted_at, views, applies, company_name } = job;
   return {
     id: id as string,
     name: (
       <Box display="flex" alignItems="center">
-        {logo ? (
+        {matchDownMd ? null : logo ? (
           <div
             style={{
               borderRadius: 12,
@@ -227,9 +230,14 @@ export const createPostedJobTableData = (job: TJob): PostedJobTableData => {
           </Box>
         )}
         <Box>
-          <Box display="flex" flexDirection="column">
+          <Box display="flex" flexDirection="column" alignItems="start">
             <Typography fontSize={14}>{company_name}</Typography>
-            <Typography fontWeight={300} fontSize={12} color="#C4C4C4" mt={1}>
+            <Typography
+              fontWeight={300}
+              fontSize={12}
+              color="#C4C4C4"
+              mt={{ xs: 0.5, md: 1 }}
+            >
               {title}
             </Typography>
           </Box>
@@ -251,49 +259,57 @@ export const createManageJobTableData = (
   return {
     id: id as string,
     name: (
-      <Box display="flex" alignItems="center">
-        <Typography fontWeight={500} width={36}>
-          {_i + 1}.
-        </Typography>
-        {logo ? (
-          <div
-            style={{
-              borderRadius: 12,
-              marginRight: 16,
-            }}
-          >
-            <Image
-              src={logo}
+      <>
+        <Box display={{ xs: 'none', md: 'flex' }} alignItems="center">
+          <Typography fontWeight={500} width={36}>
+            {_i + 1}.
+          </Typography>
+          {logo ? (
+            <div
+              style={{
+                borderRadius: 12,
+                marginRight: 16,
+              }}
+            >
+              <Image
+                src={logo}
+                width={48}
+                height={48}
+                style={{ borderRadius: 12 }}
+              />
+            </div>
+          ) : (
+            <Box
+              display="flex"
+              alignItems="center"
+              justifyContent="center"
               width={48}
               height={48}
-              style={{ borderRadius: 12 }}
-            />
-          </div>
-        ) : (
-          <Box
-            display="flex"
-            alignItems="center"
-            justifyContent="center"
-            width={48}
-            height={48}
-            borderRadius="12px"
-            mr={2}
-            border="1px solid #fff"
-          >
-            <Typography fontSize={30} lineHeight={1.5} fontWeight={700}>
-              {company_name?.charAt(0).toUpperCase()}
+              borderRadius="12px"
+              mr={2}
+              border="1px solid #fff"
+            >
+              <Typography fontSize={30} lineHeight={1.5} fontWeight={700}>
+                {company_name?.charAt(0).toUpperCase()}
+              </Typography>
+            </Box>
+          )}
+          <Box display="flex" flexDirection="column">
+            <Typography fontWeight={600} fontSize={14} lineHeight="21px">
+              {title}
+            </Typography>
+            <Typography
+              fontSize={12}
+              lineHeight="18px"
+              mt={0.5}
+              color="#A3A3AD"
+            >
+              {company_name}
             </Typography>
           </Box>
-        )}
-        <Box display="flex" flexDirection="column">
-          <Typography fontWeight={600} fontSize={14} lineHeight="21px">
-            {title}
-          </Typography>
-          <Typography fontSize={12} lineHeight="18px" mt={0.5} color="#A3A3AD">
-            {company_name}
-          </Typography>
         </Box>
-      </Box>
+        <Typography display={{ xs: 'block', md: 'none' }}>{title}</Typography>
+      </>
     ),
     price: job.salary?.min ? `$${job.salary?.min}` : '',
     date: (
@@ -315,49 +331,52 @@ export const createInvoiceTableData = (
   return {
     id: invoice.id as string,
     name: (
-      <Box display="flex" alignItems="center">
-        <Typography fontWeight={500} width={36}>
-          {_i + 1}.
-        </Typography>
-        {logo ? (
-          <div
-            style={{
-              borderRadius: 12,
-              marginRight: 16,
-            }}
-          >
-            <Image
-              src={logo}
+      <>
+        <Box alignItems="center" display={{ xs: 'none', md: 'flex' }}>
+          <Typography fontWeight={500} width={36}>
+            {_i + 1}.
+          </Typography>
+          {logo ? (
+            <div
+              style={{
+                borderRadius: 12,
+                marginRight: 16,
+              }}
+            >
+              <Image
+                src={logo}
+                width={48}
+                height={48}
+                style={{ borderRadius: 12 }}
+              />
+            </div>
+          ) : (
+            <Box
+              display="flex"
+              alignItems="center"
+              justifyContent="center"
               width={48}
               height={48}
-              style={{ borderRadius: 12 }}
-            />
-          </div>
-        ) : (
-          <Box
-            display="flex"
-            alignItems="center"
-            justifyContent="center"
-            width={48}
-            height={48}
-            borderRadius="12px"
-            mr={2}
-            border="1px solid #fff"
-          >
-            <Typography fontSize={30} lineHeight={1.5} fontWeight={700}>
-              {company_name?.charAt(0).toUpperCase()}
+              borderRadius="12px"
+              mr={2}
+              border="1px solid #fff"
+            >
+              <Typography fontSize={30} lineHeight={1.5} fontWeight={700}>
+                {company_name?.charAt(0).toUpperCase()}
+              </Typography>
+            </Box>
+          )}
+          <Box display="flex" flexDirection="column">
+            <Typography fontWeight={600} fontSize={14} lineHeight="21px">
+              {title}
+            </Typography>
+            <Typography fontSize={12} lineHeight="18px" mt={0.5}>
+              {PositionMap[position]}
             </Typography>
           </Box>
-        )}
-        <Box display="flex" flexDirection="column">
-          <Typography fontWeight={600} fontSize={14} lineHeight="21px">
-            {title}
-          </Typography>
-          <Typography fontSize={12} lineHeight="18px" mt={0.5}>
-            {PositionMap[position]}
-          </Typography>
         </Box>
-      </Box>
+        <Typography fontSize={12}>{title}</Typography>
+      </>
     ),
     price: salary?.min ? `$${salary?.min}` : '',
     // @ts-ignore

@@ -18,12 +18,6 @@ type AccountInfoPopoverProps = {
   onClose: () => void;
 };
 
-const CloseButton = styled(IconButton)({
-  background: '#9E9E9E20',
-  borderRadius: '50%',
-  cursor: 'pointer',
-});
-
 const ContainerBox = styled(Box)({
   display: 'flex',
   flexDirection: 'column',

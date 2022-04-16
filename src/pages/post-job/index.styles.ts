@@ -1,4 +1,11 @@
-import { styled, Box, Button, Link, FormHelperText, Theme } from '@mui/material';
+import {
+  styled,
+  Box,
+  Button,
+  Link,
+  FormHelperText,
+  Theme,
+} from '@mui/material';
 
 export const MainContainer = styled(Box)({
   background: '#05050D',
@@ -25,7 +32,7 @@ export const PostJobContainer = styled(Box)(({ theme }) => ({
     backdropFilter: 'none',
     marginTop: 25,
 
-    '& .MuiOutlinedInput-root input, .MuiSelect-select.MuiOutlinedInput-input':
+    '& .MuiOutlinedInput-root input:not([name="color"]), .MuiSelect-select.MuiOutlinedInput-input':
       {
         fontSize: 12,
         lineHeight: 1.5,
@@ -56,7 +63,7 @@ export const DraftLink = styled(Link)({
   cursor: 'pointer',
 });
 
-export const CheckButton = styled(Button)(({theme}: {theme: Theme}) => ({
+export const CheckButton = styled(Button)(({ theme }: { theme: Theme }) => ({
   marginLeft: 20,
   padding: '6px 16px',
   borderRadius: 2,
@@ -71,7 +78,7 @@ export const CheckButton = styled(Button)(({theme}: {theme: Theme}) => ({
   },
   [theme.breakpoints.down('md')]: {
     marginLeft: 10,
-  }
+  },
 }));
 
 export const UseCouponContainer = styled(Box)({

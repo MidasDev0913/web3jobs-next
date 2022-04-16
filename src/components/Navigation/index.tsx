@@ -25,8 +25,8 @@ const Navigation = ({
   collapsed,
   setCollapsed,
 }: {
-  collapsed: boolean;
-  setCollapsed: (arg: boolean) => void;
+  collapsed?: boolean;
+  setCollapsed?: (arg: boolean) => void;
 }) => {
   const router = useRouter();
   const theme = useTheme();
@@ -34,15 +34,14 @@ const Navigation = ({
   const url = router.pathname;
 
   const handleCollapse = () => {
-    setCollapsed(!collapsed);
+    if (setCollapsed) {
+      setCollapsed(!collapsed);
+    }
   };
 
   const renderNavigation = () => (
     <>
-
-      <Box
-        display="block"
-      >
+      <Box display="block">
         <Box
           display="flex"
           alignItems="center"
@@ -66,19 +65,20 @@ const Navigation = ({
         <div className="menu-wapper">
           <ul>
             {NavigationLinks.map((link: NavigationLinkProps) => {
-              console.log("midas",link);
-              return <NavLink
-                href={link.link || '/'}
-                key={link.key}
-                id={link.key}
-                active={url === link.link}
-                collapsed={collapsed}
-              >
-                <Box className="icon-wrapper">{link.icon}</Box>
-                {!collapsed && (
-                  <span style={{ whiteSpace: 'nowrap' }}>{link.title}</span>
-                )}
-              </NavLink>
+              return (
+                <NavLink
+                  href={link.link || '/'}
+                  key={link.key}
+                  id={link.key}
+                  active={url === link.link}
+                  collapsed={collapsed}
+                >
+                  <Box className="icon-wrapper">{link.icon}</Box>
+                  {!collapsed && (
+                    <span style={{ whiteSpace: 'nowrap' }}>{link.title}</span>
+                  )}
+                </NavLink>
+              );
             })}
           </ul>
         </div>

@@ -1,4 +1,4 @@
-import { styled, Box, Button, Link } from '@mui/material';
+import { styled, Box, Button, Link, Theme } from '@mui/material';
 
 export const MainContainer = styled(Box)({
   background: '#05050D',
@@ -6,20 +6,37 @@ export const MainContainer = styled(Box)({
   position: 'relative',
 });
 
-export const PostJobContainer = styled(Box)({
+export const PostJobContainer = styled(Box)(({ theme }: { theme: Theme }) => ({
   marginTop: 31,
   borderRadius: 10,
   position: 'relative',
-});
+  [theme.breakpoints.down('md')]: {
+    marginTop: 25,
 
-export const PostButton = styled(Button)({
+    '& .MuiOutlinedInput-root input:not([name="color"]), .MuiSelect-select.MuiOutlinedInput-input':
+      {
+        fontSize: 12,
+        lineHeight: 1.5,
+        paddingTop: '13px !important',
+        paddingBottom: '13px !important',
+        borderRadius: 6,
+      },
+  },
+}));
+
+export const PostButton = styled(Button)(({ theme }: { theme: Theme }) => ({
   padding: '0px',
   height: '60px',
   width: 804,
   textTransform: 'none',
   fontSize: 20,
-  lineHeight: '24.2px',
-});
+  lineHeight: 1.2,
+  [theme.breakpoints.down('md')]: {
+    fontSize: 15,
+    width: 'calc(100% - 48px)',
+    height: '43px',
+  },
+}));
 
 export const DraftLink = styled(Link)({
   color: '#fff',

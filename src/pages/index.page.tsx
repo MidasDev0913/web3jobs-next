@@ -54,6 +54,7 @@ export const getServerSideProps = async (ctx: NextPageContext) => {
       jobData: res[0].data,
       jobsInCities: res[1]?.data?.data,
       tags: (res[2]?.data?.tags || []).map((item: any) => item.value),
+      showBanner: true,
     },
   };
 };

@@ -13,17 +13,35 @@ export const DataTableContainer = styled(Box)`
 
     & .MuiTableHead-root {
       & .MuiTableRow-root {
-        background: #313145;
+        background: #313145 !important;
       }
     }
     & .MuiTableRow-root {
       background: #10101e;
     }
   }
+  ${(props) => props.theme.breakpoints.down('md')} {
+    & .MuiTableRow-root {
+      background: transparent !important;
+    }
+    & .MuiTablePagination-selectLabel {
+      display: none;
+    }
+    & .MuiTableContainer-root {
+      & .MuiTableHead-root {
+        & .MuiTableRow-root {
+          & th:first-child {
+            border-top-left-radius: 10px;
+          }
+          & th:last-child {
+            border-top-right-radius: 10px;
+          }
+        }
+      }
+  }
 `;
 
 export const DropdownWrapper = styled(Box)`
-  display: flex;
   align-items: center;
 
   & .MuiSelect-select {
