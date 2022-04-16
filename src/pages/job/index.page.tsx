@@ -637,7 +637,7 @@ const ApplyJobPage: React.FC<ComponentProps> = (props) => {
 export const getServerSideProps = async (ctx: NextPageContext) => {
   const { query } = ctx;
   const { data } = await axios.get(
-    `${process.env.REACT_APP_API_URL}/job/getJobById`,
+    `${process.env.NEXT_PUBLIC_API_URL}/job/getJobById`,
     {
       params: { id: query.id },
     }
