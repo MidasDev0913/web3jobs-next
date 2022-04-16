@@ -89,8 +89,7 @@ const JoinEmployerConfirmModal = ({
           </CloseButton>
         </Box>
         <Box className="modal-body">
-          {/* <img src={SuccessSVG} /> */}
-          <Image src={SuccessSVG} layout='fill' />
+          <Image src={SuccessSVG}/>
           <Box className="modal-body-text">
             You joined as a company. Swipe through your personal dashboard,
             download invoices, manage your jobs or check edit historys.
