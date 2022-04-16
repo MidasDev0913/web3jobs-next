@@ -1,7 +1,7 @@
 import { styled, Box, IconButton } from '@mui/material';
 
 export const NavigationContainer = styled(Box)(
-  ({ collapsed }: { collapsed: boolean }) => ({
+  ({ collapsed }: { collapsed: boolean | undefined }) => ({
     '& .nav-logo': {
       fontWeight: '700',
       fontSize: '25px',
