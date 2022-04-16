@@ -37,12 +37,7 @@ const NavLink = ({
         ) : (
           <LinkWrapper active={active} collapsed={collapsed}>
             <Link href={href} target={target} {...props}>
-              <span style={{
-                display: "flex",
-                alignItems: "center",
-                columnGap: "20px",
-                marginLeft: 0
-              }}>
+              <span>
                 {active && collapsed && (
                   <Box
                     height="30px"
