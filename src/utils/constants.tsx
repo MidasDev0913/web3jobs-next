@@ -203,3 +203,7 @@ export const MonthlyUnitList = [
 ];
 
 export const WeekDays = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
+
+export const TITLE = 'Web3 Jobs: Crypto, Web3, Blockchain, and Smart Contract Jobs';
+export const DESCRIPTION = 'Find a job in Web3. Web3 Jobs in Analyst, Backend, Bitcoin, Blockchain, Community Manager, Content Writer, CTO, Customer Support, DAO, DeFi, Design, DevOps, Entry-Level, Ethereum, Front End, Full Stack, Game Dev, Golang, Intern, Java, Javascript, Marketing, Mobile, NFT, Node, Non-Tech Jobs, Product Manager, Project Manager, React, Refi, Remote, Ruby, Rust, Sales, Smart Contract, Solana, Solidity, Web3js.';
+
