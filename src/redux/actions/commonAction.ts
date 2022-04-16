@@ -6,7 +6,7 @@ export function* getFilterTags(action: any) {
   try {
     const { data } = yield call(
       axios.get,
-      `${process.env.REACT_APP_API_URL}/getFilterTags`
+      `${process.env.NEXT_PUBLIC_API_URL}/getFilterTags`
     );
     if (data.success) {
       yield put(

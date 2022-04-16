@@ -11,7 +11,7 @@ export async function connect(activate: any) {
         {
           chainId:
             '0x' +
-            (process.env.REACT_APP_ENV === 'prod'
+            (process.env.NEXT_PUBLIC_ENV === 'prod'
               ? ETH_MAINNET_CHAIN_ID
               : ETH_TESTNET_CHAIN_ID),
         },
