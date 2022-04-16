@@ -96,7 +96,12 @@ const menus = [
     ],
   },
 ];
-const Header = () => {
+
+type ComponentProps = {
+  showBanner: boolean | undefined;
+};
+
+const Header: React.FC<ComponentProps> = ({ showBanner }) => {
   const dispatch = useDispatch();
   const router = useRouter();
   const pathName = router.pathname;
@@ -118,7 +123,7 @@ const Header = () => {
   const [openJobseekerFailedModal, setOpenJobseekerFailedModal] =
     useState<boolean>(false);
   const [latestPostJobs, setLatestPostJobs] = useState<TJob[]>([]);
-  const [showAnnounceBar, setShowAnnounceBar] = useState<boolean>(false);
+  const [showAnnounceBar, setShowAnnounceBar] = useState<boolean>(!!showBanner);
   const [openInstallMetamaskPopup, setOpenInstallMetamaskPopup] =
     useState<boolean>(false);
 
@@ -133,14 +138,6 @@ const Header = () => {
       );
     }
   }, []);
-
-  useEffect(() => {
-    if (pathName === '/' || pathName === '/post-job') {
-      setShowAnnounceBar(true);
-    } else {
-      setShowAnnounceBar(false);
-    }
-  }, [pathName]);
 
   useEffect(() => {
     if (isLoggedIn && account) {
