@@ -375,7 +375,9 @@ export const createInvoiceTableData = (
             </Typography>
           </Box>
         </Box>
-        <Typography fontSize={12}>{title}</Typography>
+        <Typography fontSize={12} display={{ xs: 'block', md: 'none' }}>
+          {title}
+        </Typography>
       </>
     ),
     price: salary?.min ? `$${salary?.min}` : '',
