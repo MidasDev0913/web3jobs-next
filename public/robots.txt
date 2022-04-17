@@ -1,3 +1,8 @@
 # https://www.robotstxt.org/robotstxt.html
 User-agent: *
 Disallow:
+
+User-agent: *
+Allow: /
+
+Sitemap: http://www.web3.jobs/sitemap.xml
