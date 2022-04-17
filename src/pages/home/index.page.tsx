@@ -353,8 +353,9 @@ const HomePage: React.FC<ComponentProps> = ({
           fontWeight={700}
           textAlign="center"
           px="37px"
+          component ="h1"
         >
-          <h1>Web3 Jobs all over the <span style={{ color: '#199FD9' }}>World</span></h1>
+          Web3 Jobs all over the <span style={{ color: '#199FD9' }}>World</span>
         </Typography>
         <Typography
           fontSize={{ xs: 15, md: 20 }}

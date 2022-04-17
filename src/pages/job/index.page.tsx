@@ -197,7 +197,7 @@ const ApplyJobPage: React.FC<ComponentProps> = (props) => {
             alignItems="center"
             position="relative"
           >
-            <Typography fontSize={30} lineHeight={1.5} fontWeight={600}>
+            <Typography fontSize={30} lineHeight={1.5} fontWeight={600} component="h1">
               {selectedJob.title}
             </Typography>
             <Box display="flex" alignItems="center" ml="41px">
