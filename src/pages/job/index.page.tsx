@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
+import Head from 'next/head';
 
 import { useDispatch, useSelector } from 'react-redux';
 import Moment from 'react-moment';
@@ -69,6 +70,8 @@ const ApplyJobPage: React.FC<ComponentProps> = (props) => {
   );
   const [similarJobs, setSimilarJobs] = useState<TJob[]>([]);
   const [companyJobs, setCompanyJobs] = useState<TJob[]>([]);
+  const JOBDESCRIPTION = selectedJob.description.replace(/<\/?[^>]+(>|$)/g, "").split(".")[0];
+  const JOBSALARY = `$${formatPriceAmount(selectedJob.salary?.min)} - $${formatPriceAmount(selectedJob.salary?.max)}`;
 
   // const shareButtonProps = {
   //   url: window.location.href,
@@ -122,7 +125,7 @@ const ApplyJobPage: React.FC<ComponentProps> = (props) => {
     }
   }, [selectedJob]);
 
-  const handleSubscribe = () => {};
+  const handleSubscribe = () => { };
 
   const handleApplyJob = () => {
     axios.post(`${process.env.NEXT_PUBLIC_API_URL}/job/applyJob`, {
@@ -160,9 +163,14 @@ const ApplyJobPage: React.FC<ComponentProps> = (props) => {
       );
     }
   };
-
+  
   return (
     <>
+      <Head>
+        <meta name="description" content={JOBDESCRIPTION + '. ' + JOBSALARY + ', ' + selectedJob.company_name} />
+        <meta name="og:description" content={JOBDESCRIPTION + '. ' + JOBSALARY + ', ' + selectedJob.company_name} />
+        <meta property="twitter:description" content={JOBDESCRIPTION + '. ' + JOBSALARY + ', ' + selectedJob.company_name} />
+      </Head>
       <Box
         display={{ xs: 'none', md: 'flex' }}
         alignItems="center"
@@ -341,8 +349,8 @@ const ApplyJobPage: React.FC<ComponentProps> = (props) => {
               selectedJob.applyBy === 'email'
                 ? `mailto:${selectedJob.applyByUrl}?subject=${selectedJob.title} via Web3.jobs`
                 : selectedJob.applyByUrl?.includes('http')
-                ? selectedJob.applyByUrl
-                : `https://${selectedJob.applyByUrl}`
+                  ? selectedJob.applyByUrl
+                  : `https://${selectedJob.applyByUrl}`
             }
             target="_blank"
             rel="noreferrer"
@@ -458,8 +466,8 @@ const ApplyJobPage: React.FC<ComponentProps> = (props) => {
             selectedJob.applyBy === 'email'
               ? `mailto:${selectedJob.applyByUrl}?subject=${selectedJob.title} via Web3.jobs`
               : selectedJob.applyByUrl?.includes('http')
-              ? selectedJob.applyByUrl
-              : `https://${selectedJob.applyByUrl}`
+                ? selectedJob.applyByUrl
+                : `https://${selectedJob.applyByUrl}`
           }
           target="_blank"
           rel="noreferrer"
@@ -491,8 +499,8 @@ const ApplyJobPage: React.FC<ComponentProps> = (props) => {
             selectedJob.applyBy === 'email'
               ? `mailto:${selectedJob.applyByUrl}?subject=${selectedJob.title} via Web3.jobs`
               : selectedJob.applyByUrl?.includes('http')
-              ? selectedJob.applyByUrl
-              : `https://${selectedJob.applyByUrl}`
+                ? selectedJob.applyByUrl
+                : `https://${selectedJob.applyByUrl}`
           }
           target="_blank"
           rel="noreferrer"
