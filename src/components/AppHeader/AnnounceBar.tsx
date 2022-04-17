@@ -12,6 +12,7 @@ const AnnounceBar: React.FC<ComponentProps> = ({ onClose }) => {
   return (
     <Stack
       width="100%"
+      display={{ xs: 'none', md: 'flex' }}
       direction="row"
       alignItems="center"
       justifyContent="center"

@@ -28,11 +28,11 @@ export const getServerSideProps = async (ctx: NextPageContext) => {
         favorite: query.favorite && query.favorite === 'true',
         location: query.location,
         search:
-          (query.searchKey as string)?.toLowerCase() === 'united states'
+          (query.search as string)?.toLowerCase() === 'united states'
             ? 'USA'
-            : (query.searchKey as string)?.toLowerCase() === 'united kingdom'
+            : (query.search as string)?.toLowerCase() === 'united kingdom'
             ? 'UK'
-            : query.searchKey,
+            : query.search,
         page: Number(query.page || '0'),
         pageSize: JOB_PAGE_SIZE,
         tags: activeTags || [],

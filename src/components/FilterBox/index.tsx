@@ -102,7 +102,16 @@ const FilterBox = ({
   };
 
   const handleClearAllSettings = () => {
-    setFilterSettings({});
+    setFilterSettings({
+      salary: undefined,
+      location: undefined,
+      isRemote: undefined,
+      position: undefined,
+      favorite: undefined,
+      city: undefined,
+      company: undefined,
+      search: undefined,
+    });
   };
 
   const handleClear =
@@ -115,9 +124,13 @@ const FilterBox = ({
     };
 
   const isVisibleRemoveAll = useMemo(() => {
-    return Object.values(filterSettings).some(
-      (v: any) => v && (v?.length || 0) > 0
-    );
+    return Object.values(filterSettings).some((v: any) => {
+      if (typeof v === 'boolean') return v;
+      if (typeof v === 'string') return Boolean(v);
+      if (typeof v === 'number') return Boolean(v);
+      if (Array.isArray(v)) return v.length > 0;
+      return false;
+    });
   }, [filterSettings]);
 
   return (

@@ -237,12 +237,13 @@ const Header: React.FC<ComponentProps> = ({ showBanner }) => {
 
   return (
     <>
-      {showAnnounceBar && !matchDownMd && (
+      {showAnnounceBar && (
         <AnnounceBar onClose={() => setShowAnnounceBar(false)} />
       )}
       <HeaderContainer p={{ xs: '17px 25px', md: '38px 115px 0' }}>
         <Box display="flex">
           <LogoContainer
+            display={{ xs: 'flex', md: 'none' }}
             onClick={() =>
               router.push({
                 pathname: '/',
@@ -250,12 +251,19 @@ const Header: React.FC<ComponentProps> = ({ showBanner }) => {
               })
             }
           >
-            <Image
-              src={matchDownMd ? MobileLogo : Logo}
-              width={matchDownMd ? 35 : 180}
-              height={matchDownMd ? 35 : 48}
-              priority
-            />
+            <Image src={MobileLogo} width={35} height={35} priority />
+          </LogoContainer>
+
+          <LogoContainer
+            display={{ xs: 'none', md: 'flex' }}
+            onClick={() =>
+              router.push({
+                pathname: '/',
+                query: { goToJobs: pathName.includes('/job/') },
+              })
+            }
+          >
+            <Image src={Logo} width={180} height={48} priority />
           </LogoContainer>
           {/* <MenuContainer>
             {menus.map((menu: TMenuItem, _i: number) => (

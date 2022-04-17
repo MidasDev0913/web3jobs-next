@@ -8,7 +8,6 @@ export const HeaderContainer = styled(Box)({
 });
 
 export const LogoContainer = styled(Link)(({ theme }) => ({
-  display: 'flex',
   alignItems: 'center',
   cursor: 'pointer',
   textDecoration: 'none',

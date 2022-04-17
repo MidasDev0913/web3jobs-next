@@ -75,6 +75,7 @@ const HomePage: React.FC<ComponentProps> = ({
     salary,
     position,
     goToJobs,
+    favorite,
   } = router.query;
   const currentPage = Number(page || '0');
   const activeTags =
@@ -196,6 +197,7 @@ const HomePage: React.FC<ComponentProps> = ({
         scroll: false,
       }
     );
+    goToJobBoard();
   };
 
   const handleClickTag = (tag: string) => {
@@ -353,7 +355,7 @@ const HomePage: React.FC<ComponentProps> = ({
           fontWeight={700}
           textAlign="center"
           px="37px"
-          component ="h1"
+          component="h1"
         >
           Web3 Jobs all over the <span style={{ color: '#199FD9' }}>World</span>
         </Typography>
@@ -498,6 +500,8 @@ const HomePage: React.FC<ComponentProps> = ({
               location,
               salary: Number(salary || '0'),
               position,
+              city,
+              favorite: favorite === 'true',
             }}
             setFilterSettings={(v) => handleApplyFilter(v, true)}
             handleConnectWallet={handleConnectWallet}
@@ -518,6 +522,8 @@ const HomePage: React.FC<ComponentProps> = ({
                 location,
                 salary: Number(salary || '0'),
                 position,
+                city,
+                favorite: favorite === 'true',
               }}
               setFilterSettings={handleApplyFilter}
               onSearch={handleSearch}
@@ -606,6 +612,8 @@ const HomePage: React.FC<ComponentProps> = ({
             location,
             salary: Number(salary || '0'),
             position,
+            favorite: favorite === 'true',
+            city,
           }}
         />
       </Drawer>
