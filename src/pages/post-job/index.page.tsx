@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useMemo } from 'react';
-import Image from 'next/image';
+import Head from 'next/head';
 import { useSelector, useDispatch } from 'react-redux';
 import {
   Box,
@@ -58,6 +58,7 @@ import { PaymentProcessPopup } from '../../components/PaymentProcess';
 import { FreePostJobSuccess } from '../../components/Modals/FreePostJobSuccess';
 import DraftPostJobSuccess from '../../components/Modals/DraftPostJobSuccess';
 import { connect } from '../../utils/web3';
+import { formatPriceAmount, getLocationText } from '../../utils/helper';
 import { useRouter } from 'next/router';
 
 const FilterTag = React.lazy(() => import('../../components/FilterTag'));
@@ -603,7 +604,19 @@ const PostJobPage = () => {
     } as TJob);
   };
 
+  const JOBSALARY = `$${formatPriceAmount(newJob?.salary?.min)} - $${formatPriceAmount(newJob?.salary?.max)}`;
+  const GEO = getLocationText(newJob);
+  const COMPANY = newJob.company_name;
+  const FULLDES = "Web3 " + `${newJob.title}` + " " + `${JOBSALARY}` + " in " + `${GEO}` + " at " + `${COMPANY}`;
+  const NOTSALARYDES = "Web3 " + `${newJob.title}` + " in " + `${GEO}` + " at " + `${COMPANY}`;
+  const REMOTEDES = "Web3 " + `${newJob.title}` + " " + `${JOBSALARY}` + " Remote" + " at " + `${COMPANY}`;
+ 
   return (
+    <>
+      <Head>
+        <meta name="title" content={newJob.isRemote ? REMOTEDES : (newJob.salary?.min != 0 || newJob.salary?.max != 0) ?  FULLDES : NOTSALARYDES} />
+        <meta name="og:title" content={newJob.isRemote ? REMOTEDES : (newJob.salary?.min != 0 || newJob.salary?.max != 0) ?  FULLDES : NOTSALARYDES} />
+      </Head>
     <Box>
       <MainContainer padding={{ xs: '6px 11px 100px', md: '30px 120px 100px' }}>
         <img src={NewsletterBgSvg.src} className="post-job-bg" />
@@ -1201,6 +1214,7 @@ const PostJobPage = () => {
       />
       <div id="pdf"></div>
     </Box>
+    </>
   );
 };
 
