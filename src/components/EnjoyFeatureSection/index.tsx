@@ -13,50 +13,50 @@ interface ComponentProps {
 
 const companyFeatures = [
   {
-    label: 'Dashboard with real time data.',
+    label: 'Manage job postings',
     active: true,
   },
   {
-    label: 'History to keep tracks on changes on job posts',
+    label: 'Track real-time data',
     active: true,
   },
   {
-    label: 'Manage Jobs to be in charge of all job and processes',
+    label: 'Keep track on changes in job postings',
     active: true,
   },
   {
-    label: 'Invoices to manage finances and transactions',
+    label: 'Get access to all your invoices and transactions',
     active: true,
   },
   {
-    label: 'More features in the pipeline..',
+    label: 'More features coming soon',
     active: false,
   },
 ];
 
 const applicantFeatures = [
   {
-    label: 'Save Favorites jobs.',
+    label: 'Save jobs in Favorites',
     active: true,
   },
   {
-    label: 'Features coming soon..',
+    label: 'More features coming soon',
     active: undefined,
   },
   {
-    label: 'Job Applicant Dashboard.',
+    label: 'Job seeker dashboard',
     active: false,
   },
   {
-    label: 'Mail Notification.',
+    label: 'Email notifications',
     active: false,
   },
   {
-    label: 'One click apply.',
+    label: 'One-click apply',
     active: false,
   },
   {
-    label: 'Auto apply.',
+    label: 'Auto-apply',
     active: false,
   },
 ];
