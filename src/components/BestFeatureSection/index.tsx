@@ -13,13 +13,12 @@ export const BestFeatureSection = () => {
       <TitleContainer>
         <Box position="relative">
           <span className="section-title">
-            Connect your wallet and enjoy the features
+            Connect your wallet and get access to all features
           </span>
           <div className="section-title-underline" />
         </Box>
         <span className="section-title-text">
-          The best features for companies and workers to bring them together
-          faster.
+          Get your dream job. Find the best employees
         </span>
       </TitleContainer>
       {/*
