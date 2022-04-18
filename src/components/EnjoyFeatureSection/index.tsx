@@ -80,7 +80,7 @@ const EnjoyFeatureSection: React.FC<ComponentProps> = ({
         textAlign="center"
         px={4}
       >
-        Connect your wallet and enjoy the features
+        Connect your wallet and get access to all features
       </Typography>
       <Typography
         color="#A3A1A1"
@@ -89,8 +89,7 @@ const EnjoyFeatureSection: React.FC<ComponentProps> = ({
         textAlign="center"
         px={4}
       >
-        The best features for companies and workers to bring them together
-        faster.
+        Get your dream job. Find the best employees
       </Typography>
       <Stack
         width="100%"
