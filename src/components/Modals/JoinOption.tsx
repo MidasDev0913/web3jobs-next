@@ -184,7 +184,7 @@ const JoinOptionModal = ({
             />
           </Box>
           <ConfirmButton onClick={() => onConfirm(type)}>
-            <Box ml={2}>Join as a {type === 0 ? 'Employer' : 'Job Applicant'}</Box>
+            <Box ml={2}>Join as {type === 0 ? 'an Employer' : 'a Job Applicant'}</Box>
           </ConfirmButton>
         </Box>
       </ContainerBox>
