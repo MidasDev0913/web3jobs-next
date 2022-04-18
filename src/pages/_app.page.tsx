@@ -22,7 +22,7 @@ interface Route {
 }
 
 const routes: Route = {
-  '/:company': true,
+  '/companies/[companyDesc]': true,
   '/': true,
   '/salaries': true,
   '/learn': true,

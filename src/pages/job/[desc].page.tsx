@@ -141,12 +141,13 @@ const ApplyJobPage: React.FC<ComponentProps> = (props) => {
 
   const handleGoToCompany = () => {
     router.push({
-      pathname: '/',
-      query: {
-        ...router.query,
-        company: selectedJob.company_name,
-        goToJobs: true,
-      },
+      // pathname: '/',
+      // query: {
+      //   ...router.query,
+      //   company: selectedJob.company_name,
+      //   goToJobs: true,
+      // },
+      pathname: `/companies/${selectedJob.company_name}`
     });
   };
 

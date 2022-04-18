@@ -1,12 +1,13 @@
 import axios from 'axios';
 
-import HomePage from './home/index.page';
+import HomePage from './companies/index.page';
 import { JOB_PAGE_SIZE } from '../utils/constants';
 import { NextPageContext } from 'next';
 
 const Home = (props: any) => {
   return <HomePage {...props} />;
 };
+
 
 export const getServerSideProps = async (ctx: NextPageContext) => {
   const { query } = ctx;
@@ -60,3 +61,4 @@ export const getServerSideProps = async (ctx: NextPageContext) => {
 };
 
 export default Home;
+
