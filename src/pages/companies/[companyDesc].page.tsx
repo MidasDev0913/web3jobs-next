@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useRouter } from 'next/router';
 import Image from 'next/image';
+import { NextPageContext } from 'next';
 import {
   Box,
   Pagination,
@@ -57,11 +58,7 @@ type ComponentProps = {
   jobData: any;
 };
 
-const HomePage: React.FC<ComponentProps> = ({
-  tags,
-  jobsInCities,
-  jobData,
-}) => {
+const HomePage: React.FC<ComponentProps> = (props) => {
   const dispatch = useDispatch();
   const router = useRouter();
   const {
@@ -77,7 +74,6 @@ const HomePage: React.FC<ComponentProps> = ({
     goToJobs,
     favorite,
   } = router.query;
-
   const { companyDesc } = router.query;
   const company = companyDesc;
   const currentPage = Number(page || '0');
@@ -146,18 +142,19 @@ const HomePage: React.FC<ComponentProps> = ({
         delete newQuery[key];
       }
     }
-    // router.push(
-    //   {
-    //     pathname: '/',
-    //     query: {
-    //       ...newQuery,
-    //     },
-    //   },
-    //   undefined,
-    //   {
-    //     scroll: false,
-    //   }
-    // );
+    router.push(
+      {
+        // pathname: '/',
+        // query: {
+        //   ...newQuery,
+        // },
+        pathname:`/companies/${companyDesc}`.replace(/[ ]+/g, '-'),
+      },
+      undefined,
+      {
+        scroll: false,
+      }
+    );
   }, [userInfo]);
 
   useEffect(() => {
@@ -237,14 +234,23 @@ const HomePage: React.FC<ComponentProps> = ({
   };
 
   const handleSearch = (key: string) => {
+    const {companyDesc} = router.query;
+    console.log("MIdas", key);
     router.push(
       {
-        pathname: '/',
+        // pathname: '/',
+        // query: {
+        //   ...router.query,
+        //   page: 0,
+        //   search: key,
+        // },
+        pathname:`/companies/${companyDesc}`.replace(/[ ]+/g, '-'),
         query: {
           ...router.query,
           page: 0,
           search: key,
-        },
+        }
+
       },
       undefined,
       {
@@ -322,7 +328,7 @@ const HomePage: React.FC<ComponentProps> = ({
   const FilterTagList = React.useMemo(() => {
     const MyComp = () => (
       <>
-        {(tags || []).map((tag: string, _i: number) => (
+        {(props.tags || []).map((tag: string, _i: number) => (
           <Box
             mx={{ xs: '2.5px', md: 1 }}
             my={{ xs: '2.5px', md: 0.5 }}
@@ -340,7 +346,7 @@ const HomePage: React.FC<ComponentProps> = ({
     );
     MyComp.displayName = 'FilterTagList';
     return MyComp;
-  }, [tags, router.query.tags]);
+  }, [props.tags, router.query.tags]);
 
   return (
     <HomePageWrapper position="relative">
@@ -369,8 +375,8 @@ const HomePage: React.FC<ComponentProps> = ({
           mt={4}
           px={9}
         >
-          Browse {jobData?.totalJobs || 0} jobs at{' '}
-          {jobData?.totalCompanies || 0} Web3 Projects
+          Browse {props.jobData?.totalJobs || 0} jobs at{' '}
+          {props.jobData?.totalCompanies || 0} Web3 Projects
         </Typography>
       </Box>
       <Box
@@ -470,7 +476,7 @@ const HomePage: React.FC<ComponentProps> = ({
               textAlign="center"
               mt={{ xs: '16px', md: '27px' }}
             >
-              {jobData?.filterJobsCount || 0} Jobs found
+              {props.jobData?.filterJobsCount || 0} Jobs found
             </Typography>
             <Box display="flex" alignItems="center" ml={{ xs: 0, md: 11 }}>
               <Box mt={{ xs: '10px', md: '30px' }} mr={1}>
@@ -482,7 +488,7 @@ const HomePage: React.FC<ComponentProps> = ({
                 textAlign="center"
                 mt={{ xs: '10px', md: '27px' }}
               >
-                Average Salary ${jobData?.averagePrice || 0}
+                Average Salary ${props.jobData?.averagePrice || 0}
               </Typography>
             </Box>
           </Box>
@@ -530,8 +536,8 @@ const HomePage: React.FC<ComponentProps> = ({
               setFilterSettings={handleApplyFilter}
               onSearch={handleSearch}
             />
-            {(jobData?.jobs || []).length > 0 ? (
-              (jobData?.jobs || []).map((job: TJob) => (
+            {(props.jobData?.jobs || []).length > 0 ? (
+              (props.jobData?.jobs || []).map((job: TJob) => (
                 <Box key={job.id} marginTop="5px">
                   <JobItem
                     job={job}
@@ -570,10 +576,10 @@ const HomePage: React.FC<ComponentProps> = ({
               </Stack>
             )}
           </Box>
-          {(jobData?.jobs || []).length > 0 && (
+          {(props.jobData?.jobs || []).length > 0 && (
             <Box display="flex" justifyContent="center" marginTop="52px">
               <Pagination
-                count={Math.ceil(jobData?.filterJobsCount / JOB_PAGE_SIZE)}
+                count={Math.ceil(props.jobData?.filterJobsCount / JOB_PAGE_SIZE)}
                 variant="outlined"
                 shape="rounded"
                 siblingCount={0}
@@ -629,7 +635,7 @@ const HomePage: React.FC<ComponentProps> = ({
         onGetJob={() => goToJobBoard()}
       />
       <TopWeb3CitiesSection
-        cities={jobsInCities || []}
+        cities={props.jobsInCities || []}
         onClick={handleClickTopCity}
       />
       <NewsletterConfirmModal
@@ -644,6 +650,57 @@ const HomePage: React.FC<ComponentProps> = ({
       />
     </HomePageWrapper>
   );
+};
+
+export const getServerSideProps = async (ctx: NextPageContext) => {
+  const { query } = ctx;
+
+  const activeTags =
+    typeof query.tags === 'string'
+      ? [query.tags]
+      : Array.isArray(query.tags)
+      ? query.tags
+      : [];
+  const promises: any[] = [];
+  promises.push(
+    axios.get(`${process.env.NEXT_PUBLIC_API_URL}/job/getAllJobs`, {
+      params: {
+        ...query,
+        company: query.companyDesc,
+        city: query.city,
+        isRemote: query.isRemote && query.isRemote === 'true',
+        favorite: query.favorite && query.favorite === 'true',
+        location: query.location,
+        search:
+          (query.search as string)?.toLowerCase() === 'united states'
+            ? 'USA'
+            : (query.search as string)?.toLowerCase() === 'united kingdom'
+            ? 'UK'
+            : query.search,
+        page: Number(query.page || '0'),
+        pageSize: JOB_PAGE_SIZE,
+        tags: activeTags || [],
+        userId: (query.account as string)?.toLowerCase(),
+        position: query.position === 'all' ? '' : query.position,
+        salary: Number(query.salary || '') * 1000,
+      },
+    })
+  );
+  promises.push(
+    axios.get(`${process.env.NEXT_PUBLIC_API_URL}/job/getJobCountByCity`)
+  );
+  promises.push(axios.get(`${process.env.NEXT_PUBLIC_API_URL}/getFilterTags`));
+
+  const res: any[] = await Promise.all(promises);
+
+  return {
+    props: {
+      jobData: res[0].data,
+      jobsInCities: res[1]?.data?.data,
+      tags: (res[2]?.data?.tags || []).map((item: any) => item.value),
+      showBanner: true,
+    },
+  };
 };
 
 export default HomePage;
