@@ -51,7 +51,6 @@ function MyApp({ Component, pageProps }: AppProps) {
   }
 
   const path = router.pathname;
-  console.log("Apollo", path)
   const isMainLayout = routes[path];
 
   return (

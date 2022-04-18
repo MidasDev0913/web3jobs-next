@@ -79,10 +79,7 @@ const HomePage: React.FC<ComponentProps> = ({
   } = router.query;
 
   const { companyDesc } = router.query;
-  console.log("Midas", companyDesc);
   const company = companyDesc;
-  // const tokens = (companyDesc as string).split('/');
-  // const company = tokens[tokens.length - 1];
   const currentPage = Number(page || '0');
   const activeTags =
     typeof tagsInQuery === 'string'
@@ -149,19 +146,18 @@ const HomePage: React.FC<ComponentProps> = ({
         delete newQuery[key];
       }
     }
-
-    router.push(
-      {
-        pathname: '/',
-        query: {
-          ...newQuery,
-        },
-      },
-      undefined,
-      {
-        scroll: false,
-      }
-    );
+    // router.push(
+    //   {
+    //     pathname: '/',
+    //     query: {
+    //       ...newQuery,
+    //     },
+    //   },
+    //   undefined,
+    //   {
+    //     scroll: false,
+    //   }
+    // );
   }, [userInfo]);
 
   useEffect(() => {

@@ -110,13 +110,17 @@ const Header: React.FC<ComponentProps> = ({
 
   useEffect(() => {
     auth.onAuthStateChanged((user: any) => {
-      if (typeof window !== 'undefined') {
-        //added by midas start
-        const { pathname } = window.location;
-        if (!user && privateUrls.includes(pathname)) {
-          dispatch(logout());
-          router.push('/');
-        }
+      //   if (typeof window !== 'undefined') {
+      //     const { pathname } = window.location;
+      //     if (!user && privateUrls.includes(pathname)) {
+      //       dispatch(logout());
+      //       router.push('/');
+      //     }
+      //   }
+      const pathname = router.pathname;
+      if (!user && privateUrls.includes(pathname)) {
+        dispatch(logout());
+        router.push('/');
       }
     });
   }, [auth]);

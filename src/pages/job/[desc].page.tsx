@@ -147,7 +147,7 @@ const ApplyJobPage: React.FC<ComponentProps> = (props) => {
       //   company: selectedJob.company_name,
       //   goToJobs: true,
       // },
-      pathname: `/companies/${selectedJob.company_name}`
+      pathname: `/companies/${selectedJob.company_name}`.replace(/[ ]+/g, '-')
     });
   };
 
