@@ -372,8 +372,10 @@ export const PaymentProcessPopup: React.FC<ComponentProps> = ({
                         },
                       })
                     : router.push({
-                        pathname: `/job`,
-                        query: {
+                      pathname: `/job/[${newJob.title}-${newJob.company_name}-${newJobId}]`,
+                      query: {
+                        title: newJob.title,
+                        company: newJob.company_name,
                           id: newJobId, // pass the id
                         },
                       })
