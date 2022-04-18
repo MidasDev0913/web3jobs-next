@@ -151,10 +151,11 @@ const AccountInfoPopover = ({
               key={job.id}
               onClick={() => {
                 router.push({
-                  pathname: `/job`,
-                  query: {
-                    id: job.id, // pass the id
-                  },
+                  // pathname: `/job`,
+                  // query: {
+                  //   id: job.id, // pass the id
+                  // },
+                  pathname: `/job/${job.title} ${job.company_name} ${job.id}`.replace(/[ ]+/g, '-'),
                 });
                 onClose();
               }}

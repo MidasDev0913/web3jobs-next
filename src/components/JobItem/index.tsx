@@ -81,7 +81,7 @@ const JobItem = ({
   return (
     <>
       <Box position="relative" display={{ xs: 'none', md: 'block' }}>
-        <Link href={`/job?id=${job.id}`}>
+        <Link href={`/job/${job.title} ${job.company_name} ${job.id}`.replace(/[ ]+/g, '-')}>
           <Container
             style={{
               background:
@@ -196,10 +196,11 @@ const JobItem = ({
             <ApplyButton
               onClick={() => {
                 router.push({
-                  pathname: `/job`,
-                  query: {
-                    id: job.id, // pass the id
-                  },
+                  pathname: `/job/${job.title} ${job.company_name} ${job.id}`.replace(/[ ]+/g, '-'),
+                  // pathname: `/job`,
+                  // query: {
+                  // id: job.id, // pass the id
+                  // },
                 });
               }}
             >
@@ -234,7 +235,7 @@ const JobItem = ({
         </HtmlTooltip>
       </Box>
       <Stack display={{ xs: 'block', md: 'none' }}>
-        <Link href={`/job?id=${job.id}`}>
+        <Link href={`/job/${job.title} ${job.company_name} ${job.id}`.replace(/[ ]+/g, '-')}>
           <Container
             style={{
               padding: 0,

@@ -29,6 +29,7 @@ const routes: Route = {
   '/sponsorship': true,
   '/post-job': true,
   '/job': true,
+  '/job/[desc]': true,
   '/dashboard': false,
   '/manage-jobs': false,
   '/detail-job/:id': false,
@@ -50,6 +51,7 @@ function MyApp({ Component, pageProps }: AppProps) {
   }
 
   const path = router.pathname;
+  console.log("Apollo", path)
   const isMainLayout = routes[path];
 
   return (
