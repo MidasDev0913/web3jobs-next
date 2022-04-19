@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
 import Head from 'next/head';
+import Image from 'next/image';
 
 import { useDispatch, useSelector } from 'react-redux';
 import Moment from 'react-moment';
@@ -328,7 +329,14 @@ const ApplyJobPage: React.FC<ComponentProps> = (props) => {
         >
           <Box display="flex" alignItems="start">
             {selectedJob.logo ? (
-              <img src={selectedJob.logo.src} className="apply-job-logo" />
+              <div className="apply-job-logo">
+                <Image
+                  src={selectedJob.logo}
+                  width={35}
+                  height={35}
+                  style={{ borderRadius: 18 }}
+                />
+              </div>
             ) : (
               <Box
                 display="flex"
@@ -423,7 +431,14 @@ const ApplyJobPage: React.FC<ComponentProps> = (props) => {
           </Box>
           <Box display="flex" alignItems="center" mt="15px">
             {selectedJob.logo ? (
-              <img src={selectedJob.logo.src} className="apply-job-logo" />
+              <div className="apply-job-logo">
+                <Image
+                  src={selectedJob.logo}
+                  width={23}
+                  height={23}
+                  style={{ borderRadius: 12 }}
+                />
+              </div>
             ) : (
               <Box
                 display="flex"
@@ -677,7 +692,7 @@ export const getServerSideProps = async (ctx: NextPageContext) => {
   const { data } = await axios.get(
     `${process.env.NEXT_PUBLIC_API_URL}/job/getJobById`,
     {
-      params: { id: id },
+      params: { id },
     }
   );
 
