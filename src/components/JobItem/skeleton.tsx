@@ -8,6 +8,7 @@ const JobItemSkeleton = () => {
 
   if (matchDownMd) {
     return (
+      // @ts-ignore
       <Container
         style={{
           width: '100%',
@@ -99,6 +100,7 @@ const JobItemSkeleton = () => {
   }
 
   return (
+    // @ts-ignore
     <Container
       style={{
         width: '100%',
