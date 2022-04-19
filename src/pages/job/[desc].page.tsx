@@ -79,6 +79,12 @@ const ApplyJobPage: React.FC<ComponentProps> = (props) => {
   const JOBSALARY = `$${formatPriceAmount(
     selectedJob.salary?.min
   )} - $${formatPriceAmount(selectedJob.salary?.max)}`;
+  const GEO = getLocationText(selectedJob);
+  const COMPANY = selectedJob.company_name;
+  const FULLDES = "Web3 " + `${selectedJob.title}` + " " + `${JOBSALARY}` + " in " + `${GEO}` + " at " + `${COMPANY}`;
+  const NOTSALARYDES = "Web3 " + `${selectedJob.title}` + " in " + `${GEO}` + " at " + `${COMPANY}`;
+  const REMOTEDES = "Web3 " + `${selectedJob.title}` + " " + `${JOBSALARY}` + " Remote" + " at " + `${COMPANY}`;
+
 
   // const shareButtonProps = {
   //   url: window.location.href,
@@ -172,9 +178,13 @@ const ApplyJobPage: React.FC<ComponentProps> = (props) => {
     }
   };
 
+ 
+
   return (
     <>
       <Head>
+        <title>{selectedJob.isRemote ? REMOTEDES : (selectedJob.salary?.min != 0 || selectedJob.salary?.max != 0) ?  FULLDES : NOTSALARYDES}</title>
+        <meta name="og:title" content={selectedJob.isRemote ? REMOTEDES : (selectedJob.salary?.min != 0 || selectedJob.salary?.max != 0) ?  FULLDES : NOTSALARYDES} />
         <meta
           name="description"
           content={
