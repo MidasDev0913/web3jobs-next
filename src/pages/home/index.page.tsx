@@ -119,6 +119,10 @@ const HomePage: React.FC<ComponentProps> = ({
   };
 
   useEffect(() => {
+    setJobs(jobData?.jobs || []);
+  }, [jobData?.jobs]);
+
+  useEffect(() => {
     window?.addEventListener('scroll', handleScroll);
 
     return () => {
@@ -202,14 +206,20 @@ const HomePage: React.FC<ComponentProps> = ({
 
   const handleClickTag = (tag: string, isScroll?: boolean) => {
     const newTags = insertItemToArray(activeTags, tag);
-    router.push({
-      pathname: '/',
-      query: {
-        ...router.query,
-        page: 0,
-        tags: newTags,
+    router.push(
+      {
+        pathname: '/',
+        query: {
+          ...router.query,
+          page: 0,
+          tags: newTags,
+        },
       },
-    });
+      undefined,
+      {
+        scroll: !isScroll,
+      }
+    );
   };
 
   const handleClickFav = (
