@@ -22,8 +22,8 @@ interface Route {
 }
 
 const routes: Route = {
-  '/companies/[companyDesc]': true,
-  '/': true,
+  '/companies': true,
+  '/companies/[company]': true,
   '/salaries': true,
   '/learn': true,
   '/sponsorship': true,
