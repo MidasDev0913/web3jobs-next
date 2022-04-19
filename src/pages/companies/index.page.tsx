@@ -42,13 +42,13 @@ import NewsletterConfirmModal from '../../components/Modals/NewletterConfirm';
 import WaveBgSVG from '../../assets/images/home_wave.svg';
 import FilterMaskSVG from '../../assets/images/filter_mask.svg';
 import upperArrowAnimationData from '../../assets/lotties/upper_arrow.json';
-// import NewsletterBgSvg from '../../assets/images/newsletter-bg.svg';
 import EmptyIcon from '../../assets/images/home-empty-icon.svg';
 
 import { login } from '../../redux/reducers/authReducer';
 import { FilterButton } from '../../components/FilterBox/index.styles';
 import { connect } from '../../utils/web3';
 import { TJob, TJobCountyOfCity } from '../../interfaces';
+import { NextPageContext } from 'next';
 
 type ComponentProps = {
   tags: string[];
@@ -56,7 +56,7 @@ type ComponentProps = {
   jobData: any;
 };
 
-const HomePage: React.FC<ComponentProps> = ({
+export const HomePage: React.FC<ComponentProps> = ({
   tags,
   jobsInCities,
   jobData,
@@ -76,13 +76,15 @@ const HomePage: React.FC<ComponentProps> = ({
     goToJobs,
     favorite,
   } = router.query;
+
+  console.log(company)
   const currentPage = Number(page || '0');
   const activeTags =
     typeof tagsInQuery === 'string'
       ? [tagsInQuery]
       : Array.isArray(tagsInQuery)
-      ? tagsInQuery
-      : [];
+        ? tagsInQuery
+        : [];
 
   const theme = useTheme();
   const matchDownMd = useMediaQuery(theme.breakpoints.down('md'));
@@ -131,36 +133,10 @@ const HomePage: React.FC<ComponentProps> = ({
   }, []);
 
   useEffect(() => {
-    if (goToJobs === 'true') {
+    if (goToJobs === 'true' || company) {
       goToJobBoard();
     }
-  }, [goToJobs]);
-
-  useEffect(() => {
-    const newQuery: any = {
-      ...router.query,
-      account: userInfo.address,
-    };
-
-    for (const key in newQuery) {
-      if (newQuery[key] === undefined) {
-        delete newQuery[key];
-      }
-    }
-
-    router.push(
-      {
-        pathname: '/',
-        query: {
-          ...newQuery,
-        },
-      },
-      undefined,
-      {
-        scroll: false,
-      }
-    );
-  }, [userInfo]);
+  }, [goToJobs, company]);
 
   useEffect(() => {
     axios
@@ -450,27 +426,27 @@ const HomePage: React.FC<ComponentProps> = ({
           </Box>
           <h1>
             {searchKey &&
-            !countryNameList.includes(
-              makeWordsUpperCase(searchKey as string) as string
-            )
+              !countryNameList.includes(
+                makeWordsUpperCase(searchKey as string) as string
+              )
               ? searchKey
               : (activeTags || []).length
-              ? ((activeTags as string[]) || [])
+                ? ((activeTags as string[]) || [])
                   .map((tag: string) => getCaptialized(tag))
                   .join(' & ')
-              : company
-              ? company
-              : 'All'}{' '}
+                : company
+                  ? company
+                  : 'All'}{' '}
             Jobs
             {location
               ? ` in ${location}`
               : city
-              ? ` in ${city}`
-              : countryNameList.includes(
+                ? ` in ${city}`
+                : countryNameList.includes(
                   makeWordsUpperCase(searchKey as string) as string
                 )
-              ? ` in ${makeWordsUpperCase(searchKey as string)}`
-              : ''}
+                  ? ` in ${makeWordsUpperCase(searchKey as string)}`
+                  : ''}
             {/* <Box ml={3}>
             <NewsletterButton
               onClick={() => setOpenNewsletterConfirmModal(true)}
@@ -666,6 +642,58 @@ const HomePage: React.FC<ComponentProps> = ({
       />
     </HomePageWrapper>
   );
+};
+
+
+export const getServerSideProps = async (ctx: NextPageContext) => {
+  const { query } = ctx;
+
+  const activeTags =
+    typeof query.tags === 'string'
+      ? [query.tags]
+      : Array.isArray(query.tags)
+        ? query.tags
+        : [];
+  const promises: any[] = [];
+  promises.push(
+    axios.get(`${process.env.NEXT_PUBLIC_API_URL}/job/getAllJobs`, {
+      params: {
+        ...query,
+        company: query.company,
+        city: query.city,
+        isRemote: query.isRemote && query.isRemote === 'true',
+        favorite: query.favorite && query.favorite === 'true',
+        location: query.location,
+        search:
+          (query.search as string)?.toLowerCase() === 'united states'
+            ? 'USA'
+            : (query.search as string)?.toLowerCase() === 'united kingdom'
+              ? 'UK'
+              : query.search,
+        page: Number(query.page || '0'),
+        pageSize: JOB_PAGE_SIZE,
+        tags: activeTags || [],
+        userId: (query.account as string)?.toLowerCase(),
+        position: query.position === 'all' ? '' : query.position,
+        salary: Number(query.salary || '') * 1000,
+      },
+    })
+  );
+  promises.push(
+    axios.get(`${process.env.NEXT_PUBLIC_API_URL}/job/getJobCountByCity`)
+  );
+  promises.push(axios.get(`${process.env.NEXT_PUBLIC_API_URL}/getFilterTags`));
+
+  const res: any[] = await Promise.all(promises);
+
+  return {
+    props: {
+      jobData: res[0].data,
+      jobsInCities: res[1]?.data?.data,
+      tags: (res[2]?.data?.tags || []).map((item: any) => item.value),
+      showBanner: true,
+    },
+  };
 };
 
 export default HomePage;

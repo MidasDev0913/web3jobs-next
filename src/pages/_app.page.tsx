@@ -22,8 +22,8 @@ interface Route {
 }
 
 const routes: Route = {
-  '/:company': true,
-  '/': true,
+  '/companies': true,
+  '/companies/[company]': true,
   '/salaries': true,
   '/learn': true,
   '/sponsorship': true,
@@ -51,7 +51,6 @@ function MyApp({ Component, pageProps }: AppProps) {
   }
 
   const path = router.pathname;
-  console.log("Apollo", path)
   const isMainLayout = routes[path];
 
   return (
