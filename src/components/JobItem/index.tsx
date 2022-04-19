@@ -109,7 +109,7 @@ const JobItem = ({
                     maxWidth: '48px',
                   }}
                 >
-                  <Image src={job.logo} width={48} height={56} layout="fixed" />
+                  <Image src={job.logo} width={48} height={56} layout="fixed" alt={`${job.company_name} logo`} title={job.company_name}/>
                 </div>
               ) : (
                 <Box className="logo-text">{job.company_name?.charAt(0)}</Box>
@@ -275,7 +275,7 @@ const JobItem = ({
                         maxWidth: '40px',
                       }}
                     >
-                      <Image src={job.logo} width={40} height={48} />
+                      <Image src={job.logo} width={40} height={48} alt={`${job.company_name} logo`} title={job.company_name} />
                     </div>
                   ) : (
                     <Box
