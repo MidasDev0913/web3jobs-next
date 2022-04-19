@@ -1,8 +1,18 @@
 # https://www.robotstxt.org/robotstxt.html
 User-agent: *
-Disallow:
-
-User-agent: *
+Disallow:/dashboard
+Disallow:/history
+Disallow:/invoices
+Disallow:/manage-jobs
+Disallow:/edit-job
+Disallow:/edit-job*
+Allow:/detail-job*
+Allow:/detail-job
+Allow:/companies
+Allow:/companies/*
+Allow:/salaries
+Allow:/job
+Allow:/job/*
 Allow: /
 
 Sitemap: http://www.web3.jobs/sitemap.xml
