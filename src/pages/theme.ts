@@ -102,6 +102,20 @@ export const customizedTheme: ThemeOptions = {
             border: '1px solid #B50000',
             borderRadius: 5,
           },
+
+          '&::-webkit-scrollbar': {
+            '-webkit-appearance': 'none',
+            width: '1px',
+            height: '4px',
+          },
+          '&::-webkit-scrollbar-button': {
+            display: 'none',
+          },
+          '&::-webkit-scrollbar-thumb': {
+            height: '100px',
+            background: '#717278',
+            border$adius: '30px',
+          },
         },
       },
     },
@@ -202,7 +216,7 @@ export const customizedTheme: ThemeOptions = {
             '&:hover .MuiChip-label': {
               color: '#fff',
             },
-          }
+          },
         },
       },
     },
@@ -265,7 +279,7 @@ export const customizedTheme: ThemeOptions = {
         },
         popperDisablePortal: {
           transform: 'none !important',
-          inset: 'auto !important'
+          inset: 'auto !important',
         },
         listbox: {
           padding: 0,

@@ -109,6 +109,7 @@ export const CompanyInfoContainer = styled(Stack)({
     width: 35,
     height: 35,
     borderRadius: 18,
+    marginTop: 9,
   },
   '& .apply-button': {
     padding: '18px 0',

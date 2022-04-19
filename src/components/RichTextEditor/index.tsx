@@ -1,22 +1,16 @@
 import React, { useState, useEffect } from 'react';
 import { Box } from '@mui/material';
-import {
-  EditorState,
-  convertToRaw,
-  convertFromHTML,
-  ContentState,
-} from 'draft-js';
+import { EditorState, convertFromHTML, ContentState } from 'draft-js';
 import { stateToHTML } from 'draft-js-export-html';
-import { EditorProps } from 'react-draft-wysiwyg'
+import { EditorProps } from 'react-draft-wysiwyg';
 
 const Editor = dynamic<EditorProps>(
   () => import('react-draft-wysiwyg').then((mod) => mod.Editor),
   { ssr: false }
-)
+);
 
 import 'react-draft-wysiwyg/dist/react-draft-wysiwyg.css';
 import { Container } from './index.styles';
-import htmlToDraft from 'html-to-draftjs';
 
 import Bold from '../../assets/icons/editorIcons/bold.svg';
 import Indent from '../../assets/icons/editorIcons/indent.svg';
@@ -29,8 +23,7 @@ import Outdent from '../../assets/icons/editorIcons/outdent.svg';
 import StrikeThrough from '../../assets/icons/editorIcons/strikethrough.svg';
 import Redo from '../../assets/icons/editorIcons/redo.svg';
 import Undo from '../../assets/icons/editorIcons/undo.svg';
-import dynamic from 'next/dynamic'; 
-
+import dynamic from 'next/dynamic';
 
 interface AppRichTextEditorProps {
   label?: string;

@@ -1,12 +1,8 @@
-import Script from 'next/script'
+import Script from 'next/script';
 import Head from 'next/head';
-import {
-  TITLE,
-  DESCRIPTION,
-} from '../../utils/constants';
+import { TITLE, DESCRIPTION } from '../../utils/constants';
 
 const LoadScript = () => {
-
   return (
     <>
       <Head>
@@ -18,21 +14,25 @@ const LoadScript = () => {
           name="viewport"
           content="minimum-scale=1, initial-scale=1, width=device-width, shrink-to-fit=no"
         />
-
+        <meta
+          name="viewport"
+          content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0"
+        />
         <meta name="og:title" content={TITLE} />
         <meta name="description" content={DESCRIPTION} />
         <meta name="og:description" content={DESCRIPTION} />
-
 
         {/* Twitter */}
         <meta property="twitter:card" content="summary_large_image" />
         <meta property="twitter:title" content={TITLE} />
         <meta property="twitter:description" content={DESCRIPTION} />
-
       </Head>
       <Script
         strategy="beforeInteractive"
-        dangerouslySetInnerHTML={{ __html: `function __googleMapsCallback() {}` }} />
+        dangerouslySetInnerHTML={{
+          __html: `function __googleMapsCallback() {}`,
+        }}
+      />
       <Script
         strategy="beforeInteractive"
         type="text/javascript"
@@ -52,16 +52,19 @@ const LoadScript = () => {
             dataLayer.push(arguments);
           }
           gtag('js', new Date());
-          gtag('config', 'AW-10924165313');` }} />
+          gtag('config', 'AW-10924165313');`,
+        }}
+      />
       <Script
         strategy="beforeInteractive"
-        src="https://unpkg.com/pdfjs-dist/build/pdf.min.js"></Script>
+        src="https://unpkg.com/pdfjs-dist/build/pdf.min.js"
+      ></Script>
       <Script
         strategy="beforeInteractive"
-        src="https://unpkg.com/pdfjs-dist/build/pdf.worker.min.js"></Script>
-
+        src="https://unpkg.com/pdfjs-dist/build/pdf.worker.min.js"
+      ></Script>
     </>
-  )
-}
+  );
+};
 
 export default LoadScript;

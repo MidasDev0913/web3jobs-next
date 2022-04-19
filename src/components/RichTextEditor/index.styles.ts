@@ -13,6 +13,20 @@ export const Container = styled(Box)(({ theme }) => ({
       minHeight: 563,
       maxHeight: 563,
       overflowY: 'scroll',
+
+      '&::-webkit-scrollbar': {
+        '-webkit-appearance': 'none',
+        width: '1px',
+        height: '4px',
+      },
+      '&::-webkit-scrollbar-button': {
+        display: 'none',
+      },
+      '&::-webkit-scrollbar-thumb': {
+        height: '100px',
+        background: '#717278',
+        border$adius: '30px',
+      },
     },
   },
   '& .mui-toolbar': {
