@@ -36,19 +36,8 @@ export const PaymentStep: React.FC<ComponentProps> = ({
         <Box fontSize={{ xs: 10, md: 18 }} ml={2}>
           Proceed to Metamask
         </Box>
-        {/* <img
-          src={MetamaskIcon}
-          width="28px"
-          height="27px"
-          style={{ marginLeft: '12px' }}
-        /> */}
         <div style={{ marginLeft: '12px' }}>
-        <Image
-          src={MetamaskIcon}
-          width={28}
-          height={27}
-          
-        />
+          <Image src={MetamaskIcon} width={28} height={27} />
         </div>
       </ConfirmButton>
       <Typography

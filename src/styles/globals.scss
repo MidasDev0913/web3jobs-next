@@ -95,20 +95,6 @@ code {
   cursor: pointer;
 }
 
-::-webkit-scrollbar {
-  -webkit-appearance: none;
-  width: 1px;
-  height: 4px;
-}
-::-webkit-scrollbar-button {
-  display: none;
-}
-::-webkit-scrollbar-thumb {
-  height: 100px;
-  background: #717278;
-  border-radius: 30px;
-}
-
 * {
   margin: 0;
   padding: 0;

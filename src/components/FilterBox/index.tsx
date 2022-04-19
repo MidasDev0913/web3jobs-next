@@ -27,14 +27,14 @@ export type FilterBoxProps = {
   account: string | undefined | null;
   filterSettings: any;
   setFilterSettings: (arg: any, noScroll?: boolean) => void;
-  handleConnectWallet: (arg: () => void) => void;
+  handleClickTag: (arg: string) => void;
 };
 
 const FilterBox = ({
   account,
   filterSettings,
   setFilterSettings,
-  handleConnectWallet,
+  handleClickTag,
 }: FilterBoxProps) => {
   const [isExpanded, setIsExpanded] = useState<boolean>(true);
   const [anchorSalaryEl, setAnchorSalaryEl] =
@@ -111,6 +111,7 @@ const FilterBox = ({
       city: undefined,
       company: undefined,
       search: undefined,
+      tags: undefined,
     });
   };
 
@@ -346,6 +347,28 @@ const FilterBox = ({
                 </IconButton>
               </SettingButton>
             )}
+            {filterSettings.tags &&
+              (filterSettings.tags || []).length > 0 &&
+              (filterSettings.tags || []).map((tag: string) => (
+                <SettingButton
+                  active
+                  width="auto"
+                  sx={{
+                    height: 30,
+                    textTransform: 'none',
+                    marginTop: 1,
+                  }}
+                >
+                  <span>{tag}</span>
+                  <IconButton
+                    aria-label="delete"
+                    size="small"
+                    onClick={() => handleClickTag(tag)}
+                  >
+                    <CloseIcon fontSize="inherit" />
+                  </IconButton>
+                </SettingButton>
+              ))}
           </Stack>
 
           {isVisibleRemoveAll && (

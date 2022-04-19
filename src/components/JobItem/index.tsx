@@ -81,7 +81,13 @@ const JobItem = ({
   return (
     <>
       <Box position="relative" display={{ xs: 'none', md: 'block' }}>
-        <Link href={`/job/${job.title} ${job.company_name} ${job.id}`.replace(/[ ]+/g, '-')}>
+        <Link
+          href={`/job/${job.title} ${job.company_name} ${job.id}`.replace(
+            /[ ]+/g,
+            '-'
+          )}
+        >
+          {/** @ts-ignore */}
           <Container
             style={{
               background:
@@ -105,11 +111,18 @@ const JobItem = ({
                   className="logo"
                   style={{
                     objectFit: 'cover',
-                    border: '1px solid #fff',
+                    outline: '1px solid #fff',
                     maxWidth: '48px',
                   }}
                 >
-                  <Image src={job.logo} width={48} height={56} layout="fixed" alt={`${job.company_name} logo`} title={job.company_name}/>
+                  <Image
+                    src={job.logo}
+                    width={48}
+                    height={56}
+                    layout="fixed"
+                    alt={`${job.company_name} logo`}
+                    title={job.company_name}
+                  />
                 </div>
               ) : (
                 <Box className="logo-text">{job.company_name?.charAt(0)}</Box>
@@ -196,7 +209,11 @@ const JobItem = ({
             <ApplyButton
               onClick={() => {
                 router.push({
-                  pathname: `/job/${job.title} ${job.company_name} ${job.id}`.replace(/[ ]+/g, '-'),
+                  pathname:
+                    `/job/${job.title} ${job.company_name} ${job.id}`.replace(
+                      /[ ]+/g,
+                      '-'
+                    ),
                   // pathname: `/job`,
                   // query: {
                   // id: job.id, // pass the id
@@ -235,7 +252,13 @@ const JobItem = ({
         </HtmlTooltip>
       </Box>
       <Stack display={{ xs: 'block', md: 'none' }}>
-        <Link href={`/job/${job.title} ${job.company_name} ${job.id}`.replace(/[ ]+/g, '-')}>
+        <Link
+          href={`/job/${job.title} ${job.company_name} ${job.id}`.replace(
+            /[ ]+/g,
+            '-'
+          )}
+        >
+          {/** @ts-ignore */}
           <Container
             style={{
               padding: 0,
@@ -268,14 +291,22 @@ const JobItem = ({
                 <Stack direction="row" alignItems="center">
                   {job.logo ? (
                     <div
-                      className="logo"
                       style={{
                         objectFit: 'cover',
-                        border: '1px solid #fff',
+                        outline: '1px solid #fff',
                         maxWidth: '40px',
+                        width: '40px',
+                        height: 48,
                       }}
                     >
-                      <Image src={job.logo} width={40} height={48} alt={`${job.company_name} logo`} title={job.company_name} />
+                      <Image
+                        src={job.logo}
+                        width={40}
+                        height={48}
+                        layout="fixed"
+                        alt={`${job.company_name} logo`}
+                        title={job.company_name}
+                      />
                     </div>
                   ) : (
                     <Box
