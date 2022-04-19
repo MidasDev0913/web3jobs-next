@@ -294,8 +294,8 @@ const Header: React.FC<ComponentProps> = ({ showBanner }) => {
               Post Job
             </AppButton>
           </Box>
-          {matchDownMd ? (
-            isLoggedIn ? (
+          <Box display={{ xs: 'block', md: 'none' }}>
+            {isLoggedIn ? (
               <ClickAwayListener onClickAway={handleCloseAccountInfoPopover}>
                 <Box>
                   <HtmlTooltip
@@ -338,44 +338,47 @@ const Header: React.FC<ComponentProps> = ({ showBanner }) => {
               >
                 Connect Wallet
               </ConnectWalletButton>
-            )
-          ) : isLoggedIn ? (
-            <>
-              <HtmlTooltip
-                open={openAccountInfoPopup}
-                onClose={handleCloseAccountInfoPopover}
-                onOpen={handleOpenAccountInfoPopover}
-                placement="bottom-end"
-                enterDelay={10}
-                title={
-                  <React.Fragment>
-                    <AccountInfoPopover
-                      isEmployer={userInfo.type === 0}
-                      account={account || ''}
-                      jobs={latestPostJobs}
-                      onClose={handleCloseAccountInfoPopover}
-                    />
-                  </React.Fragment>
-                }
+            )}
+          </Box>
+          <Box display={{ xs: 'none', md: 'block' }}>
+            {isLoggedIn ? (
+              <>
+                <HtmlTooltip
+                  open={openAccountInfoPopup}
+                  onClose={handleCloseAccountInfoPopover}
+                  onOpen={handleOpenAccountInfoPopover}
+                  placement="bottom-end"
+                  enterDelay={10}
+                  title={
+                    <React.Fragment>
+                      <AccountInfoPopover
+                        isEmployer={userInfo.type === 0}
+                        account={account || ''}
+                        jobs={latestPostJobs}
+                        onClose={handleCloseAccountInfoPopover}
+                      />
+                    </React.Fragment>
+                  }
+                >
+                  <WalletAddressBox>
+                    <Image src={MetamaskIcon} width={28} height={27} />
+                    <Typography mx={2}>
+                      {getAbbrAddress(userInfo.address, 5, 4)}
+                    </Typography>
+                    <Image src={ArrowDownIcon} width={13} height={7} />
+                  </WalletAddressBox>
+                </HtmlTooltip>
+              </>
+            ) : (
+              <ConnectWalletButton
+                id="header-connect-wallet-btn"
+                onClick={handleConnectWallet}
               >
-                <WalletAddressBox>
-                  <Image src={MetamaskIcon} width={28} height={27} />
-                  <Typography mx={2}>
-                    {getAbbrAddress(userInfo.address, 5, 4)}
-                  </Typography>
-                  <Image src={ArrowDownIcon} width={13} height={7} />
-                </WalletAddressBox>
-              </HtmlTooltip>
-            </>
-          ) : (
-            <ConnectWalletButton
-              id="header-connect-wallet-btn"
-              onClick={handleConnectWallet}
-            >
-              <ConnectWalletIcon />
-              Connect Wallet
-            </ConnectWalletButton>
-          )}
+                <ConnectWalletIcon />
+                Connect Wallet
+              </ConnectWalletButton>
+            )}
+          </Box>
         </ButtonContainer>
         <JoinOptionModal
           open={openJoinOptionModal}

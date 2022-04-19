@@ -94,6 +94,7 @@ export const HomePage: React.FC<ComponentProps> = ({
   const { viewedJobs, isLoggedIn } = useSelector(
     (state: RootState) => state.auth
   );
+  const [jobs, setJobs] = useState<TJob[]>(jobData?.jobs || []);
   const [filterSidebarAnchor, setFilterSidebarAnchor] = useState<any>(null);
   const [openNewsletterConfirmModal, setOpenNewsletterConfirmModal] =
     useState<boolean>(false);
@@ -118,6 +119,10 @@ export const HomePage: React.FC<ComponentProps> = ({
       }
     }
   };
+
+  useEffect(() => {
+    setJobs(jobData?.jobs || []);
+  }, [jobData?.jobs]);
 
   useEffect(() => {
     window?.addEventListener('scroll', handleScroll);
@@ -175,16 +180,22 @@ export const HomePage: React.FC<ComponentProps> = ({
     goToJobBoard();
   };
 
-  const handleClickTag = (tag: string) => {
+  const handleClickTag = (tag: string, isScroll?: boolean) => {
     const newTags = insertItemToArray(activeTags, tag);
-    router.push({
-      pathname: '/',
-      query: {
-        ...router.query,
-        page: 0,
-        tags: newTags,
+    router.push(
+      {
+        pathname: '/',
+        query: {
+          ...router.query,
+          page: 0,
+          tags: newTags,
+        },
       },
-    });
+      undefined,
+      {
+        scroll: !isScroll,
+      }
+    );
   };
 
   const handleClickFav = (
@@ -204,6 +215,19 @@ export const HomePage: React.FC<ComponentProps> = ({
           },
         })
       );
+      const updateJobs = [...jobs];
+      const index = jobs.findIndex((job) => job.id === jobId);
+      if (index !== -1) {
+        const updateLikes = insertItemToArray(
+          jobs[index].likes || [],
+          account?.toLowerCase()
+        );
+        updateJobs.splice(index, 1, {
+          ...jobs[index],
+          likes: updateLikes,
+        });
+        setJobs(updateJobs);
+      }
     } else {
       setOpenConnectWalletModal(true);
     }
@@ -477,9 +501,10 @@ export const HomePage: React.FC<ComponentProps> = ({
               position,
               city,
               favorite: favorite === 'true',
+              tags: activeTags,
             }}
             setFilterSettings={(v) => handleApplyFilter(v, true)}
-            handleConnectWallet={handleConnectWallet}
+            handleClickTag={(arg) => handleClickTag(arg, true)}
           />
         </Box>
         <Box
@@ -503,8 +528,8 @@ export const HomePage: React.FC<ComponentProps> = ({
               setFilterSettings={handleApplyFilter}
               onSearch={handleSearch}
             />
-            {(jobData?.jobs || []).length > 0 ? (
-              (jobData?.jobs || []).map((job: TJob) => (
+            {(jobs || []).length > 0 ? (
+              (jobs || []).map((job: TJob) => (
                 <Box key={job.id} marginTop="5px">
                   <JobItem
                     job={job}
