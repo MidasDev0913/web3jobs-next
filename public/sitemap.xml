@@ -1,9 +1,79 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-  <url>
-    <loc>http://www.web3.jobs/foo.html</loc>
-    <lastmod>2018-06-04</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
-  </url>
-</urlset>
+	<urlset xmlns="http://www.google.com/schemas/sitemap/0.84" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.sitemaps.org/schemas/sitemap/0.9 http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd">
+		<url>
+			<loc>https://web3.jobs/</loc>
+			<changefreq>weekly</changefreq>
+		</url>
+
+		<url>
+			<loc>https://web3.jobs/cdn-cgi/l/email-protection#6b181e1b1b04191f2b1c0e09584501040918</loc>
+			<changefreq>weekly</changefreq>
+		</url>
+
+		<url>
+			<loc>https://web3.jobs/dashboard</loc>
+			<changefreq>weekly</changefreq>
+		</url>
+
+		<url>
+			<loc>https://web3.jobs/history</loc>
+			<changefreq>weekly</changefreq>
+		</url>
+
+		<url>
+			<loc>https://web3.jobs/invoices</loc>
+			<changefreq>weekly</changefreq>
+		</url>
+
+		<url>
+			<loc>https://web3.jobs/manage-jobs/</loc>
+			<changefreq>weekly</changefreq>
+		</url>
+
+		<url>
+			<loc>https://web3.jobs/edit-job/</loc>
+			<changefreq>weekly</changefreq>
+		</url>
+
+		<url>
+			<loc>https://web3.jobs/detail-job/</loc>
+			<changefreq>weekly</changefreq>
+		</url>
+
+		<url>
+			<loc>https://web3.jobs/companies/</loc>
+			<changefreq>weekly</changefreq>
+		</url>
+
+		<url>
+			<loc>https://web3.jobs/companies</loc>
+			<changefreq>weekly</changefreq>
+		</url>
+
+		<url>
+			<loc>https://web3.jobs/salaries</loc>
+			<changefreq>weekly</changefreq>
+		</url>
+
+		<url>
+			<loc>https://web3.jobs/job</loc>
+			<changefreq>weekly</changefreq>
+		</url>
+
+		<url>
+			<loc>https://web3.jobs/learn</loc>
+			<changefreq>weekly</changefreq>
+		</url>
+
+		<url>
+			<loc>https://web3.jobs/post-job</loc>
+			<changefreq>weekly</changefreq>
+		</url>
+
+		<url>
+			<loc>https://web3.jobs/sponsorship</loc>
+			<changefreq>weekly</changefreq>
+		</url>
+
+	</urlset>
+
