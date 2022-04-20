@@ -32,14 +32,20 @@ const TopWeb3CitiesSection = ({
       </Box>
       <Box
         display={{ xs: 'none', md: 'flex' }}
-        mt="30px"
-        width="calc(100% - 240px)"
+        width="calc(100% - 120px)"
         height="255px"
-        padding="0 120px"
+        margin="30px 120px"
+        columnGap="60px"
       >
-        <Box display="flex" flexDirection="column" flex="1 0 25%">
+        <Box display="flex" flexDirection="column" flex="1 0 calc(25% - 60px)">
           {cities.slice(0, 5).map((item, _i) => (
-            <Box display="flex" alignItems="center" mb="30px" key={item.id}>
+            <Box 
+              key={item.id}
+               display="flex"
+              alignItems="center"
+              mb="30px"
+              justifyContent="space-between"
+            >
               <Link className="city-link" onClick={() => onClick(item.city)}>
                 Web3 Jobs in {item.city}
               </Link>
@@ -48,9 +54,15 @@ const TopWeb3CitiesSection = ({
           ))}
         </Box>
 
-        <Box display="flex" flexDirection="column" flex="1 0 25%">
+        <Box display="flex" flexDirection="column" flex="1 0 calc(25% - 60px)">
           {cities.slice(5, 10).map((item, _i) => (
-            <Box display="flex" alignItems="center" mb="30px" key={item.id}>
+            <Box 
+              key={item.id}
+               display="flex"
+              alignItems="center"
+              mb="30px"
+              justifyContent="space-between"
+            >
               <Link className="city-link" onClick={() => onClick(item.city)}>
                 Web3 Jobs in {item.city}
               </Link>
@@ -59,9 +71,15 @@ const TopWeb3CitiesSection = ({
           ))}
         </Box>
 
-        <Box display="flex" flexDirection="column" flex="1 0 25%">
+        <Box display="flex" flexDirection="column" flex="1 0 calc(25% - 60px)">
           {cities.slice(10, 15).map((item, _i) => (
-            <Box display="flex" alignItems="center" mb="30px" key={item.id}>
+            <Box 
+              key={item.id}
+               display="flex"
+              alignItems="center"
+              mb="30px"
+              justifyContent="space-between"
+            >
               <Link className="city-link" onClick={() => onClick(item.city)}>
                 Web3 Jobs in {item.city}
               </Link>
@@ -70,9 +88,15 @@ const TopWeb3CitiesSection = ({
           ))}
         </Box>
 
-        <Box display="flex" flexDirection="column" flex="1 0 25%">
+        <Box display="flex" flexDirection="column" flex="1 0 calc(25% - 60px)">
           {cities.slice(15, 20).map((item, _i) => (
-            <Box display="flex" alignItems="center" mb="30px" key={item.id}>
+            <Box 
+              key={item.id}
+              display="flex"
+              alignItems="center"
+              mb="30px"
+              justifyContent="space-between"
+            >
               <Link className="city-link" onClick={() => onClick(item.city)}>
                 Web3 Jobs in {item.city}
               </Link>
