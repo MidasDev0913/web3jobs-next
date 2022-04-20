@@ -3,8 +3,6 @@ import Image from 'next/image';
 import {
   styled,
   Box,
-  Grow,
-  Paper,
   useTheme,
   useMediaQuery,
   IconButton,
@@ -14,20 +12,17 @@ import {
 import Tooltip, { TooltipProps, tooltipClasses } from '@mui/material/Tooltip';
 import { useDispatch, useSelector } from 'react-redux';
 import { useRouter } from 'next/router';
-import { useWeb3React } from '@web3-react/core';
 import axios from 'axios';
+import { useAccount } from 'wagmi';
 
 import {
   HeaderContainer,
   LogoContainer,
-  MenuContainer,
   ButtonContainer,
   ConnectWalletButton,
   WalletAddressBox,
-  SubMenuItem,
 } from './index.styles';
-import { auth } from '../../firebase';
-import { AppMenuItem, TMenuItem } from '../MenuItem';
+import { TMenuItem } from '../MenuItem';
 import { AppButton } from '../Button';
 import {
   login,
@@ -39,7 +34,6 @@ import { getAbbrAddress } from '../../utils/helper';
 import ConnectWalletIcon from '../SVGIcons/ConnectWalletIcon';
 import MetamaskIcon from '../../assets/icons/metamask_icon.svg';
 import ArrowDownIcon from '../../assets/icons/arrow_up_tri_icon.svg';
-import { MenuPopper } from '../MenuItem/index.styles';
 import { maybeFixMetamaskConnection } from '../../provider/MetamaskProvider';
 import JoinOptionModal from '../Modals/JoinOption';
 import JoinEmployerConfirmModal from '../Modals/JoinEmployerConfirm';
@@ -49,10 +43,11 @@ import AccountInfoPopover from '../Modals/AccountInfoPopover';
 import { TJob } from '../../interfaces';
 import AnnounceBar from './AnnounceBar';
 import InstallMetamaskModal from '../Modals/InstallMetamask';
-import { connect } from '../../utils/web3';
 import useDetectMobile from '../../hooks/useDetectMobile';
 import Logo from '../../assets/web3jobs_logo.svg';
 import MobileLogo from '../../assets/web3jobs_logo_mobile.svg';
+import { useAuth } from '../../hooks/useAuth';
+import { connect } from '../../utils/web3';
 
 const HtmlTooltip = styled(({ className, ...props }: TooltipProps) => (
   <Tooltip {...props} classes={{ popper: className }} />
@@ -108,7 +103,8 @@ const Header: React.FC<ComponentProps> = ({ showBanner }) => {
   const theme = useTheme();
   const matchDownMd = useMediaQuery(theme.breakpoints.down('md'));
   const { isMobile } = useDetectMobile();
-  const { account, activate } = useWeb3React();
+  const { login: activate } = useAuth();
+  const { address: account, isConnected } = useAccount();
   const { isLoggedIn, userInfo } = useSelector(
     (state: RootState) => state.auth
   );
@@ -178,12 +174,15 @@ const Header: React.FC<ComponentProps> = ({ showBanner }) => {
 
   const handleConnectWallet = async () => {
     if (isMobile) {
-      if (typeof window !== undefined) {
+      if (typeof window !== undefined && !window.ethereum) {
         window.open(
-          `dapp://${
+          `https://metamask.app.link/dapp/${
             process.env.NEXT_PUBLIC_ENV === 'prod' ? '' : 'staging.'
-          }web3.jobs`
+          }web3.jobs/`,
+          '_blank',
+          'noopener noreferrer'
         );
+        return;
       }
     } else {
       if (typeof window !== undefined && !window.ethereum) {
@@ -192,17 +191,17 @@ const Header: React.FC<ComponentProps> = ({ showBanner }) => {
       }
     }
     await maybeFixMetamaskConnection();
-    connect(activate)
-      .then(() => {
-        dispatch(login({ openPopup: () => setOpenJoinOptionModal(true) }));
-      })
-      .catch((err) => {
-        connect(activate);
-      });
-  };
-
-  const handleOpenSubmenu = (menu: TMenuItem | null) => {
-    setOpenSubmenu(menu?.text || '');
+    if (isConnected) {
+      dispatch(login({ openPopup: () => setOpenJoinOptionModal(true) }));
+    } else {
+      connect(activate)
+        .then(() => {
+          dispatch(login({ openPopup: () => setOpenJoinOptionModal(true) }));
+        })
+        .catch((err) => {
+          connect(activate);
+        });
+    }
   };
 
   const handleConfirmJoinOption = (type: number) => {
@@ -294,8 +293,8 @@ const Header: React.FC<ComponentProps> = ({ showBanner }) => {
               Post Job
             </AppButton>
           </Box>
-          <Box display={{ xs: 'block', md: 'none' }}>
-            {isLoggedIn ? (
+          {matchDownMd ? (
+            isLoggedIn ? (
               <ClickAwayListener onClickAway={handleCloseAccountInfoPopover}>
                 <Box>
                   <HtmlTooltip
@@ -338,47 +337,46 @@ const Header: React.FC<ComponentProps> = ({ showBanner }) => {
               >
                 Connect Wallet
               </ConnectWalletButton>
-            )}
-          </Box>
-          <Box display={{ xs: 'none', md: 'block' }}>
-            {isLoggedIn ? (
-              <>
-                <HtmlTooltip
-                  open={openAccountInfoPopup}
-                  onClose={handleCloseAccountInfoPopover}
-                  onOpen={handleOpenAccountInfoPopover}
-                  placement="bottom-end"
-                  enterDelay={10}
-                  title={
-                    <React.Fragment>
-                      <AccountInfoPopover
-                        isEmployer={userInfo.type === 0}
-                        account={account || ''}
-                        jobs={latestPostJobs}
-                        onClose={handleCloseAccountInfoPopover}
-                      />
-                    </React.Fragment>
-                  }
-                >
-                  <WalletAddressBox>
-                    <Image src={MetamaskIcon} width={28} height={27} />
-                    <Typography mx={2}>
-                      {getAbbrAddress(userInfo.address, 5, 4)}
-                    </Typography>
-                    <Image src={ArrowDownIcon} width={13} height={7} />
-                  </WalletAddressBox>
-                </HtmlTooltip>
-              </>
-            ) : (
-              <ConnectWalletButton
-                id="header-connect-wallet-btn"
-                onClick={handleConnectWallet}
+            )
+          ) : isLoggedIn ? (
+            <>
+              <HtmlTooltip
+                open={openAccountInfoPopup}
+                onClose={handleCloseAccountInfoPopover}
+                onOpen={handleOpenAccountInfoPopover}
+                placement="bottom-end"
+                enterDelay={10}
+                title={
+                  <React.Fragment>
+                    <AccountInfoPopover
+                      isEmployer={userInfo.type === 0}
+                      account={account || ''}
+                      jobs={latestPostJobs}
+                      onClose={handleCloseAccountInfoPopover}
+                    />
+                  </React.Fragment>
+                }
               >
+                <WalletAddressBox>
+                  <Image src={MetamaskIcon} width={28} height={27} />
+                  <Typography mx={2}>
+                    {getAbbrAddress(userInfo.address, 5, 4)}
+                  </Typography>
+                  <Image src={ArrowDownIcon} width={13} height={7} />
+                </WalletAddressBox>
+              </HtmlTooltip>
+            </>
+          ) : (
+            <ConnectWalletButton
+              id="header-connect-wallet-btn"
+              onClick={handleConnectWallet}
+            >
+              <Box display={{ xs: 'hidden', md: 'block' }}>
                 <ConnectWalletIcon />
-                Connect Wallet
-              </ConnectWalletButton>
-            )}
-          </Box>
+              </Box>
+              Connect Wallet
+            </ConnectWalletButton>
+          )}
         </ButtonContainer>
         <JoinOptionModal
           open={openJoinOptionModal}

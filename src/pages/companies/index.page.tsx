@@ -11,7 +11,6 @@ import {
   useTheme,
   Drawer,
 } from '@mui/material';
-import { useWeb3React } from '@web3-react/core';
 import axios from 'axios';
 
 import { HomePageWrapper } from './index.styles';
@@ -49,6 +48,7 @@ import { FilterButton } from '../../components/FilterBox/index.styles';
 import { connect } from '../../utils/web3';
 import { TJob, TJobCountyOfCity } from '../../interfaces';
 import { NextPageContext } from 'next';
+import { useAccount } from 'wagmi';
 
 type ComponentProps = {
   tags: string[];
@@ -77,19 +77,18 @@ export const HomePage: React.FC<ComponentProps> = ({
     favorite,
   } = router.query;
 
-  console.log(company)
   const currentPage = Number(page || '0');
   const activeTags =
     typeof tagsInQuery === 'string'
       ? [tagsInQuery]
       : Array.isArray(tagsInQuery)
-        ? tagsInQuery
-        : [];
+      ? tagsInQuery
+      : [];
 
   const theme = useTheme();
   const matchDownMd = useMediaQuery(theme.breakpoints.down('md'));
   const countryNameList = getCountryNames();
-  const { account, activate } = useWeb3React();
+  const { address: account } = useAccount();
   const { userInfo } = useSelector((state: RootState) => state.auth);
   const { viewedJobs, isLoggedIn } = useSelector(
     (state: RootState) => state.auth
@@ -151,16 +150,6 @@ export const HomePage: React.FC<ComponentProps> = ({
         }
       });
   }, [dispatch]);
-
-  const handleConnectWallet = (onClose?: () => void) => {
-    connect(activate)
-      .then(() => {
-        dispatch(login({ onClose }));
-      })
-      .catch((err) => {
-        connect(activate);
-      });
-  };
 
   const handleClickTopCity = (city: string) => {
     router.push(
@@ -426,27 +415,27 @@ export const HomePage: React.FC<ComponentProps> = ({
           </Box>
           <h1>
             {searchKey &&
-              !countryNameList.includes(
-                makeWordsUpperCase(searchKey as string) as string
-              )
+            !countryNameList.includes(
+              makeWordsUpperCase(searchKey as string) as string
+            )
               ? searchKey
               : (activeTags || []).length
-                ? ((activeTags as string[]) || [])
+              ? ((activeTags as string[]) || [])
                   .map((tag: string) => getCaptialized(tag))
                   .join(' & ')
-                : company
-                  ? company
-                  : 'All'}{' '}
+              : company
+              ? company
+              : 'All'}{' '}
             Jobs
             {location
               ? ` in ${location}`
               : city
-                ? ` in ${city}`
-                : countryNameList.includes(
+              ? ` in ${city}`
+              : countryNameList.includes(
                   makeWordsUpperCase(searchKey as string) as string
                 )
-                  ? ` in ${makeWordsUpperCase(searchKey as string)}`
-                  : ''}
+              ? ` in ${makeWordsUpperCase(searchKey as string)}`
+              : ''}
             {/* <Box ml={3}>
             <NewsletterButton
               onClick={() => setOpenNewsletterConfirmModal(true)}
@@ -644,7 +633,6 @@ export const HomePage: React.FC<ComponentProps> = ({
   );
 };
 
-
 export const getServerSideProps = async (ctx: NextPageContext) => {
   const { query } = ctx;
 
@@ -652,8 +640,8 @@ export const getServerSideProps = async (ctx: NextPageContext) => {
     typeof query.tags === 'string'
       ? [query.tags]
       : Array.isArray(query.tags)
-        ? query.tags
-        : [];
+      ? query.tags
+      : [];
   const promises: any[] = [];
   promises.push(
     axios.get(`${process.env.NEXT_PUBLIC_API_URL}/job/getAllJobs`, {
@@ -668,8 +656,8 @@ export const getServerSideProps = async (ctx: NextPageContext) => {
           (query.search as string)?.toLowerCase() === 'united states'
             ? 'USA'
             : (query.search as string)?.toLowerCase() === 'united kingdom'
-              ? 'UK'
-              : query.search,
+            ? 'UK'
+            : query.search,
         page: Number(query.page || '0'),
         pageSize: JOB_PAGE_SIZE,
         tags: activeTags || [],

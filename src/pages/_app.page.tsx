@@ -3,19 +3,18 @@ import type { AppProps, AppContext } from 'next/app';
 import React, { useEffect } from 'react';
 import { Provider } from 'react-redux';
 import { useRouter } from 'next/router';
-import { Web3ReactProvider as Web3Provider } from '@web3-react/core';
-import { UseWalletProvider as WalletProvider } from 'use-wallet';
 import { ThemeProvider, createTheme } from '@mui/material/styles';
 import { SnackbarProvider } from 'notistack';
 import axios from 'axios';
 
-import { walletConnect } from '../utils/constants';
 import { store } from '../redux/store';
 import { customizedTheme } from './theme';
 import { getLibrary } from '../utils/helper';
 import MainLayout from '../components/MainLayout';
 import PersonalDashboardLayout from '../components/PersonalDashboardLayout';
 import LoadScript from '../components/LoadScript';
+import { WagmiConfig } from 'wagmi';
+import { client } from '../provider/wagmi';
 
 interface Route {
   [key: string]: boolean;
@@ -56,29 +55,27 @@ function MyApp({ Component, pageProps }: AppProps) {
   return (
     <>
       <LoadScript />
-      <WalletProvider connectors={walletConnect}>
-        <Web3Provider getLibrary={getLibrary}>
-          <ThemeProvider theme={theme}>
-            {/*
+      <WagmiConfig client={client}>
+        <ThemeProvider theme={theme}>
+          {/*
           @ts-ignore */}
 
-            <SnackbarProvider maxSnack={3}>
-              <Provider store={store}>
-                {isMainLayout && (
-                  <MainLayout showBanner={pageProps.showBanner}>
-                    <Component {...pageProps} />
-                  </MainLayout>
-                )}
-                {!isMainLayout && (
-                  <PersonalDashboardLayout>
-                    <Component {...pageProps} />
-                  </PersonalDashboardLayout>
-                )}
-              </Provider>
-            </SnackbarProvider>
-          </ThemeProvider>
-        </Web3Provider>
-      </WalletProvider>
+          <SnackbarProvider maxSnack={3}>
+            <Provider store={store}>
+              {isMainLayout && (
+                <MainLayout showBanner={pageProps.showBanner}>
+                  <Component {...pageProps} />
+                </MainLayout>
+              )}
+              {!isMainLayout && (
+                <PersonalDashboardLayout>
+                  <Component {...pageProps} />
+                </PersonalDashboardLayout>
+              )}
+            </Provider>
+          </SnackbarProvider>
+        </ThemeProvider>
+      </WagmiConfig>
     </>
   );
 }

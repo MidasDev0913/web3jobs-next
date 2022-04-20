@@ -1,5 +1,12 @@
 import React, { useState, useEffect, useMemo } from 'react';
-import { useWeb3React } from '@web3-react/core';
+import {
+  useAccount,
+  useNetwork,
+  useProvider,
+  useWebSocketProvider,
+  useSendTransaction,
+  usePrepareSendTransaction,
+} from 'wagmi';
 import Web3 from 'web3';
 import axios from 'axios';
 import { useSelector, useDispatch } from 'react-redux';
@@ -40,6 +47,9 @@ import { postNewJob, editJob } from '../../redux/reducers/jobReducer';
 import JobSeekerFailedModal from '../Modals/JobseekerFailed';
 import { CompleteStep } from './steps/complete';
 import { switchNetwork } from '../../utils/helper';
+import { useAuth } from '../../hooks/useAuth';
+import useDetectMobile from '../../hooks/useDetectMobile';
+import InstallMetamaskModal from '../Modals/InstallMetamask';
 
 type ComponentProps = {
   open: boolean;
@@ -144,15 +154,6 @@ export const PaymentProcessPopup: React.FC<ComponentProps> = ({
   const steps = ['Payment', 'Waiting for confirmation', 'Job Live'];
   const url = 'https://min-api.cryptocompare.com/data/price?fsym=ETH&tsyms=USD';
 
-  const dispatch = useDispatch();
-  const router = useRouter();
-  const theme = useTheme();
-  const matchDownMd = useMediaQuery(theme.breakpoints.down('md'));
-  const { account, library, chainId, activate } = useWeb3React();
-  const { isLoggedIn, userInfo } = useSelector(
-    (state: RootState) => state.auth
-  );
-
   const [activeStep, setActiveStep] = useState<number>(0);
   const [priceInEth, setPriceInEth] = useState<number>(0);
   const [txnHash, setTxnHash] = useState<string>('');
@@ -162,8 +163,60 @@ export const PaymentProcessPopup: React.FC<ComponentProps> = ({
   const [postingJob, setPostingJob] = useState<boolean>(false);
   const [openJobseekerFailedModal, setOpenJobseekerFailedModal] =
     useState<boolean>(false);
-  const [isLoadingLive, setIsLoadingLive] = useState<boolean>(false);
   const [newJobId, setNewJobId] = useState<string>('');
+  const [openInstallMetamaskPopup, setOpenInstallMetamaskPopup] =
+    useState<boolean>(false);
+
+  const dispatch = useDispatch();
+  const router = useRouter();
+  const theme = useTheme();
+  const matchDownMd = useMediaQuery(theme.breakpoints.down('md'));
+  const { chain } = useNetwork();
+  const { config } = usePrepareSendTransaction({
+    request: {
+      to: process.env.NEXT_PUBLIC_PAYMENT_RECEIVER as string,
+      value: new Web3().utils.toWei(priceInEth.toString()),
+    },
+  });
+  const { sendTransaction } = useSendTransaction({
+    ...config,
+    onSuccess(data) {
+      setTxnHash(data.hash);
+      setActiveStep(1);
+      setPostingJob(false);
+      if (isEdit) {
+        dispatch(
+          editJob({
+            ...newJob,
+            onSuccess: () => {
+              setNewJobId(newJob.job.id);
+              setActiveStep(2);
+            },
+          })
+        );
+      } else {
+        dispatch(
+          postNewJob({
+            ...newJob,
+            setNewJobId: setNewJobId,
+            onInitialize: () => {
+              onInitialize();
+              setActiveStep(2);
+            },
+          })
+        );
+      }
+    },
+    onError(err) {
+      setTxnError(true);
+      setPostingJob(false);
+    },
+  });
+  const { login: activate } = useAuth();
+  const { isMobile } = useDetectMobile();
+  const { isLoggedIn, userInfo } = useSelector(
+    (state: RootState) => state.auth
+  );
 
   useEffect(() => {
     if (!open) {
@@ -185,67 +238,20 @@ export const PaymentProcessPopup: React.FC<ComponentProps> = ({
 
   useEffect(() => {
     (async () => {
-      if (open && isLoggedIn && postingJob && chainId) {
+      if (open && isLoggedIn && postingJob && chain?.id) {
         if (userInfo.type === 0) {
           const availableChains =
             process.env.NEXT_PUBLIC_ENV === 'prod'
               ? [ETH_MAINNET_CHAIN_ID]
               : [ETH_TESTNET_CHAIN_ID];
-          if (chainId && !availableChains.includes(chainId as number)) {
+          if (chain?.id && !availableChains.includes(chain?.id as number)) {
             const isCorrectChain = await switchNetwork(availableChains[0]);
             if (!isCorrectChain) {
               return;
             }
           }
 
-          const web3 = new Web3(library.provider);
-          web3.eth
-            .sendTransaction(
-              {
-                to: process.env.NEXT_PUBLIC_PAYMENT_RECEIVER,
-                from: account as string,
-                value: web3.utils.toWei(priceInEth.toString()),
-              },
-              (error, txnHash) => {
-                console.log(error, txnHash);
-              }
-            )
-            .on('transactionHash', (hash) => {
-              setTxnHash(hash);
-              setActiveStep(1);
-            })
-            .on('receipt', () => {
-              setPostingJob(false);
-              setIsLoadingLive(true);
-              if (isEdit) {
-                dispatch(
-                  editJob({
-                    ...newJob,
-                    onSuccess: () => {
-                      setNewJobId(newJob.job.id);
-                      setIsLoadingLive(false);
-                      setActiveStep(2);
-                    },
-                  })
-                );
-              } else {
-                dispatch(
-                  postNewJob({
-                    ...newJob,
-                    setNewJobId: setNewJobId,
-                    onInitialize: () => {
-                      onInitialize();
-                      setIsLoadingLive(false);
-                      setActiveStep(2);
-                    },
-                  })
-                );
-              }
-            })
-            .on('error', () => {
-              setTxnError(true);
-              setPostingJob(false);
-            });
+          sendTransaction?.();
         } else {
           setOpenJobseekerFailedModal(true);
         }
@@ -275,6 +281,23 @@ export const PaymentProcessPopup: React.FC<ComponentProps> = ({
 
   const handleProcessPayment = () => {
     if (!isLoggedIn) {
+      if (isMobile) {
+        if (typeof window !== undefined && !window.ethereum) {
+          window.open(
+            `https://metamask.app.link/dapp/${
+              process.env.NEXT_PUBLIC_ENV === 'prod' ? '' : 'staging.'
+            }web3.jobs/`,
+            '_blank',
+            'noopener noreferrer'
+          );
+          return;
+        }
+      } else {
+        if (typeof window !== undefined && !window.ethereum) {
+          setOpenInstallMetamaskPopup(true);
+          return;
+        }
+      }
       connect(activate)
         .then(() => {
           setPostingJob(true);
@@ -372,10 +395,10 @@ export const PaymentProcessPopup: React.FC<ComponentProps> = ({
                         },
                       })
                     : router.push({
-                      pathname: `/job/[${newJob.title}-${newJob.company_name}-${newJobId}]`,
-                      query: {
-                        title: newJob.title,
-                        company: newJob.company_name,
+                        pathname: `/job/[${newJob.job.title}-${newJob.job.company_name}-${newJobId}]`,
+                        query: {
+                          title: newJob.job.title,
+                          company: newJob.job.company_name,
                           id: newJobId, // pass the id
                         },
                       })
@@ -410,6 +433,10 @@ export const PaymentProcessPopup: React.FC<ComponentProps> = ({
           setOpenJobseekerFailedModal(false);
           router.push('/');
         }}
+      />
+      <InstallMetamaskModal
+        open={openInstallMetamaskPopup}
+        onClose={() => setOpenInstallMetamaskPopup(false)}
       />
     </>
   );

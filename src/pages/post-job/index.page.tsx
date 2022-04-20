@@ -8,7 +8,7 @@ import {
   useTheme,
   Stack,
 } from '@mui/material';
-import { useWeb3React } from '@web3-react/core';
+import { useAccount } from 'wagmi';
 
 import { RootState } from '../../redux/store';
 import { getTags } from '../../redux/reducers/commonReducer';
@@ -50,7 +50,6 @@ import { useAlertMessage } from '../../hooks/useAlertMessage';
 import { ErrorMessage } from '../../components/ErrorMessage';
 import GooglePlaceAutoComplete from '../../components/GooglePlaceAutoComplete';
 import { AppAutocomplete } from '../../components/Autocomplete';
-import NewsletterBgSvg from '../../assets/images/newsletter-bg.svg';
 import JobSeekerFailedModal from '../../components/Modals/JobseekerFailed';
 import JoinOptionModal from '../../components/Modals/JoinOption';
 import { PaymentProcessPopup } from '../../components/PaymentProcess';
@@ -58,6 +57,9 @@ import { FreePostJobSuccess } from '../../components/Modals/FreePostJobSuccess';
 import DraftPostJobSuccess from '../../components/Modals/DraftPostJobSuccess';
 import { connect } from '../../utils/web3';
 import { useRouter } from 'next/router';
+import { useAuth } from '../../hooks/useAuth';
+import useDetectMobile from '../../hooks/useDetectMobile';
+import InstallMetamaskModal from '../../components/Modals/InstallMetamask';
 
 const FilterTag = React.lazy(() => import('../../components/FilterTag'));
 const StickyPostCompareModal = React.lazy(
@@ -80,7 +82,9 @@ const PostJobPage = () => {
   const theme = useTheme();
   const matchDownMd = useMediaQuery(theme.breakpoints.down('md'));
   const { showAlertMessage } = useAlertMessage();
-  const { account, library, chainId, activate } = useWeb3React();
+  const { address: account } = useAccount();
+  const { login: activate } = useAuth();
+  const { isMobile } = useDetectMobile();
 
   const { tags } = useSelector((state: RootState) => state.common);
   const { organizations, companies } = useSelector(
@@ -127,6 +131,8 @@ const PostJobPage = () => {
     useState<boolean>(false);
   const [newJobId, setNewJobId] = useState<string>('');
   const [descriptions, setDescriptions] = useState<string[]>([]);
+  const [openInstallMetamaskPopup, setOpenInstallMetamaskPopup] =
+    useState<boolean>(false);
 
   const initalize = () => {
     setOpenConfirmPaymentPopup(false);
@@ -404,7 +410,7 @@ const PostJobPage = () => {
       }
 
       const obj = document.getElementById(fieldId);
-      if(typeof window !== undefined) {
+      if (typeof window !== undefined) {
         window.scrollTo({
           top: obj?.offsetTop,
           behavior: 'smooth',
@@ -451,6 +457,23 @@ const PostJobPage = () => {
 
     if (!price.total || isDraft) {
       if (!isLoggedIn) {
+        if (isMobile) {
+          if (typeof window !== undefined && !window.ethereum) {
+            window.open(
+              `https://metamask.app.link/dapp/${
+                process.env.NEXT_PUBLIC_ENV === 'prod' ? '' : 'staging.'
+              }web3.jobs/`,
+              '_blank',
+              'noopener noreferrer'
+            );
+            return;
+          }
+        } else {
+          if (typeof window !== undefined && !window.ethereum) {
+            setOpenInstallMetamaskPopup(true);
+            return;
+          }
+        }
         connect(activate)
           .then(() => {
             setClickedPostJob(true);
@@ -505,6 +528,23 @@ const PostJobPage = () => {
   const handleConfirmPayment = async (priceInEth: number) => {
     setInternalLoading(true);
     if (!isLoggedIn) {
+      if (isMobile) {
+        if (typeof window !== undefined && !window.ethereum) {
+          window.open(
+            `https://metamask.app.link/dapp/${
+              process.env.NEXT_PUBLIC_ENV === 'prod' ? '' : 'staging.'
+            }web3.jobs/`,
+            '_blank',
+            'noopener noreferrer'
+          );
+          return;
+        }
+      } else {
+        if (typeof window !== undefined && !window.ethereum) {
+          setOpenInstallMetamaskPopup(true);
+          return;
+        }
+      }
       connect(activate)
         .then(() => {
           dispatch(login({ openPopup: () => setOpenJoinOptionModal(true) }));
@@ -604,431 +644,438 @@ const PostJobPage = () => {
 
   return (
     <>
-    <Box>
-      <MainContainer padding={{ xs: '6px 11px 100px', md: '30px 120px 100px' }}>
-        <img src={NewsletterBgSvg.src} className="post-job-bg" />
-        <Typography
-          fontSize={{ xs: 25, md: 40 }}
-          lineHeight={1.5}
-          fontWeight={600}
-          textAlign="center"
-          mt={{ xs: 0, md: '70px' }}
+      <Box>
+        <MainContainer
+          padding={{ xs: '6px 11px 100px', md: '30px 120px 100px' }}
         >
-          Post a Web3 Job
-        </Typography>
-        <PostJobContainer
-          padding={{ xs: '8px 11px 53px', md: '50px 120px 100px' }}
-        >
-          <Box
-            id="company_name"
-            mt={errors.organization ? '44px' : '20px'}
-            position="relative"
+          <Typography
+            fontSize={{ xs: 25, md: 40 }}
+            lineHeight={1.5}
+            fontWeight={600}
+            textAlign="center"
+            mt={{ xs: 0, md: '70px' }}
           >
-            <AppAutocomplete
-              freeSolo
-              value={newJob?.company_name}
-              label="Company Name:"
-              placeholder="e.g. Coinbase, Binance, Palmswap"
-              options={companies.map((item) => ({
-                value: item.name,
-                text: item.name,
-              }))}
-              onChange={handleChangeNewJob('company_name')}
-              error={errors.company_name}
-            />
-            {errors.company_name && <ErrorMessage />}
-          </Box>
-          <Box
-            id="title"
-            mt={errors.company_name ? '44px' : '20px'}
-            position="relative"
-          >
-            <AppTextField
-              value={newJob?.title}
-              label="Job Title:"
-              placeholder="e.g. community manager, rust developer"
-              disableSpecialCharacter
-              onChange={handleChangeNewJob('title')}
-              error={errors.title}
-            />
-            {errors.title && <ErrorMessage />}
-          </Box>
-          <Box
-            id="position"
-            mt={errors.title ? '44px' : '20px'}
-            position="relative"
-          >
-            <AppDropdown
-              label="Type of Position:"
-              placeholder="select one..."
-              options={[
-                { value: 'full', text: 'Full time' },
-                { value: 'part', text: 'Part time' },
-                { value: 'contract', text: 'Contract' },
-                { value: 'internship', text: 'Internship' },
-              ]}
-              value={newJob?.position || ''}
-              onChange={handleChangeNewJob('position')}
-              error={errors.position}
-            />
-            {errors.position && <ErrorMessage />}
-          </Box>
-          <Box
-            id="location"
-            mt={errors.position ? '44px' : '20px'}
-            position="relative"
+            Post a Web3 Job
+          </Typography>
+          <PostJobContainer
+            padding={{ xs: '8px 11px 53px', md: '50px 120px 100px' }}
           >
             <Box
-              mb="11px"
-              display="flex"
-              alignItems="center"
-              fontSize={{ xs: 13, md: 18 }}
-              fontWeight={500}
-              color="#fff"
+              id="company_name"
+              mt={errors.organization ? '44px' : '20px'}
+              position="relative"
             >
-              Location:
+              <AppAutocomplete
+                freeSolo
+                value={newJob?.company_name}
+                label="Company Name:"
+                placeholder="e.g. Coinbase, Binance, Palmswap"
+                options={companies.map((item) => ({
+                  value: item.name,
+                  text: item.name,
+                }))}
+                onChange={handleChangeNewJob('company_name')}
+                error={errors.company_name}
+              />
+              {errors.company_name && <ErrorMessage />}
             </Box>
-            <Box display="flex" alignItems="center">
-              <Box flex={{ xs: 1, md: 0.5 }}>
-                <GooglePlaceAutoComplete
-                  placeholder="type in the city your company is located or/and toggle remote"
-                  value={newJob.location}
-                  onChange={handleChangeNewJob('location')}
-                />
+            <Box
+              id="title"
+              mt={errors.company_name ? '44px' : '20px'}
+              position="relative"
+            >
+              <AppTextField
+                value={newJob?.title}
+                label="Job Title:"
+                placeholder="e.g. community manager, rust developer"
+                disableSpecialCharacter
+                onChange={handleChangeNewJob('title')}
+                error={errors.title}
+              />
+              {errors.title && <ErrorMessage />}
+            </Box>
+            <Box
+              id="position"
+              mt={errors.title ? '44px' : '20px'}
+              position="relative"
+            >
+              <AppDropdown
+                label="Type of Position:"
+                placeholder="select one..."
+                options={[
+                  { value: 'full', text: 'Full time' },
+                  { value: 'part', text: 'Part time' },
+                  { value: 'contract', text: 'Contract' },
+                  { value: 'internship', text: 'Internship' },
+                ]}
+                value={newJob?.position || ''}
+                onChange={handleChangeNewJob('position')}
+                error={errors.position}
+              />
+              {errors.position && <ErrorMessage />}
+            </Box>
+            <Box
+              id="location"
+              mt={errors.position ? '44px' : '20px'}
+              position="relative"
+            >
+              <Box
+                mb="11px"
+                display="flex"
+                alignItems="center"
+                fontSize={{ xs: 13, md: 18 }}
+                fontWeight={500}
+                color="#fff"
+              >
+                Location:
+              </Box>
+              <Box display="flex" alignItems="center">
+                <Box flex={{ xs: 1, md: 0.5 }}>
+                  <GooglePlaceAutoComplete
+                    placeholder="type in the city your company is located or/and toggle remote"
+                    value={newJob.location}
+                    onChange={handleChangeNewJob('location')}
+                  />
+                </Box>
+                <Box
+                  display="flex"
+                  alignItems="center"
+                  marginLeft={{ xs: '16px', md: '51px' }}
+                >
+                  <AppToggle
+                    value={newJob?.isRemote}
+                    onChange={handleChangeIsRemote}
+                    label="Remote"
+                  />
+                </Box>
+              </Box>
+              {errors.location && <ErrorMessage />}
+            </Box>
+            <Box
+              id="description"
+              mt={errors.location ? '44px' : '20px'}
+              position="relative"
+            >
+              <AppRichTextEditor
+                label="Job Description:"
+                value={newJob?.description}
+                onChange={handleChangeNewJob('description')}
+                placeholder="Give a concise description of the job....."
+                error={errors.description}
+              />
+              {errors.description && <ErrorMessage />}
+            </Box>
+            <Box
+              id="short_description"
+              mt={errors.description ? '44px' : '20px'}
+              position="relative"
+            >
+              <AppAutocomplete
+                freeSolo
+                displayLength
+                maxLength={120}
+                value={newJob?.short_description}
+                label="Short Company Description:"
+                placeholder="Will be displayed on the jobview page (max 120 letters)"
+                options={descriptions.map((item) => ({
+                  value: item,
+                  text: item,
+                }))}
+                onChange={handleChangeNewJob('short_description')}
+                error={errors.short_description}
+              />
+              {errors.short_description && <ErrorMessage />}
+            </Box>
+            <Box
+              mt={errors.short_description ? '44px' : '20px'}
+              position="relative"
+            >
+              <Box
+                mb="3px"
+                display="flex"
+                alignItems="center"
+                fontSize={{ xs: 13, md: 18 }}
+                fontWeight={500}
+                color="#fff"
+              >
+                Tags:{' '}
+                <Box
+                  ml={1}
+                  fontSize="12px"
+                  fontWeight={300}
+                  display={{ xs: 'none', md: 'block' }}
+                >
+                  (Select up to 3 tags. Can be less than 3)
+                </Box>
+              </Box>
+              <Box
+                display={{ xs: 'none', md: 'flex' }}
+                alignItems="center"
+                flexWrap="wrap"
+              >
+                {tags.map((tag: string, _i: number) => (
+                  <Box mx={1} my={0.5} key={_i}>
+                    <FilterTag
+                      text={tag}
+                      active={(newJob?.tags || []).includes(tag)}
+                      onClick={() => handleClickTag(tag)}
+                      disabled={newJob.tags?.length === 3}
+                    />
+                  </Box>
+                ))}
+              </Box>
+              <Stack
+                direction="row"
+                flex={1}
+                flexWrap="wrap"
+                display={{ xs: 'flex', md: 'none' }}
+              >
+                <Stack flex={0.33} mr={1} mt={1}>
+                  <AppDropdown
+                    selectablePlaceholder
+                    placeholder="-- Select --"
+                    options={(tags || [])
+                      .filter(
+                        (tag) =>
+                          !(newJob?.tags || []).includes(tag) ||
+                          tag === (newJob?.tags || [])[0]
+                      )
+                      .map((tag) => ({
+                        value: tag,
+                        text: tag,
+                      }))}
+                    value={(newJob?.tags || [])[0] ?? ''}
+                    onChange={handleClickTagInMobile(0)}
+                  />
+                </Stack>
+                <Stack flex={0.33} mr={1} mt={1}>
+                  <AppDropdown
+                    selectablePlaceholder
+                    placeholder="-- Select --"
+                    options={(tags || [])
+                      .filter(
+                        (tag) =>
+                          !(newJob?.tags || []).includes(tag) ||
+                          tag === (newJob?.tags || [])[1]
+                      )
+                      .map((tag) => ({
+                        value: tag,
+                        text: tag,
+                      }))}
+                    value={(newJob?.tags || [])[1] ?? ''}
+                    onChange={handleClickTagInMobile(1)}
+                  />
+                </Stack>
+                <Stack flex={0.33} mt={1}>
+                  <AppDropdown
+                    selectablePlaceholder
+                    placeholder="-- Select --"
+                    options={(tags || [])
+                      .filter(
+                        (tag) =>
+                          !(newJob?.tags || []).includes(tag) ||
+                          tag === (newJob?.tags || [])[2]
+                      )
+                      .map((tag) => ({
+                        value: tag,
+                        text: tag,
+                      }))}
+                    value={(newJob?.tags || [])[2] ?? ''}
+                    onChange={handleClickTagInMobile(2)}
+                  />
+                </Stack>
+              </Stack>
+            </Box>
+            <Box id="salary" mt="20px">
+              <Box
+                mb="11px"
+                display="flex"
+                alignItems="center"
+                fontSize={{ xs: 13, md: 18 }}
+                fontWeight={500}
+                color="#fff"
+              >
+                Compensation (USD):
               </Box>
               <Box
                 display="flex"
                 alignItems="center"
-                marginLeft={{ xs: '16px', md: '51px' }}
+                justifyContent="space-between"
               >
-                <AppToggle
-                  value={newJob?.isRemote}
-                  onChange={handleChangeIsRemote}
-                  label="Remote"
-                />
-              </Box>
-            </Box>
-            {errors.location && <ErrorMessage />}
-          </Box>
-          <Box
-            id="description"
-            mt={errors.location ? '44px' : '20px'}
-            position="relative"
-          >
-            <AppRichTextEditor
-              label="Job Description:"
-              value={newJob?.description}
-              onChange={handleChangeNewJob('description')}
-              placeholder="Give a concise description of the job....."
-              error={errors.description}
-            />
-            {errors.description && <ErrorMessage />}
-          </Box>
-          <Box
-            id="short_description"
-            mt={errors.description ? '44px' : '20px'}
-            position="relative"
-          >
-            <AppAutocomplete
-              freeSolo
-              displayLength
-              maxLength={120}
-              value={newJob?.short_description}
-              label="Short Company Description:"
-              placeholder="Will be displayed on the jobview page (max 120 letters)"
-              options={descriptions.map((item) => ({
-                value: item,
-                text: item,
-              }))}
-              onChange={handleChangeNewJob('short_description')}
-              error={errors.short_description}
-            />
-            {errors.short_description && <ErrorMessage />}
-          </Box>
-          <Box
-            mt={errors.short_description ? '44px' : '20px'}
-            position="relative"
-          >
-            <Box
-              mb="3px"
-              display="flex"
-              alignItems="center"
-              fontSize={{ xs: 13, md: 18 }}
-              fontWeight={500}
-              color="#fff"
-            >
-              Tags:{' '}
-              <Box
-                ml={1}
-                fontSize="12px"
-                fontWeight={300}
-                display={{ xs: 'none', md: 'block' }}
-              >
-                (Select up to 3 tags. Can be less than 3)
-              </Box>
-            </Box>
-            <Box
-              display={{ xs: 'none', md: 'flex' }}
-              alignItems="center"
-              flexWrap="wrap"
-            >
-              {tags.map((tag: string, _i: number) => (
-                <Box mx={1} my={0.5} key={_i}>
-                  <FilterTag
-                    text={tag}
-                    active={(newJob?.tags || []).includes(tag)}
-                    onClick={() => handleClickTag(tag)}
-                    disabled={newJob.tags?.length === 3}
+                <Box width="49%" position="relative">
+                  <AppDropdown
+                    placeholder="Minimum annual salary"
+                    options={salaryOptionList}
+                    value={
+                      newJob?.salary?.min ? newJob?.salary?.min.toString() : ''
+                    }
+                    onChange={handleChangeSalary('min')}
                   />
                 </Box>
-              ))}
-            </Box>
-            <Stack
-              direction="row"
-              flex={1}
-              flexWrap="wrap"
-              display={{ xs: 'flex', md: 'none' }}
-            >
-              <Stack flex={0.33} mr={1} mt={1}>
-                <AppDropdown
-                  selectablePlaceholder
-                  placeholder="-- Select --"
-                  options={(tags || [])
-                    .filter(
-                      (tag) =>
-                        !(newJob?.tags || []).includes(tag) ||
-                        tag === (newJob?.tags || [])[0]
-                    )
-                    .map((tag) => ({
-                      value: tag,
-                      text: tag,
-                    }))}
-                  value={(newJob?.tags || [])[0] ?? ''}
-                  onChange={handleClickTagInMobile(0)}
-                />
-              </Stack>
-              <Stack flex={0.33} mr={1} mt={1}>
-                <AppDropdown
-                  selectablePlaceholder
-                  placeholder="-- Select --"
-                  options={(tags || [])
-                    .filter(
-                      (tag) =>
-                        !(newJob?.tags || []).includes(tag) ||
-                        tag === (newJob?.tags || [])[1]
-                    )
-                    .map((tag) => ({
-                      value: tag,
-                      text: tag,
-                    }))}
-                  value={(newJob?.tags || [])[1] ?? ''}
-                  onChange={handleClickTagInMobile(1)}
-                />
-              </Stack>
-              <Stack flex={0.33} mt={1}>
-                <AppDropdown
-                  selectablePlaceholder
-                  placeholder="-- Select --"
-                  options={(tags || [])
-                    .filter(
-                      (tag) =>
-                        !(newJob?.tags || []).includes(tag) ||
-                        tag === (newJob?.tags || [])[2]
-                    )
-                    .map((tag) => ({
-                      value: tag,
-                      text: tag,
-                    }))}
-                  value={(newJob?.tags || [])[2] ?? ''}
-                  onChange={handleClickTagInMobile(2)}
-                />
-              </Stack>
-            </Stack>
-          </Box>
-          <Box id="salary" mt="20px">
-            <Box
-              mb="11px"
-              display="flex"
-              alignItems="center"
-              fontSize={{ xs: 13, md: 18 }}
-              fontWeight={500}
-              color="#fff"
-            >
-              Compensation (USD):
-            </Box>
-            <Box
-              display="flex"
-              alignItems="center"
-              justifyContent="space-between"
-            >
-              <Box width="49%" position="relative">
-                <AppDropdown
-                  placeholder="Minimum annual salary"
-                  options={salaryOptionList}
-                  value={
-                    newJob?.salary?.min ? newJob?.salary?.min.toString() : ''
-                  }
-                  onChange={handleChangeSalary('min')}
-                />
-              </Box>
-              <Box width="49%" position="relative">
-                <AppDropdown
-                  placeholder="Maximum annual salary"
-                  options={salaryOptionList}
-                  value={
-                    newJob?.salary?.max ? newJob?.salary?.max.toString() : ''
-                  }
-                  onChange={handleChangeSalary('max')}
-                  error={errors.salary?.max}
-                />
-                {errors.salary?.max && (
-                  <CustomFormHelperText>
-                    <img src={InfoIcon.src} />
-                    This field must be greater than minimum salary.
-                  </CustomFormHelperText>
-                )}
+                <Box width="49%" position="relative">
+                  <AppDropdown
+                    placeholder="Maximum annual salary"
+                    options={salaryOptionList}
+                    value={
+                      newJob?.salary?.max ? newJob?.salary?.max.toString() : ''
+                    }
+                    onChange={handleChangeSalary('max')}
+                    error={errors.salary?.max}
+                  />
+                  {errors.salary?.max && (
+                    <CustomFormHelperText>
+                      <img src={InfoIcon.src} />
+                      This field must be greater than minimum salary.
+                    </CustomFormHelperText>
+                  )}
+                </Box>
               </Box>
             </Box>
-          </Box>
-          <Box
-            id="applyby"
-            mt={errors.salary?.max ? { xs: '74px', md: '44px' } : '20px'}
-          >
-            <AppRadioGroup
-              label="How to apply"
-              row
-              options={[
-                {
-                  text: 'Apply by email',
-                  value: 'email',
-                },
-                {
-                  text: 'Apply by website',
-                  value: 'website',
-                },
-              ]}
-              value={newJob?.applyBy}
-              onChange={handleChangeNewJob('applyBy')}
-            />
-            <Box mt={{ xs: 2, md: 3 }} position="relative">
-              <AppTextField
-                placeholder={
-                  newJob?.applyBy === 'website'
-                    ? 'e.g. https://company.com'
-                    : 'e.g. apply@company.com'
-                }
-                value={newJob?.applyByUrl}
-                onChange={handleChangeNewJob('applyByUrl')}
-                error={errors.applyByUrl || errors.applyBy}
+            <Box
+              id="applyby"
+              mt={errors.salary?.max ? { xs: '74px', md: '44px' } : '20px'}
+            >
+              <AppRadioGroup
+                label="How to apply"
+                row
+                options={[
+                  {
+                    text: 'Apply by email',
+                    value: 'email',
+                  },
+                  {
+                    text: 'Apply by website',
+                    value: 'website',
+                  },
+                ]}
+                value={newJob?.applyBy}
+                onChange={handleChangeNewJob('applyBy')}
               />
-              {(errors.applyByUrl || errors.applyBy) && <ErrorMessage />}
+              <Box mt={{ xs: 2, md: 3 }} position="relative">
+                <AppTextField
+                  placeholder={
+                    newJob?.applyBy === 'website'
+                      ? 'e.g. https://company.com'
+                      : 'e.g. apply@company.com'
+                  }
+                  value={newJob?.applyByUrl}
+                  onChange={handleChangeNewJob('applyByUrl')}
+                  error={errors.applyByUrl || errors.applyBy}
+                />
+                {(errors.applyByUrl || errors.applyBy) && <ErrorMessage />}
+              </Box>
             </Box>
-          </Box>
-          <Box
-            id="invoiceAddress"
-            mt={errors.applyByUrl || errors.applyBy ? '44px' : '20px'}
-            position="relative"
-          >
-            <AppTextField
-              label="Invoice Address:"
-              placeholder="Company’s full name, full address and VAT number...."
-              value={newJob?.invoiceAddress}
-              onChange={handleChangeNewJob('invoiceAddress')}
-              error={errors.invoiceAddress}
-            />
-            {errors.invoiceAddress && <ErrorMessage />}
-          </Box>
-          <Box mt={errors.invoiceAddress ? '44px' : '20px'} position="relative">
-            <FilePicker
-              label="Add a logo:"
-              file={logo}
-              onChangeFile={setLogo}
-              onDeleteFile={handleDeleteFile}
-            />
-          </Box>
-          <Box mt="20px" position="relative">
-            <AppRadioGroup
-              label={
-                <SecondaryLabel
-                  label="Stick post on top for:"
-                  btnText="Compare"
-                  handleCheck={() => handleCheckOrCompare(1)}
-                />
-              }
-              options={stickyOptions.map((stick: TSticky) =>
-                stick.duration
-                  ? {
-                      text: (
-                        <OptionWithTag
-                          title={stick.duration}
-                          price={stick.price || 0}
-                          ratio={stick.views}
-                        />
-                      ),
-                      value: stick.value,
-                    }
-                  : {
-                      text: 'No sticky',
-                      value: '',
-                    }
-              )}
-              value={newJob?.sticky}
-              onChange={handleChangeNewJob('sticky')}
-            />
-          </Box>
-          <Box mt="20px" position="relative">
-            <AppRadioGroup
-              label={
-                <SecondaryLabel
-                  label="Highlight your post with colors:"
-                  btnText="Compare"
-                  handleCheck={() => handleCheckOrCompare(2)}
-                />
-              }
-              options={hightlightColorOptions.map((option: THightlightColor) =>
-                option.color
-                  ? option.color === 'standard'
+            <Box
+              id="invoiceAddress"
+              mt={errors.applyByUrl || errors.applyBy ? '44px' : '20px'}
+              position="relative"
+            >
+              <AppTextField
+                label="Invoice Address:"
+                placeholder="Company’s full name, full address and VAT number...."
+                value={newJob?.invoiceAddress}
+                onChange={handleChangeNewJob('invoiceAddress')}
+                error={errors.invoiceAddress}
+              />
+              {errors.invoiceAddress && <ErrorMessage />}
+            </Box>
+            <Box
+              mt={errors.invoiceAddress ? '44px' : '20px'}
+              position="relative"
+            >
+              <FilePicker
+                label="Add a logo:"
+                file={logo}
+                onChangeFile={setLogo}
+                onDeleteFile={handleDeleteFile}
+              />
+            </Box>
+            <Box mt="20px" position="relative">
+              <AppRadioGroup
+                label={
+                  <SecondaryLabel
+                    label="Stick post on top for:"
+                    btnText="Compare"
+                    handleCheck={() => handleCheckOrCompare(1)}
+                  />
+                }
+                options={stickyOptions.map((stick: TSticky) =>
+                  stick.duration
                     ? {
                         text: (
                           <OptionWithTag
-                            title={option.text}
-                            price={option.price}
-                            ratio={matchDownMd ? 0 : option.views}
+                            title={stick.duration}
+                            price={stick.price || 0}
+                            ratio={stick.views}
                           />
                         ),
-                        value: option.color,
+                        value: stick.value,
                       }
                     : {
-                        text: (
-                          <Box display="flex" alignItems="center">
-                            <OptionWithColorPicker
-                              title={option.text}
-                              price={option.price}
-                              ratio={option.views}
-                              color={newJob?.highlightCustomColor}
-                              onChangeColor={handleChangeCustomColor}
-                              hiddenColor={newJob?.highlightColor !== 'custom'}
-                            />
-                            <CheckButton
-                              onClick={() => handleCheckOrCompare(3)}
-                            >
-                              Check
-                              <ArrowRightIcon color="#fff" />
-                            </CheckButton>
-                          </Box>
-                        ),
-                        value: 'custom',
+                        text: 'No sticky',
+                        value: '',
                       }
-                  : {
-                      text: <OptionWithTag title={'No color'} price={0} />,
-                      value: '',
-                    }
-              )}
-              value={newJob?.highlightColor}
-              onChange={handleChangeNewJob('highlightColor')}
-            />
-          </Box>
-          {/* <Box mt="20px">
+                )}
+                value={newJob?.sticky}
+                onChange={handleChangeNewJob('sticky')}
+              />
+            </Box>
+            <Box mt="20px" position="relative">
+              <AppRadioGroup
+                label={
+                  <SecondaryLabel
+                    label="Highlight your post with colors:"
+                    btnText="Compare"
+                    handleCheck={() => handleCheckOrCompare(2)}
+                  />
+                }
+                options={hightlightColorOptions.map(
+                  (option: THightlightColor) =>
+                    option.color
+                      ? option.color === 'standard'
+                        ? {
+                            text: (
+                              <OptionWithTag
+                                title={option.text}
+                                price={option.price}
+                                ratio={matchDownMd ? 0 : option.views}
+                              />
+                            ),
+                            value: option.color,
+                          }
+                        : {
+                            text: (
+                              <Box display="flex" alignItems="center">
+                                <OptionWithColorPicker
+                                  title={option.text}
+                                  price={option.price}
+                                  ratio={option.views}
+                                  color={newJob?.highlightCustomColor}
+                                  onChangeColor={handleChangeCustomColor}
+                                  hiddenColor={
+                                    newJob?.highlightColor !== 'custom'
+                                  }
+                                />
+                                <CheckButton
+                                  onClick={() => handleCheckOrCompare(3)}
+                                >
+                                  Check
+                                  <ArrowRightIcon color="#fff" />
+                                </CheckButton>
+                              </Box>
+                            ),
+                            value: 'custom',
+                          }
+                      : {
+                          text: <OptionWithTag title={'No color'} price={0} />,
+                          value: '',
+                        }
+                )}
+                value={newJob?.highlightColor}
+                onChange={handleChangeNewJob('highlightColor')}
+              />
+            </Box>
+            {/* <Box mt="20px">
             <AppCheckbox
               label={
                 <SecondaryLabel
@@ -1053,7 +1100,7 @@ const PostJobPage = () => {
               onChange={handleChangeNewletter}
             />
           </Box> */}
-          {/* <Box mt="20px">
+            {/* <Box mt="20px">
             <AppCheckbox
               label="Free Coupon:"
               options={[
@@ -1078,129 +1125,130 @@ const PostJobPage = () => {
               onChange={handleChangeUseCoupon}
             />
           </Box> */}
-          <Box
-            display="flex"
-            flexDirection="column"
-            alignItems="center"
-            mt={{ xs: '42px', md: '95px' }}
-          >
-            <PostButton
-              onClick={() => handlePostNewJob(false)}
-              disabled={loading || internalLoading}
+            <Box
+              display="flex"
+              flexDirection="column"
+              alignItems="center"
+              mt={{ xs: '42px', md: '95px' }}
             >
-              {loading || internalLoading ? (
-                <CircularProgress thickness={5} />
-              ) : (
-                <Box>
-                  Post a Job{' '}
-                  <strong>{price.total ? ` $${price.total}` : ''}</strong>
-                </Box>
-              )}
-            </PostButton>
-            <Box mt="34px">
-              <DraftLink onClick={() => handlePostNewJob(true)}>
-                Save as draft
-              </DraftLink>
+              <PostButton
+                onClick={() => handlePostNewJob(false)}
+                disabled={loading || internalLoading}
+              >
+                {loading || internalLoading ? (
+                  <CircularProgress thickness={5} />
+                ) : (
+                  <Box>
+                    Post a Job{' '}
+                    <strong>{price.total ? ` $${price.total}` : ''}</strong>
+                  </Box>
+                )}
+              </PostButton>
+              <Box mt="34px">
+                <DraftLink onClick={() => handlePostNewJob(true)}>
+                  Save as draft
+                </DraftLink>
+              </Box>
             </Box>
-          </Box>
-        </PostJobContainer>
-      </MainContainer>
-      <PaymentConfirmModal
-        open={openConfirmPaymentPopup}
-        onClose={() => setOpenConfirmPaymentPopup(false)}
-        onConfirm={handleConfirmPayment}
-        price={price.total}
-        loading={loading || internalLoading}
-      />
-      <StickyPostCompareModal
-        open={openStickyPostCompare}
-        job={checkJob}
-        isHiddenMask={isHiddenMask}
-        logo={logo}
-        onClose={() => {
-          setOpenStickyPostCompare(false);
-          setIsHiddenMask(false);
-        }}
-      />
-      <JobSeekerFailedModal
-        open={openJobseekerFailedModal}
-        onClose={() => setOpenJobseekerFailedModal(false)}
-        onConfirm={() => {
-          setOpenJobseekerFailedModal(false);
-          router.push('/');
-        }}
-      />
-      <JoinOptionModal
-        open={openJoinOptionModal}
-        onClose={() => setOpenJoinOptionModal(false)}
-        onConfirm={handleConfirmJoinOption}
-      />
-      <PaymentProcessPopup
-        open={openSuccessPaidJobPost}
-        price={price.total}
-        newJob={{
-          file: logo,
-          newJob: { ...newJob, price: price.total, priceInfo: price },
-          isDraft,
-          userId: account?.toLowerCase(),
-        }}
-        onClose={() => setOpenSuccessPaidJobPost(false)}
-        onInitialize={() => initalize()}
-      />
-      <FreePostJobSuccess
-        open={openSuccessFreeJobPost}
-        jobId={newJobId}
-        onClose={() => setOpenSuccessFreeJobPost(false)}
-        onBackToHomePage={() => {
-          setOpenSuccessFreeJobPost(false);
-          if(typeof window !== undefined) {
-
-            window.scrollTo({
-              top: 0,
-              behavior: 'auto',
-            });
-          }
-          router.push('/');
-        }}
-        onViewInManageJobs={() => {
-          setOpenSuccessFreeJobPost(false);
-          if(typeof window !== undefined ) {
-            window.scrollTo({
-              top: 0,
-              behavior: 'auto',
-            });
-          }
-          router.push('/manage-jobs');
-        }}
-      />
-      <DraftPostJobSuccess
-        open={openSuccessDraftJobPost}
-        onClose={() => setOpenSuccessDraftJobPost(false)}
-        onViewDashboard={() => {
-          setOpenSuccessDraftJobPost(false);
-          if(typeof window !== undefined ) {
-
-            window.scrollTo({
-              top: 0,
-              behavior: 'auto',
-            });
-          }
-          router.push('/dashboard');
-        }}
-        onBack={() => {
-          setOpenSuccessDraftJobPost(false);
-          if(typeof window !== undefined) {
-
-            window.scrollTo({
-              top: 0,
-              behavior: 'auto',
-            });
-          }
-          router.push('/');
-        }}
-      />
-      <div id="pdf"></div>
-    </Box>
+          </PostJobContainer>
+        </MainContainer>
+        <PaymentConfirmModal
+          open={openConfirmPaymentPopup}
+          onClose={() => setOpenConfirmPaymentPopup(false)}
+          onConfirm={handleConfirmPayment}
+          price={price.total}
+          loading={loading || internalLoading}
+        />
+        <StickyPostCompareModal
+          open={openStickyPostCompare}
+          job={checkJob}
+          isHiddenMask={isHiddenMask}
+          logo={logo}
+          onClose={() => {
+            setOpenStickyPostCompare(false);
+            setIsHiddenMask(false);
+          }}
+        />
+        <JobSeekerFailedModal
+          open={openJobseekerFailedModal}
+          onClose={() => setOpenJobseekerFailedModal(false)}
+          onConfirm={() => {
+            setOpenJobseekerFailedModal(false);
+            router.push('/');
+          }}
+        />
+        <JoinOptionModal
+          open={openJoinOptionModal}
+          onClose={() => setOpenJoinOptionModal(false)}
+          onConfirm={handleConfirmJoinOption}
+        />
+        <PaymentProcessPopup
+          open={openSuccessPaidJobPost}
+          price={price.total}
+          newJob={{
+            file: logo,
+            job: { ...newJob, price: price.total, priceInfo: price },
+            isDraft,
+            userId: account?.toLowerCase(),
+          }}
+          onClose={() => setOpenSuccessPaidJobPost(false)}
+          onInitialize={() => initalize()}
+        />
+        <FreePostJobSuccess
+          open={openSuccessFreeJobPost}
+          jobId={newJobId}
+          onClose={() => setOpenSuccessFreeJobPost(false)}
+          onBackToHomePage={() => {
+            setOpenSuccessFreeJobPost(false);
+            if (typeof window !== undefined) {
+              window.scrollTo({
+                top: 0,
+                behavior: 'auto',
+              });
+            }
+            router.push('/');
+          }}
+          onViewInManageJobs={() => {
+            setOpenSuccessFreeJobPost(false);
+            if (typeof window !== undefined) {
+              window.scrollTo({
+                top: 0,
+                behavior: 'auto',
+              });
+            }
+            router.push('/manage-jobs');
+          }}
+        />
+        <InstallMetamaskModal
+          open={openInstallMetamaskPopup}
+          onClose={() => setOpenInstallMetamaskPopup(false)}
+        />
+        <DraftPostJobSuccess
+          open={openSuccessDraftJobPost}
+          onClose={() => setOpenSuccessDraftJobPost(false)}
+          onViewDashboard={() => {
+            setOpenSuccessDraftJobPost(false);
+            if (typeof window !== undefined) {
+              window.scrollTo({
+                top: 0,
+                behavior: 'auto',
+              });
+            }
+            router.push('/dashboard');
+          }}
+          onBack={() => {
+            setOpenSuccessDraftJobPost(false);
+            if (typeof window !== undefined) {
+              window.scrollTo({
+                top: 0,
+                behavior: 'auto',
+              });
+            }
+            router.push('/');
+          }}
+        />
+        <div id="pdf"></div>
+      </Box>
     </>
   );
 };

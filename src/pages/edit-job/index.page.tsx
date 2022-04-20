@@ -11,8 +11,7 @@ import {
   useTheme,
   useMediaQuery,
 } from '@mui/material';
-import { useWeb3React } from '@web3-react/core';
-import { useParams } from 'react-router-dom';
+import { useAccount } from 'wagmi';
 import { useRouter } from 'next/router';
 
 import { RootState } from '../../redux/store';
@@ -53,6 +52,9 @@ import EditInfoIcon from '../../components/SVGIcons/InfoIcon';
 import { EditJobSuccess } from '../../components/Modals/EditJobSuccess';
 import { connect } from '../../utils/web3';
 import Header from '../../components/AppHeader/DashboardHeader';
+import { useAuth } from '../../hooks/useAuth';
+import useDetectMobile from '../../hooks/useDetectMobile';
+import InstallMetamaskModal from '../../components/Modals/InstallMetamask';
 
 const FilterTag = React.lazy(() => import('../../components/FilterTag'));
 
@@ -64,7 +66,9 @@ const PostJobPage = () => {
   const matchDownMd = useMediaQuery(theme.breakpoints.down('md'));
   const { selectedJob, loading } = useSelector((state: RootState) => state.job);
   const { showAlertMessage } = useAlertMessage();
-  const { account, activate } = useWeb3React();
+  const { address: account } = useAccount();
+  const { login: activate } = useAuth();
+  const { isMobile } = useDetectMobile();
 
   const { companies } = useSelector((state: RootState) => state.organization);
   const { isLoggedIn, userInfo } = useSelector(
@@ -98,6 +102,8 @@ const PostJobPage = () => {
   const [descriptions, setDescriptions] = useState<string[]>([]);
   const [openSuccessEditJob, setOpenSuccessEditJob] = useState<boolean>(false);
   const [saveHistory, setSaveHistory] = useState<boolean>(false);
+  const [openInstallMetamaskPopup, setOpenInstallMetamaskPopup] =
+    useState<boolean>(false);
 
   useEffect(() => {
     dispatch(getOneJob({ id }));
@@ -327,6 +333,23 @@ const PostJobPage = () => {
 
     if (!price.total) {
       if (!isLoggedIn) {
+        if (isMobile) {
+          if (typeof window !== undefined && !window.ethereum) {
+            window.open(
+              `https://metamask.app.link/dapp/${
+                process.env.NEXT_PUBLIC_ENV === 'prod' ? '' : 'staging.'
+              }web3.jobs/`,
+              '_blank',
+              'noopener noreferrer'
+            );
+            return;
+          }
+        } else {
+          if (typeof window !== undefined && !window.ethereum) {
+            setOpenInstallMetamaskPopup(true);
+            return;
+          }
+        }
         connect(activate)
           .then(() => {
             setClickedPostJob(true);
@@ -714,6 +737,10 @@ const PostJobPage = () => {
           open={openSuccessEditJob}
           jobId={id as string}
           onClose={() => setOpenSuccessEditJob(false)}
+        />
+        <InstallMetamaskModal
+          open={openInstallMetamaskPopup}
+          onClose={() => setOpenInstallMetamaskPopup(false)}
         />
       </Stack>
     </>

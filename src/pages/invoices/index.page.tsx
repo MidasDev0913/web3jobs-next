@@ -1,6 +1,6 @@
 import React, { useMemo, useEffect, useState } from 'react';
 import axios from 'axios';
-import { useWeb3React } from '@web3-react/core';
+import { useAccount } from 'wagmi';
 import Image from 'next/image';
 import { Box, Stack, Typography, useTheme, useMediaQuery } from '@mui/material';
 import fileDownload from 'js-file-download';
@@ -53,7 +53,7 @@ const formatStatus = ({
 };
 
 const InvoicesPage = () => {
-  const { account } = useWeb3React();
+  const { address: account } = useAccount();
   const theme = useTheme();
   const matchDownMd = useMediaQuery(theme.breakpoints.down('md'));
   const [invoices, setInvoices] = useState<TInvoice[]>([]);

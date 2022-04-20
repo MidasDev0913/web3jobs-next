@@ -79,20 +79,6 @@ export const JOB_PAGE_SIZE = 40;
 export const ETH_MAINNET_CHAIN_ID = 1;
 export const ETH_TESTNET_CHAIN_ID = 4;
 
-export const walletConnect = {
-  walletconnect: { rpcUrl: process.env.NEXT_PUBLIC_INFURA_URL || '' },
-  bsc: {
-    web3ReactConnector() {
-      return new BscConnector({ supportedChainIds: [56, 97] });
-    },
-    handleActivationError(err: any) {
-      if (err instanceof UserRejectedRequestError) {
-        return new ConnectionRejectedError();
-      }
-    },
-  },
-};
-
 export const chainId = 1;
 
 export const DEFAULT_HIGHLIGHT_COLOR = 'rgb(0, 255, 56)';
@@ -204,6 +190,7 @@ export const MonthlyUnitList = [
 
 export const WeekDays = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
 
-export const TITLE = 'Web3 Jobs: Crypto, Web3, Blockchain, and Smart Contract Jobs';
-export const DESCRIPTION = 'Find a job in Web3. Web3 Jobs in Analyst, Backend, Bitcoin, Blockchain, Community Manager, Content Writer, CTO, Customer Support, DAO, DeFi, Design, DevOps, Entry-Level, Ethereum, Front End, Full Stack, Game Dev, Golang, Intern, Java, Javascript, Marketing, Mobile, NFT, Node, Non-Tech Jobs, Product Manager, Project Manager, React, Refi, Remote, Ruby, Rust, Sales, Smart Contract, Solana, Solidity, Web3js.';
-
+export const TITLE =
+  'Web3 Jobs: Crypto, Web3, Blockchain, and Smart Contract Jobs';
+export const DESCRIPTION =
+  'Find a job in Web3. Web3 Jobs in Analyst, Backend, Bitcoin, Blockchain, Community Manager, Content Writer, CTO, Customer Support, DAO, DeFi, Design, DevOps, Entry-Level, Ethereum, Front End, Full Stack, Game Dev, Golang, Intern, Java, Javascript, Marketing, Mobile, NFT, Node, Non-Tech Jobs, Product Manager, Project Manager, React, Refi, Remote, Ruby, Rust, Sales, Smart Contract, Solana, Solidity, Web3js.';

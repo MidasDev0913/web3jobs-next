@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import Box from '@mui/material/Box';
 import axios from 'axios';
-import { useWeb3React } from '@web3-react/core';
+import { useAccount } from 'wagmi';
 import { useRouter } from 'next/router';
 
 import { TJob, TableColumn, PostedJobTableData } from '../../interfaces';
@@ -73,10 +73,9 @@ const DashboardPage = () => {
   const curDate = new Date().getDate();
   const curWeekDay = new Date().getDay();
 
-  const { account, activate } = useWeb3React();
+  const { address: account } = useAccount();
   const [jobStatusData, setJobStatusData] = useState<JobStatusProps[]>([]);
   const [postedJobs, setPostedJobs] = useState<TJob[]>([]);
-  const [filteredJobs, setFilteredJobs] = useState<TJob[]>([]);
 
   const [period, setPeriod] = useState<HistoryPeriod>(HistoryPeriod.TODAY);
   const [jobSortBy, setJobSortBy] = useState<JobSortType>(JobSortType.DATE);

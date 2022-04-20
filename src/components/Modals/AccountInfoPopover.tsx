@@ -1,7 +1,8 @@
 import React from 'react';
 import Image from 'next/image';
 import { useRouter } from 'next/router';
-import { Box, styled, IconButton, Stack, Typography } from '@mui/material';
+import { Box, styled, Stack, Typography } from '@mui/material';
+import { useDisconnect } from 'wagmi';
 
 import SingOutIcon from '../SVGIcons/SingOut';
 import ArrowRightIcon from '../SVGIcons/ArrowRightIcon_2';
@@ -95,10 +96,12 @@ const AccountInfoPopover = ({
 }: AccountInfoPopoverProps) => {
   const router = useRouter();
   const dispatch = useDispatch();
+  const { disconnect } = useDisconnect();
 
   const handleSignOut = () => {
     auth.signOut();
     localStorage.clear();
+    disconnect();
     dispatch(logout());
     router.push('/');
     onClose();
@@ -155,7 +158,11 @@ const AccountInfoPopover = ({
                   // query: {
                   //   id: job.id, // pass the id
                   // },
-                  pathname: `/job/${job.title} ${job.company_name} ${job.id}`.replace(/[ ]+/g, '-'),
+                  pathname:
+                    `/job/${job.title} ${job.company_name} ${job.id}`.replace(
+                      /[ ]+/g,
+                      '-'
+                    ),
                 });
                 onClose();
               }}

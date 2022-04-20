@@ -16,7 +16,7 @@ import {
 import { useRouter } from 'next/router';
 import Image from 'next/image';
 import { useDispatch } from 'react-redux';
-import { useWeb3React } from '@web3-react/core';
+import { useAccount } from 'wagmi';
 import CloseIcon from '@mui/icons-material/Close';
 
 import {
@@ -36,8 +36,8 @@ import { loginWithToken, logout } from '../../redux/reducers/authReducer';
 import InfoIcon from '../../components/SVGIcons/InfoIcon_italic';
 import SearchIcon from '../../assets/icons/home_search_icon.svg';
 import MobileLogo from '../../assets/web3jobs_logo_mobile.svg';
-import Logo from '../../assets/web3jobs_logo.svg';
 import MenuPopover from './MenuPopover';
+import { useAuth } from '../../hooks/useAuth';
 
 const HtmlTooltip = styled(({ className, ...props }: TooltipProps) => (
   <Tooltip {...props} classes={{ popper: className }} />
@@ -90,7 +90,8 @@ const Header: React.FC<ComponentProps> = ({
   const router = useRouter();
   const theme = useTheme();
   const matchDownMd = useMediaQuery(theme.breakpoints.down('md'));
-  const { account, activate } = useWeb3React();
+  const { address: account } = useAccount();
+  const { login: activate } = useAuth();
   const [val, setValue] = useState<string>('');
   const [openMenuPopover, setOpenMenuPopover] = useState<boolean>(false);
 

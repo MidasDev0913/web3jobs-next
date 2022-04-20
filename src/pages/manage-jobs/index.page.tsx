@@ -1,6 +1,6 @@
 import React, { useMemo, useEffect, useState } from 'react';
 import axios from 'axios';
-import { useWeb3React } from '@web3-react/core';
+import { useAccount } from 'wagmi';
 import { Box, Stack, Typography, useTheme, useMediaQuery } from '@mui/material';
 import Image from 'next/image';
 import { useRouter } from 'next/router';
@@ -93,7 +93,7 @@ const ManageJobsPage = () => {
   const router = useRouter();
   const theme = useTheme();
   const matchDownMd = useMediaQuery(theme.breakpoints.down('md'));
-  const { account } = useWeb3React();
+  const { address: account } = useAccount();
   const [jobs, setJobs] = useState<TJob[]>([]);
   const [selectedJob, setSelectedJob] = useState<any>(null);
   const [openJobDeleteModal, setOpenJobDeleteModal] = useState<boolean>(false);

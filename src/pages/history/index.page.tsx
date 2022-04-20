@@ -8,7 +8,7 @@ import {
   useTheme,
   useMediaQuery,
 } from '@mui/material';
-import { useWeb3React } from '@web3-react/core';
+import { useAccount } from 'wagmi';
 import axios from 'axios';
 
 import { JobHistoryItem } from '../../components/JobHistoryItem';
@@ -21,7 +21,7 @@ import Header from '../../components/AppHeader/DashboardHeader';
 const HistoryPage = () => {
   const theme = useTheme();
   const matchDownMd = useMediaQuery(theme.breakpoints.down('md'));
-  const { account, activate } = useWeb3React();
+  const { address: account } = useAccount();
   const [jobHistory, setJobHistory] = useState<THistory[]>([]);
   const [selectedHistory, setSelectedHistory] = useState<string>('');
   const [loading, setLoading] = useState<boolean>(true);
