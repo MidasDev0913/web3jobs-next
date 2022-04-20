@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import Image from 'next/image';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import {
   styled,
   Stack,
@@ -22,10 +22,9 @@ import { CountryAutoComplete } from '../../components/CountryAutoComplete';
 import { AppDropdown } from '../../components/Dropdown';
 import FavIcon from '../../components/SVGIcons/FavIcon';
 import ArrowRightIcon from '../../components/SVGIcons/ArrowRightIcon_2';
-const FilterTag = React.lazy(() => import('../../components/FilterTag'));
-const ConnectWalletModal = React.lazy(
-  () => import('../../components/Modals/ConnectWalletConfirm')
-);
+import FilterTag from '../../components/FilterTag';
+import ConnectWalletModal from '../../components/Modals/ConnectWalletConfirm';
+import { getTags } from '../../redux/reducers/commonReducer';
 
 interface ComponentProps {
   onSearch: (arg: any) => void;
@@ -108,6 +107,7 @@ const FilterSidebar: React.FC<ComponentProps> = ({
   onClose,
   settings,
 }) => {
+  const dispatch = useDispatch();
   const [filterSettings, setFilterSettings] = useState<any>({});
   const [openConnectWalletModal, setOpenConnectWalletModal] =
     useState<boolean>(false);
@@ -118,18 +118,22 @@ const FilterSidebar: React.FC<ComponentProps> = ({
     setFilterSettings(settings);
   }, [settings]);
 
+  useEffect(() => {
+    dispatch(getTags());
+  }, []);
+
   const handleClickTag = (tag: string) => {
-    const tags = [...(filterSettings.activeTags || [])];
+    const tags = [...(filterSettings.tags || [])];
     setFilterSettings({
       ...filterSettings,
-      activeTags: insertItemToArray(tags, tag),
+      tags: insertItemToArray(tags, tag),
     });
   };
 
   const handleChangeSearchKey = (e: any, value: any) => {
     setFilterSettings({
       ...filterSettings,
-      searchKey: value,
+      search: value,
     });
   };
 
@@ -185,9 +189,9 @@ const FilterSidebar: React.FC<ComponentProps> = ({
           <Box mx={{ xs: '2.5px' }} my={{ xs: '7.5px' }} key={_i}>
             <FilterTag
               text={tag}
-              active={(filterSettings.activeTags || []).includes(tag)}
+              active={(filterSettings.tags || []).includes(tag)}
               onClick={() => handleClickTag(tag)}
-              disabled={(filterSettings.activeTags || []).length === 2}
+              disabled={(filterSettings.tags || []).length === 2}
             />
           </Box>
         ))}
@@ -196,7 +200,7 @@ const FilterSidebar: React.FC<ComponentProps> = ({
         <Autocomplete
           freeSolo
           disableClearable
-          value={filterSettings.searchKey || ''}
+          value={filterSettings.search || ''}
           onChange={handleChangeSearchKey}
           onInputChange={handleChangeSearchKey}
           filterOptions={areSameInSearchBox}
@@ -211,7 +215,7 @@ const FilterSidebar: React.FC<ComponentProps> = ({
                 ...params.InputProps,
                 startAdornment: (
                   <InputAdornment position="start">
-                    <Image src={SearchIcon} width={17} height={17}/>
+                    <Image src={SearchIcon} width={17} height={17} />
                   </InputAdornment>
                 ),
                 endAdornment: (
@@ -219,9 +223,7 @@ const FilterSidebar: React.FC<ComponentProps> = ({
                     position="end"
                     className="cursor__pointer"
                     style={{
-                      visibility: filterSettings.searchKey
-                        ? 'visible'
-                        : 'hidden',
+                      visibility: filterSettings.search ? 'visible' : 'hidden',
                     }}
                   >
                     <Box
@@ -230,7 +232,7 @@ const FilterSidebar: React.FC<ComponentProps> = ({
                       onClick={() => {
                         setFilterSettings({
                           ...filterSettings,
-                          searchKey: '',
+                          search: '',
                         });
                       }}
                     >

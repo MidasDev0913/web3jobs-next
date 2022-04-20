@@ -2,6 +2,7 @@ import React, { useState, useMemo } from 'react';
 import Image from 'next/image';
 import { Box, Stack, IconButton } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
+import { useSelector } from 'react-redux';
 
 import {
   FilterBoxWrapper,
@@ -22,20 +23,20 @@ import ArrowDownIcon from '../../assets/icons/arrow_up_tri_icon.svg';
 import { TPosition } from '../../interfaces';
 import ConnectWalletModal from '../Modals/ConnectWalletConfirm';
 import { WORKING_HOURS_MAPPING } from '../../utils/constants';
+import { RootState } from '../../redux/store';
 
 export type FilterBoxProps = {
-  account: string | undefined | null;
   filterSettings: any;
   setFilterSettings: (arg: any, noScroll?: boolean) => void;
   handleClickTag: (arg: string) => void;
 };
 
 const FilterBox = ({
-  account,
   filterSettings,
   setFilterSettings,
   handleClickTag,
 }: FilterBoxProps) => {
+  const { isLoggedIn } = useSelector((state: RootState) => state.auth);
   const [isExpanded, setIsExpanded] = useState<boolean>(true);
   const [anchorSalaryEl, setAnchorSalaryEl] =
     React.useState<HTMLButtonElement | null>(null);
@@ -59,7 +60,7 @@ const FilterBox = ({
   };
 
   const handleClickFav = () => {
-    if (!account) {
+    if (!isLoggedIn) {
       setOpenConnectWalletModal(true);
       return;
     }
@@ -358,6 +359,7 @@ const FilterBox = ({
                     textTransform: 'none',
                     marginTop: 1,
                   }}
+                  key={tag}
                 >
                   <span>{tag}</span>
                   <IconButton

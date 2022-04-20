@@ -30,7 +30,7 @@ import JobItem from '../../components/JobItem';
 import TopWeb3CitiesSection from '../../components/TopWeb3CitiesSection';
 import FilterBox from '../../components/FilterBox';
 import ConnectWalletModal from '../../components/Modals/ConnectWalletConfirm';
-import FilterSidebar from './FilterSidebar.page';
+import FilterSidebar from './FilterSidebar';
 import EnjoyFeatureSection from '../../components/EnjoyFeatureSection';
 import MoneyIcon from '../../components/SVGIcons/MoneyIcon';
 import FilterIcon from '../../components/SVGIcons/FilterIcon';
@@ -43,9 +43,7 @@ import FilterMaskSVG from '../../assets/images/filter_mask.svg';
 import upperArrowAnimationData from '../../assets/lotties/upper_arrow.json';
 import EmptyIcon from '../../assets/images/home-empty-icon.svg';
 
-import { login } from '../../redux/reducers/authReducer';
 import { FilterButton } from '../../components/FilterBox/index.styles';
-import { connect } from '../../utils/web3';
 import { TJob, TJobCountyOfCity } from '../../interfaces';
 import { NextPageContext } from 'next';
 import { useAccount } from 'wagmi';
@@ -100,36 +98,9 @@ export const HomePage: React.FC<ComponentProps> = ({
   const [openConnectWalletModal, setOpenConnectWalletModal] =
     useState<boolean>(false);
 
-  const handleScroll = () => {
-    const filterBarObj = document.getElementById('home-filter-bar');
-    const filterBoxObj = document.getElementById('job-list');
-    const filterBoxY = filterBoxObj?.offsetTop;
-    if (typeof window !== undefined) {
-      const scrollY = window.pageYOffset;
-
-      if (filterBarObj !== undefined && filterBoxY) {
-        if (scrollY > filterBoxY + 680) {
-          filterBarObj?.style.setProperty('opacity', '1');
-          filterBarObj?.style.setProperty('top', '0px');
-        } else {
-          filterBarObj?.style.setProperty('opacity', '0');
-          filterBarObj?.style.setProperty('top', '-100px');
-        }
-      }
-    }
-  };
-
   useEffect(() => {
     setJobs(jobData?.jobs || []);
-  }, [jobData?.jobs]);
-
-  useEffect(() => {
-    window?.addEventListener('scroll', handleScroll);
-
-    return () => {
-      window?.removeEventListener('scroll', handleScroll);
-    };
-  }, []);
+  }, [jobData]);
 
   useEffect(() => {
     if (goToJobs === 'true' || company) {
@@ -150,6 +121,22 @@ export const HomePage: React.FC<ComponentProps> = ({
         }
       });
   }, [dispatch]);
+
+  useEffect(() => {
+    router.push(
+      {
+        pathname: '/',
+        query: {
+          ...router.query,
+          account,
+        },
+      },
+      undefined,
+      {
+        scroll: false,
+      }
+    );
+  }, [account]);
 
   const handleClickTopCity = (city: string) => {
     router.push(
@@ -480,7 +467,6 @@ export const HomePage: React.FC<ComponentProps> = ({
           style={{ boxSizing: 'border-box' }}
         >
           <FilterBox
-            account={account}
             filterSettings={{
               search: searchKey,
               company,
@@ -503,20 +489,6 @@ export const HomePage: React.FC<ComponentProps> = ({
           style={{ boxSizing: 'border-box' }}
         >
           <Box position="relative" id="job-list">
-            <FilterBar
-              filterSettings={{
-                search: searchKey,
-                company,
-                isRemote: isRemote && isRemote === 'true',
-                location,
-                salary: Number(salary || '0'),
-                position,
-                city,
-                favorite: favorite === 'true',
-              }}
-              setFilterSettings={handleApplyFilter}
-              onSearch={handleSearch}
-            />
             {(jobs || []).length > 0 ? (
               (jobs || []).map((job: TJob) => (
                 <Box key={job.id} marginTop="5px">
