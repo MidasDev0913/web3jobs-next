@@ -84,7 +84,8 @@ const ApplyJobPage: React.FC<ComponentProps> = (props) => {
   const FULLDES = "Web3 " + `${selectedJob.title}` + " " + `${JOBSALARY}` + " in " + `${GEO}` + " at " + `${COMPANY}`;
   const NOTSALARYDES = "Web3 " + `${selectedJob.title}` + " in " + `${GEO}` + " at " + `${COMPANY}`;
   const REMOTEDES = "Web3 " + `${selectedJob.title}` + " " + `${JOBSALARY}` + " Remote" + " at " + `${COMPANY}`;
-
+  const NOSALARYREMOTEDES = "Web3 " + `${selectedJob.title}` + " Remote at " + `${COMPANY}`;
+  const isJobSalary = !!selectedJob.salary?.min  || !!selectedJob.salary?.max;
 
   // const shareButtonProps = {
   //   url: window.location.href,
@@ -178,13 +179,13 @@ const ApplyJobPage: React.FC<ComponentProps> = (props) => {
     }
   };
 
- 
 
   return (
     <>
       <Head>
-        <title>{selectedJob.isRemote ? REMOTEDES : (selectedJob.salary?.min != 0 || selectedJob.salary?.max != 0) ?  FULLDES : NOTSALARYDES}</title>
-        <meta name="og:title" content={selectedJob.isRemote ? REMOTEDES : (selectedJob.salary?.min != 0 || selectedJob.salary?.max != 0) ?  FULLDES : NOTSALARYDES} />
+        <title>{(selectedJob.isRemote && isJobSalary ) ? REMOTEDES : (!isJobSalary && selectedJob.isRemote ) ? NOSALARYREMOTEDES : (isJobSalary && !selectedJob.isRemote)? FULLDES : NOTSALARYDES}</title>
+        <meta name="og:title" content={(selectedJob.isRemote && isJobSalary ) ? REMOTEDES : (!isJobSalary && selectedJob.isRemote ) ? NOSALARYREMOTEDES : (isJobSalary && !selectedJob.isRemote)? FULLDES : NOTSALARYDES} />
+        <meta name="twitter:title" content={(selectedJob.isRemote && isJobSalary ) ? REMOTEDES : (!isJobSalary && selectedJob.isRemote ) ? NOSALARYREMOTEDES : (isJobSalary && !selectedJob.isRemote)? FULLDES : NOTSALARYDES} />
         <meta
           name="description"
           content={
