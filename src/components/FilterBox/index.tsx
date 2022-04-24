@@ -36,6 +36,7 @@ const FilterBox = ({
   setFilterSettings,
   handleClickTag,
 }: FilterBoxProps) => {
+  console.log("midas Filtersettings", filterSettings)
   const { isLoggedIn } = useSelector((state: RootState) => state.auth);
   const [isExpanded, setIsExpanded] = useState<boolean>(true);
   const [anchorSalaryEl, setAnchorSalaryEl] =

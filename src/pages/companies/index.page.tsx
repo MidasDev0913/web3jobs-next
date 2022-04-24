@@ -74,6 +74,7 @@ export const HomePage: React.FC<ComponentProps> = ({
     goToJobs,
     favorite,
   } = router.query;
+  const pathname = router.pathname;
 
   const currentPage = Number(page || '0');
   const activeTags =
@@ -123,55 +124,79 @@ export const HomePage: React.FC<ComponentProps> = ({
   }, [dispatch]);
 
   useEffect(() => {
-    router.push(
-      {
-        pathname: '/',
-        query: {
-          ...router.query,
-          account,
+    console.log("midas accout")
+    if(pathname == '/companies') {
+      
+      router.push(
+        {
+          pathname: '/',
+          // query: {
+          //   ...router.query,
+          //   account,
+          // },
         },
-      },
-      undefined,
-      {
-        scroll: false,
-      }
-    );
+        undefined,
+        {
+          scroll: false,
+        }
+      );
+    }
   }, [account]);
 
   const handleClickTopCity = (city: string) => {
-    router.push(
-      {
-        pathname: '/',
-        query: {
-          ...router.query,
-          page: 0,
-          city,
+    console.log("midas handleclickTopcity")
+    if(pathname == '/companies') {
+
+      router.push(
+        {
+          pathname: '/',
+          query: {
+            ...router.query,
+            page: 0,
+            city,
+          },
         },
-      },
-      undefined,
-      {
-        scroll: false,
-      }
-    );
+        undefined,
+        {
+          scroll: false,
+        }
+      );
+    }
     goToJobBoard();
   };
 
   const handleClickTag = (tag: string, isScroll?: boolean) => {
     const newTags = insertItemToArray(activeTags, tag);
-    router.push(
-      {
-        pathname: '/',
-        query: {
-          ...router.query,
-          page: 0,
-          tags: newTags,
+    console.log("midas handleclickTag", newTags)
+    if(pathname == '/companies') {
+
+      router.push(
+        {
+          pathname: '/',
+          query: {
+            ...router.query,
+            page: 0,
+            tags: newTags,
+          },
         },
-      },
-      undefined,
-      {
-        scroll: !isScroll,
-      }
-    );
+        undefined,
+        {
+          scroll: !isScroll,
+        }
+      );
+    } else {
+      router.push(
+        {
+          pathname: '/companies/[company]',
+          // query: {
+          //   ...router.query,
+          //   page: 0,
+          //   tags: newTags,
+          // },
+        },
+       
+      );
+    }
   };
 
   const handleClickFav = (
@@ -210,20 +235,24 @@ export const HomePage: React.FC<ComponentProps> = ({
   };
 
   const handleSearch = (key: string) => {
-    router.push(
-      {
-        pathname: '/',
-        query: {
-          ...router.query,
-          page: 0,
-          search: key,
+    console.log("midas hadlesearch");
+    if(pathname == '/companies') {
+
+      router.push(
+        {
+          pathname: '/',
+          query: {
+            ...router.query,
+            page: 0,
+            search: key,
+          },
         },
-      },
-      undefined,
-      {
-        scroll: false,
-      }
-    );
+        undefined,
+        {
+          scroll: false,
+        }
+      );
+    }
   };
 
   const goToJobBoard = () => {
@@ -247,19 +276,23 @@ export const HomePage: React.FC<ComponentProps> = ({
   };
 
   const handleChangePage = (e: any, value: number) => {
-    router.push(
-      {
-        pathname: '/',
-        query: {
-          ...router.query,
-          page: currentPage - 1,
+    console.log("midas handleChangepage");
+    if(pathname == '/companies') {
+
+      router.push(
+        {
+          pathname: '/',
+          query: {
+            ...router.query,
+            page: currentPage - 1,
+          },
         },
-      },
-      undefined,
-      {
-        scroll: false,
-      }
-    );
+        undefined,
+        {
+          scroll: false,
+        }
+      );
+    }
   };
 
   const handleApplyFilter = (arg: any, noScroll?: boolean) => {
@@ -273,19 +306,33 @@ export const HomePage: React.FC<ComponentProps> = ({
         delete newQuery[key];
       }
     }
-
-    router.push(
-      {
-        pathname: '/',
-        query: {
-          ...newQuery,
+    console.log("midas handleApplyFilter", newQuery);
+    if(pathname == '/companies') {
+      router.push(
+        {
+          pathname: '/',
+          query: {
+            ...newQuery,
+          },
         },
-      },
-      undefined,
-      {
-        scroll: !noScroll,
-      }
-    );
+        undefined,
+        {
+          scroll: !noScroll,
+        }
+      );
+    }
+    else {
+      router.push(
+        {
+          pathname: '/companies/[company]',
+          // query: {
+          //   ...newQuery,
+          // },
+         
+        },
+       
+      );
+    }
   };
 
   const handleToggleExpand = (e: React.MouseEvent<HTMLDivElement>) => {
